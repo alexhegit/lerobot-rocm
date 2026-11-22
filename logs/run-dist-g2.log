@@ -1,0 +1,2171 @@
+----- 2026-11-22T06:47:13+00:00 BEGIN g05-fsdp2 devices=4,5 free=107G -----
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.7s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/apex/transformer/functional/fused_rope.py:49: UserWarning: Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0
+  warnings.warn("Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0", UserWarning)
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+INFO 2026-11-22 06:47:51 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': True,
+                         'gradient_as_bucket_view': False,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': 'bfloat16',
+                                                     'reduce_dtype': 'float32'},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 1,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'bf16'},
+ 'batch_size': 1,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': [0],
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'lerobot/svla_so100_pickplace',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': None,
+             'root': None,
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': None,
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': 'g05',
+ 'log_freq': 1,
+ 'max_eval_samples': 0,
+ 'num_workers': 0,
+ 'optimizer': {'betas': [0.9, 0.95],
+               'eps': 1e-08,
+               'fused': None,
+               'grad_clip_norm': 1.0,
+               'lr': 8e-05,
+               'type': 'adamw',
+               'weight_decay': 0.01},
+ 'output_dir': '/outputs/rocm-train/g05-fsdp2',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 1,
+                 'dp_shard': 2},
+ 'peft': None,
+ 'persistent_workers': True,
+ 'policy': {'action_feature_names': ['right_arm.0',
+                                     'right_arm.1',
+                                     'right_arm.2',
+                                     'right_arm.3',
+                                     'right_arm.4',
+                                     'right_arm.5'],
+            'action_head': 'flow',
+            'action_slots': [],
+            'author_model_config': {'AT_CONFIG': {'absent_key_fill_value': -100.0,
+                                                  'action_template': '{action}',
+                                                  'block_size': 4,
+                                                  'block_wise_autoregressive': False,
+                                                  'ckpt_dir': 'checkpoints/action_tokenizer.pt',
+                                                  'dropout_noop_parts': True,
+                                                  'group_order_shuffle': False,
+                                                  'model_arch': {'block_dct_block_size': 8,
+                                                                 'c_mults': [1,
+                                                                             2,
+                                                                             2],
+                                                                 'codebook_dim': 8,
+                                                                 'codebook_size': 4096,
+                                                                 'commitment_loss_weight': 0.25,
+                                                                 'consistency_delta_max_begin': 1,
+                                                                 'consistency_delta_max_end': 3,
+                                                                 'consistency_eps_begin': 0.02,
+                                                                 'consistency_eps_end': 0.1,
+                                                                 'consistency_layer_weights_begin': [0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0],
+                                                                 'consistency_layer_weights_end': [1.0,
+                                                                                                   0.7,
+                                                                                                   0.3,
+                                                                                                   0.1],
+                                                                 'consistency_loss_weight': 0.0,
+                                                                 'consistency_schedule_begin_fraction': 0.2,
+                                                                 'consistency_schedule_end_fraction': 0.8,
+                                                                 'conv_in_action_kernel': 2,
+                                                                 'dim_heads': 64,
+                                                                 'ema_decay': 0.95,
+                                                                 'encoder_channels': 256,
+                                                                 'ffn_mult': 4.0,
+                                                                 'horizon': 32,
+                                                                 'horizon_patch_size': 8,
+                                                                 'latent_dim': 128,
+                                                                 'layer_scale_init': 0.01,
+                                                                 'max_component_dim': 9,
+                                                                 'n_codebooks': 4,
+                                                                 'num_heads': 8,
+                                                                 'quantizer_dropout': 0.5,
+                                                                 'reconstruction_loss_weight': 1.0,
+                                                                 'rope_base': 10000,
+                                                                 'strides': [[1,
+                                                                              1],
+                                                                             [2,
+                                                                              1],
+                                                                             [2,
+                                                                              1]],
+                                                                 'threshold_ema_dead': 2,
+                                                                 'transformer_depths': [2,
+                                                                                        2,
+                                                                                        2],
+                                                                 'use_block_dct': True,
+                                                                 'use_layer_scale': True,
+                                                                 'use_qk_norm': True,
+                                                                 'use_rotation_trick': False},
+                                                  'num_residuals': 4,
+                                                  'parts_meta': {'left_control': 9,
+                                                                 'left_gripper': 1,
+                                                                 'right_control': 9,
+                                                                 'right_gripper': 1},
+                                                  'rule_based_binarize_threshold': 0.0,
+                                                  'rule_based_key_patterns': ['gripper'],
+                                                  'rule_based_min_block_len': 1,
+                                                  'use_extra_tokens': True,
+                                                  'use_group_markers': True,
+                                                  'vqvae_type': 'g05.tokenizer.models.actioncodec2_v2.wrapper.ActionCodecV2Wrapper'},
+                                    'action_attend_cot': True,
+                                    'action_dim': 20,
+                                    'action_expert': {'adaptive_mode': 'adaLN',
+                                                      'attention_bias': False,
+                                                      'head_dim': 256,
+                                                      'hidden_act': 'silu',
+                                                      'hidden_size': 1024,
+                                                      'input_dim': 20,
+                                                      'input_type': 'linear',
+                                                      'intermediate_size': 4096,
+                                                      'layer_types': ['full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention',
+                                                                      'full_attention'],
+                                                      'linear_attn_backend': 'fla',
+                                                      'linear_conv_kernel_dim': 4,
+                                                      'linear_key_head_dim': 128,
+                                                      'linear_num_key_heads': 16,
+                                                      'linear_num_value_heads': 16,
+                                                      'linear_value_head_dim': 128,
+                                                      'max_position_embeddings': 262144,
+                                                      'name': 'g05.models.g05.qwen35.mixture_qwen35.MixtureQwen35',
+                                                      'num_attention_heads': 8,
+                                                      'num_hidden_layers': 24,
+                                                      'num_key_value_heads': 2,
+                                                      'output_dim': 20,
+                                                      'output_type': 'linear',
+                                                      'rms_norm_eps': 1e-06,
+                                                      'rope_parameters': {'mrope_interleaved': True,
+                                                                          'mrope_section': [11,
+                                                                                            11,
+                                                                                            10],
+                                                                          'partial_rotary_factor': 0.25,
+                                                                          'rope_theta': 10000000.0,
+                                                                          'rope_type': 'default'},
+                                                      'time_hidden_size': 1024,
+                                                      'use_final_norm': True},
+                                    'action_position_offset': None,
+                                    'action_tokenizer': 'g05.tokenizer.interface.vq_base.VQActionTokenizer',
+                                    'ae_vlm_condition_mode': 'cross_attn_only',
+                                    'ar': {'block_size': None,
+                                           'block_wise_autoregressive': True,
+                                           'bos_blk_id': None,
+                                           'ce_weight': 1.0,
+                                           'ce_z_loss_scale': 0.0,
+                                           'do_sample': False,
+                                           'eos_blk_id': None,
+                                           'loc_token_end': 248077,
+                                           'max_new_tokens': 300,
+                                           'no_repeat_ngram_size': 3,
+                                           'repetition_penalty': 1.2,
+                                           'temperature': 0.7,
+                                           'text_token_end': 248044,
+                                           'top_k': 128,
+                                           'top_p': 0.95,
+                                           'use_fused_ce': True,
+                                           'vocab_size': 248320},
+                                    'attn_implementation': 'eager',
+                                    'backbone_lr_multiplier': 1.0,
+                                    'base_vocab_size': 248044,
+                                    'camera_size_config': {'exterior': [256,
+                                                                        256],
+                                                           'wrist_left': [256,
+                                                                          256],
+                                                           'wrist_right': [256,
+                                                                           256]},
+                                    'checkpoint_action_decoder': False,
+                                    'checkpoint_action_expert': False,
+                                    'checkpoint_joint': False,
+                                    'checkpoint_vision': False,
+                                    'checkpoint_vlm': False,
+                                    'cond_steps': 1,
+                                    'continuous_action': True,
+                                    'discrete_action': True,
+                                    'eos_token_id': 248044,
+                                    'fm': {'action_causal': False,
+                                           'action_dim': 20,
+                                           'final_action_clip_value': None,
+                                           'flow_sampling': 'beta',
+                                           'flow_sig_min': 0.001,
+                                           'fm_weight': 1.0,
+                                           'horizon_steps': 32,
+                                           'joint_training': False,
+                                           'num_flow_samples': 8,
+                                           'num_inference_steps': 10,
+                                           'padding_action_weight': 0.0,
+                                           'time_convention': 'pi_convention',
+                                           'zero_pad_action_target': False},
+                                    'hf_processor_class': 'g05.models.g05.qwen35.processing.Qwen35ProcessorWrapper',
+                                    'hf_processor_path': 'checkpoints/qwen3_5_2b_base_processor',
+                                    'horizon_steps': 32,
+                                    'image_token_index': 248056,
+                                    'input_preprocessor': {'batchify_action': True,
+                                                           'input_action_corruption': False,
+                                                           'pi05_ft_mode': False,
+                                                           'pred_eov': True},
+                                    'max_chunk_token_length': 1200,
+                                    'max_pad_token_length': None,
+                                    'max_text_tokens': 160,
+                                    'num_extra_image_tokens_per_camera': 0,
+                                    'num_input_images': 3,
+                                    'num_obs_steps': 1,
+                                    'pad_token_id': 0,
+                                    'padded_vocab_size': 248320,
+                                    'position_ids_type': 'pi0fast',
+                                    'predict_cot': True,
+                                    'pretrained_model_path': None,
+                                    'proprio_dim': 20,
+                                    'proprio_encoder': 'mlp',
+                                    'return_continuous_action': True,
+                                    'use_lm_head': True,
+                                    'vision': {'batch_all_cameras': False,
+                                               'depth': 24,
+                                               'hidden_act': 'gelu_pytorch_tanh',
+                                               'hidden_size': 1024,
+                                               'in_channels': 3,
+                                               'intermediate_size': 4096,
+                                               'name': 'g05.models.g05.qwen35.vision.Qwen3_5VisionModel',
+                                               'num_channels': 3,
+                                               'num_heads': 16,
+                                               'num_image_tokens': None,
+                                               'num_position_embeddings': 2304,
+                                               'out_hidden_size': 2048,
+                                               'patch_size': 16,
+                                               'spacetime_mode': 'factorized',
+                                               'spatial_merge_size': 2,
+                                               'temporal_freq': 0,
+                                               'temporal_patch_size': 2,
+                                               'temporal_pe_pretrain_frames': None,
+                                               'token_drop_layer': None,
+                                               'use_temporal_conv3d': False},
+                                    'vision_projector': {'name': None},
+                                    'vla_training_strategy': 'vla-full-train',
+                                    'vlm': {'adaptive_mode': None,
+                                            'attention_bias': False,
+                                            'head_dim': 256,
+                                            'hidden_act': 'silu',
+                                            'hidden_size': 2048,
+                                            'input_type': 'embedding',
+                                            'intermediate_size': 6144,
+                                            'layer_types': ['linear_attention',
+                                                            'linear_attention',
+                                                            'linear_attention',
+                                                            'full_attention',
+                                                            'linear_attention',
+                                                            'linear_attention',
+                                                            'linear_attention',
+                                                            'full_attention',
+                                                            'linear_attention',
+                                                            'linear_attention',
+                                                            'linear_attention',
+                                                            'full_attention',
+                                                            'linear_attention',
+                                                            'linear_attention',
+                                                            'linear_attention',
+                                                            'full_attention',
+                                                            'linear_attention',
+                                                            'linear_attention',
+                                                            'linear_attention',
+                                                            'full_attention',
+                                                            'linear_attention',
+                                                            'linear_attention',
+                                                            'linear_attention',
+                                                            'full_attention'],
+                                            'linear_attn_backend': 'fla',
+                                            'linear_conv_kernel_dim': 4,
+                                            'linear_key_head_dim': 128,
+                                            'linear_num_key_heads': 16,
+                                            'linear_num_value_heads': 16,
+                                            'linear_value_head_dim': 128,
+                                            'max_position_embeddings': 262144,
+                                            'name': 'g05.models.g05.qwen35.mixture_qwen35.MixtureQwen35',
+                                            'num_attention_heads': 8,
+                                            'num_hidden_layers': 24,
+                                            'num_key_value_heads': 2,
+                                            'output_type': 'lm_head',
+                                            'pad_token_id': 0,
+                                            'rms_norm_eps': 1e-06,
+                                            'rope_parameters': {'mrope_interleaved': True,
+                                                                'mrope_section': [11,
+                                                                                  11,
+                                                                                  10],
+                                                                'partial_rotary_factor': 0.25,
+                                                                'rope_theta': 10000000.0,
+                                                                'rope_type': 'default'},
+                                            'time_hidden_size': 0,
+                                            'use_final_norm': True,
+                                            'vocab_size': 248320},
+                                    'vocab_size': 248320},
+            'camera_order': ['observation.images.top',
+                             'observation.images.wrist_left',
+                             'observation.images.wrist'],
+            'camera_sizes': {'observation.images.top': [256, 256],
+                             'observation.images.wrist': [256, 256],
+                             'observation.images.wrist_left': [256, 256]},
+            'chunk_size': 32,
+            'continuous_action': True,
+            'cot_bbox_camera': None,
+            'device': 'cuda',
+            'discrete_action': True,
+            'dtype': 'float32',
+            'embodiment': 'so100',
+            'image_mean': [0.5, 0.5, 0.5],
+            'image_std': [0.5, 0.5, 0.5],
+            'input_features': {'observation.images.exterior': {'shape': [3,
+                                                                         256,
+                                                                         256],
+                                                               'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.images.wrist_left': {'shape': [3,
+                                                                           256,
+                                                                           256],
+                                                                 'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.images.wrist_right': {'shape': [3,
+                                                                            256,
+                                                                            256],
+                                                                  'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.state': {'shape': [6],
+                                                     'type': <FeatureType.STATE: 'STATE'>}},
+            'joint_offsets': [0.0, 90.0, 90.0, 0.0, 0.0, 0.0],
+            'joint_signs': [1.0, -1.0, 1.0, 1.0, 1.0, 1.0],
+            'libero_gripper_binarize': False,
+            'license': 'other',
+            'n_action_steps': 16,
+            'n_obs_steps': 1,
+            'normalization_clip': [-5.0, 5.0],
+            'normalization_mapping': {'ACTION': <NormalizationMode.QUANTILES: 'QUANTILES'>,
+                                      'STATE': <NormalizationMode.QUANTILES: 'QUANTILES'>,
+                                      'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>},
+            'num_input_images': 3,
+            'num_prompt_images': 3,
+            'optimizer_apply_decay_on_norm_and_bias': False,
+            'optimizer_backbone_lr_multiplier': 1.0,
+            'optimizer_betas': [0.9, 0.95],
+            'optimizer_grad_clip_norm': 1.0,
+            'optimizer_lr': 8e-05,
+            'optimizer_vision_lr_multiplier': 1.0,
+            'optimizer_weight_decay': 0.01,
+            'optional_camera_keys': ['observation.images.wrist_left'],
+            'output_features': {'action': {'shape': [6],
+                                           'type': <FeatureType.ACTION: 'ACTION'>}},
+            'policy_action_dim': 20,
+            'policy_state_dim': 20,
+            'predict_cot': False,
+            'pretrained_path': 'lerobot/g05_so101',
+            'pretrained_revision': None,
+            'private': None,
+            'processor_metadata': {'_target_': 'g05.data_processor.processor.galaxea_cot_processor.GalaxeaCoTProcessor',
+                                   'action_filter': {'_target_': 'g05.data_processor.transforms.action_filter.DummyActionFilter'},
+                                   'action_state_merger': {'_target_': 'g05.data_processor.transforms.action_state_merger.GroupedPaddingMerger',
+                                                           'max_action_shape_meta': {'left_arm': 8,
+                                                                                     'left_ee_pose': 9,
+                                                                                     'left_gripper': 1,
+                                                                                     'right_arm': 8,
+                                                                                     'right_ee_pose': 9,
+                                                                                     'right_gripper': 1},
+                                                           'max_state_shape_meta': {'left_arm': 8,
+                                                                                    'left_ee_pose': 9,
+                                                                                    'left_gripper': 1,
+                                                                                    'right_arm': 8,
+                                                                                    'right_ee_pose': 9,
+                                                                                    'right_gripper': 1},
+                                                           'merge': True,
+                                                           'merge_spec': {'left_control': ['left_arm',
+                                                                                           'left_ee_pose'],
+                                                                          'left_gripper': ['left_gripper'],
+                                                                          'right_control': ['right_arm',
+                                                                                            'right_ee_pose'],
+                                                                          'right_gripper': ['right_gripper']}},
+                                   'action_state_transforms': [{'_target_': 'g05.data_processor.transforms.relative_action.RelativeJointTransform',
+                                                                'keys': ['right_arm']}],
+                                   'camera_size_config': {'exterior': [256,
+                                                                       256],
+                                                          'wrist_left': [256,
+                                                                         256],
+                                                          'wrist_right': [256,
+                                                                          256]},
+                                   'discrete_action': True,
+                                   'drop_high_level_prob': 1.0,
+                                   'image_token_index': 248056,
+                                   'max_text_tokens': 160,
+                                   'norm_default_mode': 'q01/q99',
+                                   'norm_exception_mode': {},
+                                   'num_input_cameras': 3,
+                                   'num_obs_steps': 1,
+                                   'num_output_cameras': 3,
+                                   'pad_token_id': 0,
+                                   'samples_builder': {'_partial_': True,
+                                                       '_recursive_': False,
+                                                       '_target_': 'g05.data_processor.processor.samples_builder.MixedSamplesBuilder',
+                                                       'candidates': [{'_target_': 'g05.data_processor.processor.samples_builder.HighLevelAtomicTaskCoTBuilder',
+                                                                       'weight': 1.0},
+                                                                      {'_target_': 'g05.data_processor.processor.samples_builder.AtomicTaskBaseSamplesBuilder',
+                                                                       'weight': 1.0},
+                                                                      {'_target_': 'g05.data_processor.processor.samples_builder.BBoxSubtaskCoTBuilder',
+                                                                       'weight': 1.0},
+                                                                      {'_target_': 'g05.data_processor.processor.samples_builder.BBoxCoTBuilder',
+                                                                       'weight': 1.0},
+                                                                      {'_target_': 'g05.data_processor.processor.samples_builder.SubtaskCoTBuilder',
+                                                                       'weight': 2.0},
+                                                                      {'_target_': 'g05.data_processor.processor.samples_builder.BaseSamplesBuilder',
+                                                                       'weight': 1.0}],
+                                                       'eval_builder': {'_target_': 'g05.data_processor.processor.samples_builder.BaseSamplesBuilder'}},
+                                   'shape_meta': {'action': [{'key': 'right_arm',
+                                                              'lerobot_key': 'action',
+                                                              'raw_shape': 6,
+                                                              'shape': 6,
+                                                              'start_index': 0,
+                                                              'time_offset': 0}],
+                                                  'images': [{'camera_type': 'exterior',
+                                                              'key': 'exterior',
+                                                              'lerobot_key': '__so100_exterior__',
+                                                              'raw_shape': [3,
+                                                                            480,
+                                                                            640],
+                                                              'shape': [3,
+                                                                        224,
+                                                                        224],
+                                                              'start_index': 0,
+                                                              'time_offset': 0},
+                                                             {'camera_type': 'wrist_left',
+                                                              'key': 'wrist_left',
+                                                              'lerobot_key': '__so100_wrist_left__',
+                                                              'raw_shape': [3,
+                                                                            480,
+                                                                            640],
+                                                              'shape': [3,
+                                                                        224,
+                                                                        224],
+                                                              'start_index': 0,
+                                                              'time_offset': 0},
+                                                             {'camera_type': 'wrist_right',
+                                                              'key': 'wrist_right',
+                                                              'lerobot_key': '__so100_wrist_right__',
+                                                              'raw_shape': [3,
+                                                                            480,
+                                                                            640],
+                                                              'shape': [3,
+                                                                        224,
+                                                                        224],
+                                                              'start_index': 0,
+                                                              'time_offset': 0}],
+                                                  'state': [{'key': 'right_arm',
+                                                             'lerobot_key': 'observation.state',
+                                                             'raw_shape': 6,
+                                                             'shape': 6,
+                                                             'start_index': 0,
+                                                             'time_offset': 0}]},
+                                   'tokenizer_params': {'local_files_only': True,
+                                                        'pretrained_model_name_or_path': 'checkpoints/qwen3_5_2b_base_processor',
+                                                        'token': None},
+                                   'train_transforms': {'exterior': [{'_target_': 'g05.data_processor.transforms.image.ToTensor'},
+                                                                     {'_target_': 'torchvision.transforms.Normalize',
+                                                                      'mean': [0.5,
+                                                                               0.5,
+                                                                               0.5],
+                                                                      'std': [0.5,
+                                                                              0.5,
+                                                                              0.5]}],
+                                                        'wrist_left': [{'_target_': 'g05.data_processor.transforms.image.ToTensor'},
+                                                                       {'_target_': 'torchvision.transforms.Normalize',
+                                                                        'mean': [0.5,
+                                                                                 0.5,
+                                                                                 0.5],
+                                                                        'std': [0.5,
+                                                                                0.5,
+                                                                                0.5]}],
+                                                        'wrist_right': [{'_target_': 'g05.data_processor.transforms.image.ToTensor'},
+                                                                        {'_target_': 'torchvision.transforms.Normalize',
+                                                                         'mean': [0.5,
+                                                                                  0.5,
+                                                                                  0.5],
+                                                                         'std': [0.5,
+                                                                                 0.5,
+                                                                                 0.5]}]},
+                                   'use_stepwise_action_norm': True,
+                                   'use_zh_instruction': False,
+                                   'val_transforms': {'exterior': [{'_target_': 'g05.data_processor.transforms.image.ToTensor'},
+                                                                   {'_target_': 'torchvision.transforms.Normalize',
+                                                                    'mean': [0.5,
+                                                                             0.5,
+                                                                             0.5],
+                                                                    'std': [0.5,
+                                                                            0.5,
+                                                                            0.5]}],
+                                                      'wrist_left': [{'_target_': 'g05.data_processor.transforms.image.ToTensor'},
+                                                                     {'_target_': 'torchvision.transforms.Normalize',
+                                                                      'mean': [0.5,
+                                                                               0.5,
+                                                                               0.5],
+                                                                      'std': [0.5,
+                                                                              0.5,
+                                                                              0.5]}],
+                                                      'wrist_right': [{'_target_': 'g05.data_processor.transforms.image.ToTensor'},
+                                                                      {'_target_': 'torchvision.transforms.Normalize',
+                                                                       'mean': [0.5,
+                                                                                0.5,
+                                                                                0.5],
+                                                                       'std': [0.5,
+                                                                               0.5,
+                                                                               0.5]}]},
+                                   'vlm_input_action_norm_default_mode': None,
+                                   'vlm_input_action_norm_exception_mode': None},
+            'prompt_template': '<chat_user_prefix><image0_image_!><image1_image_!><image2_image_!><bos>Embodiment: '
+                               '<embodiment_text_!>; Task: '
+                               '<command_text_!_200> State: '
+                               '<proprio_proprio_!>;<chat_user_suffix><chat_assistant_prefix><prompt_text_!>\n'
+                               '<EOC><atomic_task_text>|Action: '
+                               '<EOV><action_action>|<eos>',
+            'proprio_dropout_p': 0.2,
+            'push_to_hub': False,
+            'raw_action_dim': 6,
+            'raw_state_dim': 6,
+            'recipe': {'bindings': {'bbox': 'emitted_at(t, style=vqa, '
+                                            'role=assistant, '
+                                            'camera=observation.images.top)'},
+                       'blend': None,
+                       'messages': [{'content': '${task}',
+                                     'if_present': None,
+                                     'role': 'user',
+                                     'stream': 'low_level',
+                                     'target': False,
+                                     'tool_calls_from': None},
+                                    {'content': 'BBoxJSON: ${bbox}',
+                                     'if_present': 'bbox',
+                                     'role': 'assistant',
+                                     'stream': 'low_level',
+                                     'target': True,
+                                     'tool_calls_from': None},
+                                    {'content': 'Subtask: ${subtask}',
+                                     'if_present': 'subtask',
+                                     'role': 'assistant',
+                                     'stream': 'low_level',
+                                     'target': True,
+                                     'tool_calls_from': None}],
+                       'route': None,
+                       'weight': None},
+            'recipe_path': None,
+            'relative_exclude_joints': [],
+            'repo_id': None,
+            'runtime_cot_fields': ['subtask'],
+            'runtime_system': 'system1',
+            'scheduler_warmup_steps': 1000,
+            'state_slots': [],
+            'tags': ['g05', 'robotics', 'so101', 'non-commercial'],
+            'type': 'g05',
+            'use_amp': False,
+            'use_language_recipe': False,
+            'use_peft': False,
+            'use_relative_actions': True,
+            'use_stepwise_action_norm': True},
+ 'prefetch_factor': 4,
+ 'rename_map': {},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 2,
+ 'scheduler': {'num_warmup_steps': 1000, 'type': 'constant_with_warmup'},
+ 'seed': 1000,
+ 'steps': 2,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-22 06:47:51 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-22 06:47:51 ot_train.py:589 Creating dataset
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1697.76it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1904.99it/s]
+INFO 2026-11-22 06:47:54 ot_train.py:628 Creating policy
+Fetching 17 files:   0%|          | 0/17 [00:00<?, ?it/s]Fetching 17 files: 100%|██████████| 17/17 [00:00<00:00, 2205.55it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1662.26it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2004.45it/s]
+Fetching 17 files:   0%|          | 0/17 [00:00<?, ?it/s]Fetching 17 files: 100%|██████████| 17/17 [00:00<00:00, 2546.00it/s]
+Loading weights from local directory
+Loading weights from local directory
+WARNING 2026-11-22 06:47:58 ot_train.py:657 Language recipe fine-tuning rebuilds processors from the active configuration; saved processors from lerobot/g05_so101 will not be loaded.
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 1595.66it/s]
+Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 1671.23it/s]
+INFO 2026-11-22 06:47:58 ot_train.py:723 Creating optimizer and scheduler
+AUTO_WRAP ['G05ActionDecoderLayer', 'Qwen3_5DecoderLayer', 'Qwen3_5VisionBlock']
+AUTO_WRAP ['G05ActionDecoderLayer', 'Qwen3_5DecoderLayer', 'Qwen3_5VisionBlock']
+/opt/venv/lib/python3.12/site-packages/torch/distributed/device_mesh.py:746: UserWarning: Slicing a flattened dim from root mesh will be deprecated in PT 2.11. Users need to bookkeep the flattened mesh directly. 
+  sliced_mesh_layout = self._get_slice_mesh_layout(mesh_dim_names)
+/opt/venv/lib/python3.12/site-packages/torch/distributed/device_mesh.py:746: UserWarning: Slicing a flattened dim from root mesh will be deprecated in PT 2.11. Users need to bookkeep the flattened mesh directly. 
+  sliced_mesh_layout = self._get_slice_mesh_layout(mesh_dim_names)
+INFO 2026-11-22 06:47:58 ot_train.py:784 Output dir: /outputs/rocm-train/g05-fsdp2
+INFO 2026-11-22 06:47:58 ot_train.py:791 cfg.steps=2 (2)
+INFO 2026-11-22 06:47:58 ot_train.py:792 dataset.num_frames=454 (454)
+INFO 2026-11-22 06:47:58 ot_train.py:793 dataset.num_episodes=1
+INFO 2026-11-22 06:47:58 ot_train.py:794 Effective batch size: 1 x 2 dp workers x 1 grad accum = 2 (topology: dp_replicate=1, dp_shard=2)
+INFO 2026-11-22 06:47:58 ot_train.py:799 num_learnable_params=2859995988 (3B)
+INFO 2026-11-22 06:47:58 ot_train.py:800 num_total_params=2859995988 (3B)
+Training:   0%|          | 0/2 [00:00<?, ?step/s]INFO 2026-11-22 06:47:58 ot_train.py:848 Start offline training on a fixed dataset, with effective batch size: 2
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/outputs/rocm-train/jobs/fsdp_autowrap_train.py", line 73, in <module>
+[rank1]:     lerobot_train.main()
+[rank1]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+[rank1]:     train()
+[rank1]:   File "/lerobot/src/lerobot/configs/parser.py", line 468, in wrapper_inner
+[rank1]:     response = fn(cfg, *args, **kwargs)
+[rank1]:                ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 864, in train
+[rank1]:     train_tracker, _ = update_policy(
+[rank1]:                        ^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 265, in update_policy
+[rank1]:     loss, output_dict = policy(batch)
+[rank1]:                         ^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1884, in _call_impl
+[rank1]:     return inner()
+[rank1]:            ^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1832, in inner
+[rank1]:     result = forward_call(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/g05/modeling_g05.py", line 2003, in forward
+[rank1]:     loss, loss_dict = self.backend(prepared)
+[rank1]:                       ^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/g05/modeling_g05.py", line 1639, in forward
+[rank1]:     hidden_states, cache, positions = self._prefill(sequence, pixel_values, proprio)
+[rank1]:                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/g05/modeling_g05.py", line 1127, in _prefill
+[rank1]:     embeddings = self._embed(sequence, pixel_values, proprio)
+[rank1]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/g05/modeling_g05.py", line 1019, in _embed
+[rank1]:     state_features = self.model.proprio_embedder(proprio).to(embeddings.dtype)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/g05/modeling_g05.py", line 327, in forward
+[rank1]:     return self.mlp(proprio.float())
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/container.py", line 253, in forward
+[rank1]:     input = module(input)
+[rank1]:             ^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/linear.py", line 134, in forward
+[rank1]:     return F.linear(input, self.weight, self.bias)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: RuntimeError: mat1 and mat2 must have the same dtype, but got Float and BFloat16
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/outputs/rocm-train/jobs/fsdp_autowrap_train.py", line 73, in <module>
+[rank0]:     lerobot_train.main()
+[rank0]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+[rank0]:     train()
+[rank0]:   File "/lerobot/src/lerobot/configs/parser.py", line 468, in wrapper_inner
+[rank0]:     response = fn(cfg, *args, **kwargs)
+[rank0]:                ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 864, in train
+[rank0]:     train_tracker, _ = update_policy(
+[rank0]:                        ^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 265, in update_policy
+[rank0]:     loss, output_dict = policy(batch)
+[rank0]:                         ^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1884, in _call_impl
+[rank0]:     return inner()
+[rank0]:            ^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1832, in inner
+[rank0]:     result = forward_call(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/g05/modeling_g05.py", line 2003, in forward
+[rank0]:     loss, loss_dict = self.backend(prepared)
+[rank0]:                       ^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/g05/modeling_g05.py", line 1639, in forward
+[rank0]:     hidden_states, cache, positions = self._prefill(sequence, pixel_values, proprio)
+[rank0]:                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/g05/modeling_g05.py", line 1127, in _prefill
+[rank0]:     embeddings = self._embed(sequence, pixel_values, proprio)
+[rank0]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/g05/modeling_g05.py", line 1019, in _embed
+[rank0]:     state_features = self.model.proprio_embedder(proprio).to(embeddings.dtype)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/g05/modeling_g05.py", line 327, in forward
+[rank0]:     return self.mlp(proprio.float())
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/container.py", line 253, in forward
+[rank0]:     input = module(input)
+[rank0]:             ^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/linear.py", line 134, in forward
+[rank0]:     return F.linear(input, self.weight, self.bias)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: RuntimeError: mat1 and mat2 must have the same dtype, but got Float and BFloat16
+Training:   0%|          | 0/2 [00:26<?, ?step/s]
+W1122 06:48:27.197000 7 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 382 closing signal SIGTERM
+E1122 06:48:27.200000 7 torch/distributed/elastic/multiprocessing/api.py:988] failed (exitcode: 1) local_rank: 0 (pid: 381) of binary: /opt/venv/bin/python
+Traceback (most recent call last):
+  File "/opt/venv/bin/accelerate", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/accelerate_cli.py", line 50, in main
+    args.func(args)
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/launch.py", line 1404, in launch_command
+    multi_gpu_launcher(args)
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/launch.py", line 1029, in multi_gpu_launcher
+    distrib_run.run(args)
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/run.py", line 1007, in run
+    elastic_launch(
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 191, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 371, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/outputs/rocm-train/jobs/fsdp_autowrap_train.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-11-22_06:48:27
+  host      : a508a06db0fe
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 382) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-11-22_06:48:27
+  host      : a508a06db0fe
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 381) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+RESULT g05-fsdp2 FAIL exit=1 seconds=75 dp_replicate=1 dp_shard=2 steps=[]
+----- 2026-11-22T06:48:28+00:00 BEGIN cover-wallx-fsdp2 devices=4,5 free=150G -----
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.6s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/apex/transformer/functional/fused_rope.py:49: UserWarning: Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0
+  warnings.warn("Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0", UserWarning)
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+INFO 2026-11-22 06:49:02 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': True,
+                         'gradient_as_bucket_view': False,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': 'bfloat16',
+                                                     'reduce_dtype': 'float32'},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 1,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'bf16'},
+ 'batch_size': 1,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': [0],
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'lerobot/svla_so100_pickplace',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': None,
+             'root': None,
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': None,
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': 'wall_x',
+ 'log_freq': 1,
+ 'max_eval_samples': 0,
+ 'num_workers': 0,
+ 'optimizer': {'betas': [0.9, 0.95],
+               'eps': 1e-08,
+               'fused': None,
+               'grad_clip_norm': 1.0,
+               'lr': 2e-05,
+               'type': 'adamw',
+               'weight_decay': 0.01},
+ 'output_dir': '/outputs/rocm-train/cover-wallx-fsdp2',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 1,
+                 'dp_shard': 2},
+ 'peft': None,
+ 'persistent_workers': True,
+ 'policy': {'action_tokenizer_path': None,
+            'attn_implementation': 'eager',
+            'chunk_size': 32,
+            'device': 'cuda',
+            'dtype': None,
+            'flow_loss_weight': 1.0,
+            'input_features': {},
+            'license': None,
+            'max_action_dim': 20,
+            'max_state_dim': 20,
+            'n_action_steps': 32,
+            'n_obs_steps': 1,
+            'normalization_mapping': {'ACTION': <NormalizationMode.MEAN_STD: 'MEAN_STD'>,
+                                      'STATE': <NormalizationMode.MEAN_STD: 'MEAN_STD'>,
+                                      'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>},
+            'optimizer_betas': [0.9, 0.95],
+            'optimizer_eps': 1e-08,
+            'optimizer_grad_clip_norm': 1.0,
+            'optimizer_lr': 2e-05,
+            'optimizer_weight_decay': 0.01,
+            'output_features': {},
+            'prediction_mode': 'diffusion',
+            'pretrained_name_or_path': 'x-square-robot/wall-oss-flow',
+            'pretrained_path': None,
+            'pretrained_revision': None,
+            'private': None,
+            'push_to_hub': False,
+            'recipe': None,
+            'recipe_path': None,
+            'repo_id': None,
+            'scheduler_decay_lr': 1e-06,
+            'scheduler_decay_steps': 100000,
+            'scheduler_warmup_steps': 1000,
+            'tags': None,
+            'text_loss_weight': 0.01,
+            'text_temperature': 0.0,
+            'text_top_p': 1.0,
+            'tokenizer_max_length': 768,
+            'type': 'wall_x',
+            'use_amp': False,
+            'use_peft': False,
+            'vision_attn_implementation': 'auto'},
+ 'prefetch_factor': 4,
+ 'rename_map': {},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 2,
+ 'scheduler': {'decay_lr': 1e-06,
+               'num_decay_steps': 100000,
+               'num_warmup_steps': 1000,
+               'peak_lr': 2e-05,
+               'type': 'cosine_decay_with_warmup'},
+ 'seed': 1000,
+ 'steps': 2,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-22 06:49:02 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-22 06:49:02 ot_train.py:589 Creating dataset
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1720.21it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2065.91it/s]
+INFO 2026-11-22 06:49:04 ot_train.py:628 Creating policy
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1533.29it/s]
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1816.50it/s]
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+[transformers] The new embeddings will be initialized from a multivariate normal distribution that has old embeddings' mean and covariance. As described in this article: https://nlp.stanford.edu/~johnhew/vocab-expansion.html. To disable this, use `mean_resizing=False`
+[transformers] The new embeddings will be initialized from a multivariate normal distribution that has old embeddings' mean and covariance. As described in this article: https://nlp.stanford.edu/~johnhew/vocab-expansion.html. To disable this, use `mean_resizing=False`
+INFO 2026-11-22 06:51:07 g_wall_x.py:366 Loading Wall-X model from x-square-robot/wall-oss-flow
+INFO 2026-11-22 06:51:07 g_wall_x.py:384 Loaded Wall-X state dict from model.safetensors
+WARNING 2026-11-22 06:51:09 ies/utils.py:95 Missing key(s) when loading model: ['lm_head.weight']
+INFO 2026-11-22 06:51:12 ot_train.py:723 Creating optimizer and scheduler
+INFO 2026-11-22 06:51:12 hedulers.py:156 Auto-scaling LR scheduler: num_training_steps (2) < num_decay_steps (100000). Scaling warmup: 1000 → 0, decay: 100000 → 2 (scale factor: 0.000)
+CAST_FP32 casted=863 param_dtypes=['torch.float32']
+CAST_FP32 casted=863 param_dtypes=['torch.float32']
+AUTO_WRAP ['BlockSparseMLP', 'Qwen2_5_VLDecoderLayer_with_MoE', 'Qwen2_5_VLVisionBlock']
+AUTO_WRAP ['BlockSparseMLP', 'Qwen2_5_VLDecoderLayer_with_MoE', 'Qwen2_5_VLVisionBlock']
+/opt/venv/lib/python3.12/site-packages/torch/distributed/device_mesh.py:746: UserWarning: Slicing a flattened dim from root mesh will be deprecated in PT 2.11. Users need to bookkeep the flattened mesh directly. 
+  sliced_mesh_layout = self._get_slice_mesh_layout(mesh_dim_names)
+/opt/venv/lib/python3.12/site-packages/torch/distributed/device_mesh.py:746: UserWarning: Slicing a flattened dim from root mesh will be deprecated in PT 2.11. Users need to bookkeep the flattened mesh directly. 
+  sliced_mesh_layout = self._get_slice_mesh_layout(mesh_dim_names)
+INFO 2026-11-22 06:51:12 ot_train.py:784 Output dir: /outputs/rocm-train/cover-wallx-fsdp2
+INFO 2026-11-22 06:51:12 ot_train.py:791 cfg.steps=2 (2)
+INFO 2026-11-22 06:51:12 ot_train.py:792 dataset.num_frames=454 (454)
+INFO 2026-11-22 06:51:12 ot_train.py:793 dataset.num_episodes=1
+INFO 2026-11-22 06:51:12 ot_train.py:794 Effective batch size: 1 x 2 dp workers x 1 grad accum = 2 (topology: dp_replicate=1, dp_shard=2)
+INFO 2026-11-22 06:51:12 ot_train.py:799 num_learnable_params=4224038912 (4B)
+INFO 2026-11-22 06:51:12 ot_train.py:800 num_total_params=4224038912 (4B)
+Training:   0%|          | 0/2 [00:00<?, ?step/s]INFO 2026-11-22 06:51:12 ot_train.py:848 Start offline training on a fixed dataset, with effective batch size: 2
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+INFO 2026-11-22 06:51:20 attention.py:69 Wall-X vision attention backend: sdpa (requested: auto)
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/outputs/rocm-train/jobs/fsdp_autowrap_train.py", line 73, in <module>
+[rank0]:     lerobot_train.main()
+[rank0]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+[rank0]:     train()
+[rank0]:   File "/lerobot/src/lerobot/configs/parser.py", line 468, in wrapper_inner
+[rank0]:     response = fn(cfg, *args, **kwargs)
+[rank0]:                ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 864, in train
+[rank0]:     train_tracker, _ = update_policy(
+[rank0]:                        ^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 265, in update_policy
+[rank0]:     loss, output_dict = policy(batch)
+[rank0]:                         ^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1884, in _call_impl
+[rank0]:     return inner()
+[rank0]:            ^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1832, in inner
+[rank0]:     result = forward_call(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/wall_x/modeling_wall_x.py", line 1897, in forward
+[rank0]:     outputs = self.model(**batch, mode="train")
+[rank0]:               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/wall_x/modeling_wall_x.py", line 1486, in forward
+[rank0]:     return self.train_step_forward(use_cache=False, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/wall_x/modeling_wall_x.py", line 943, in train_step_forward
+[rank0]:     outputs = self.model(
+[rank0]:               ^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/transformers/utils/generic.py", line 1081, in wrapper
+[rank0]:     output = func(self, *args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/transformers/utils/output_capturing.py", line 287, in wrapper
+[rank0]:     outputs = func(self, *args, **kwargs)
+[rank0]:               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/wall_x/qwen_model/qwen2_5_vl_moe.py", line 327, in forward
+[rank0]:     hidden_states = decoder_layer(
+[rank0]:                     ^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/transformers/modeling_layers.py", line 111, in __call__
+[rank0]:     return super().__call__(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1884, in _call_impl
+[rank0]:     return inner()
+[rank0]:            ^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1832, in inner
+[rank0]:     result = forward_call(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/wall_x/qwen_model/qwen2_5_vl_moe.py", line 196, in forward
+[rank0]:     hidden_states = self.moe(hidden_states, token_types)
+[rank0]:                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/wall_x/qwen_model/qwen2_5_vl_moe.py", line 140, in forward
+[rank0]:     output[batch_indices, seq_indices, :dim_input] = processed_hidden
+[rank0]:     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: RuntimeError: Index put requires the source and destination dtypes match, got Float for the destination and BFloat16 for the source.
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/outputs/rocm-train/jobs/fsdp_autowrap_train.py", line 73, in <module>
+[rank1]:     lerobot_train.main()
+[rank1]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+[rank1]:     train()
+[rank1]:   File "/lerobot/src/lerobot/configs/parser.py", line 468, in wrapper_inner
+[rank1]:     response = fn(cfg, *args, **kwargs)
+[rank1]:                ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 864, in train
+[rank1]:     train_tracker, _ = update_policy(
+[rank1]:                        ^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 265, in update_policy
+[rank1]:     loss, output_dict = policy(batch)
+[rank1]:                         ^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1884, in _call_impl
+[rank1]:     return inner()
+[rank1]:            ^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1832, in inner
+[rank1]:     result = forward_call(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/wall_x/modeling_wall_x.py", line 1897, in forward
+[rank1]:     outputs = self.model(**batch, mode="train")
+[rank1]:               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/wall_x/modeling_wall_x.py", line 1486, in forward
+[rank1]:     return self.train_step_forward(use_cache=False, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/wall_x/modeling_wall_x.py", line 943, in train_step_forward
+[rank1]:     outputs = self.model(
+[rank1]:               ^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/transformers/utils/generic.py", line 1081, in wrapper
+[rank1]:     output = func(self, *args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/transformers/utils/output_capturing.py", line 287, in wrapper
+[rank1]:     outputs = func(self, *args, **kwargs)
+[rank1]:               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/wall_x/qwen_model/qwen2_5_vl_moe.py", line 327, in forward
+[rank1]:     hidden_states = decoder_layer(
+[rank1]:                     ^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/transformers/modeling_layers.py", line 111, in __call__
+[rank1]:     return super().__call__(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1884, in _call_impl
+[rank1]:     return inner()
+[rank1]:            ^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1832, in inner
+[rank1]:     result = forward_call(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/wall_x/qwen_model/qwen2_5_vl_moe.py", line 196, in forward
+[rank1]:     hidden_states = self.moe(hidden_states, token_types)
+[rank1]:                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/wall_x/qwen_model/qwen2_5_vl_moe.py", line 140, in forward
+[rank1]:     output[batch_indices, seq_indices, :dim_input] = processed_hidden
+[rank1]:     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: RuntimeError: Index put requires the source and destination dtypes match, got Float for the destination and BFloat16 for the source.
+Training:   0%|          | 0/2 [00:09<?, ?step/s]
+E1122 06:51:23.553000 7 torch/distributed/elastic/multiprocessing/api.py:988] failed (exitcode: 1) local_rank: 0 (pid: 381) of binary: /opt/venv/bin/python
+Traceback (most recent call last):
+  File "/opt/venv/bin/accelerate", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/accelerate_cli.py", line 50, in main
+    args.func(args)
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/launch.py", line 1404, in launch_command
+    multi_gpu_launcher(args)
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/launch.py", line 1029, in multi_gpu_launcher
+    distrib_run.run(args)
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/run.py", line 1007, in run
+    elastic_launch(
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 191, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 371, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/outputs/rocm-train/jobs/fsdp_autowrap_train.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-11-22_06:51:23
+  host      : f8ae4dd86b3f
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 382) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-11-22_06:51:23
+  host      : f8ae4dd86b3f
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 381) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+RESULT cover-wallx-fsdp2 FAIL exit=1 seconds=181 dp_replicate=1 dp_shard=2 steps=[]
+----- 2026-11-22T06:51:29+00:00 BEGIN cover-fineart-fsdp2 devices=4,5 free=88G -----
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.9s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/apex/transformer/functional/fused_rope.py:49: UserWarning: Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0
+  warnings.warn("Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0", UserWarning)
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+INFO 2026-11-22 06:52:05 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': True,
+                         'gradient_as_bucket_view': False,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': 'bfloat16',
+                                                     'reduce_dtype': 'float32'},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 1,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'bf16'},
+ 'batch_size': 1,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': [0],
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'local/fineart_aloha3',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': None,
+             'root': '/outputs/rocm-train/fineart-aloha3',
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': None,
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': 'fineart_vla',
+ 'log_freq': 1,
+ 'max_eval_samples': 0,
+ 'num_workers': 0,
+ 'optimizer': {'betas': [0.9, 0.95],
+               'eps': 1e-08,
+               'fused': True,
+               'grad_clip_norm': 1.0,
+               'lr': 2.5e-05,
+               'type': 'adamw',
+               'weight_decay': 1e-10},
+ 'output_dir': '/outputs/rocm-train/cover-fineart-fsdp2',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 1,
+                 'dp_shard': 2},
+ 'peft': None,
+ 'persistent_workers': True,
+ 'policy': {'action_expert_lr_scale': 1.0,
+            'action_expert_variant': 'gemma_300m',
+            'action_feature_names': ['left_shoulder_pan',
+                                     'left_shoulder_lift',
+                                     'left_elbow_flex',
+                                     'left_wrist_angle',
+                                     'left_wrist_rotate',
+                                     'left_gripper',
+                                     'left_gripper_finger',
+                                     'right_shoulder_pan',
+                                     'right_shoulder_lift',
+                                     'right_elbow_flex',
+                                     'right_wrist_angle',
+                                     'right_wrist_rotate',
+                                     'right_gripper',
+                                     'right_gripper_finger'],
+            'action_tokenizer_name': 'lerobot/fast-action-tokenizer',
+            'auto_fit_fast_tokenizer': True,
+            'backbone_lr_scale': 1.0,
+            'chunk_size': 50,
+            'compile_mode': 'default',
+            'compile_model': True,
+            'conditioning_lr_scale': 1.0,
+            'device': 'cuda',
+            'dtype': 'float32',
+            'empty_cameras': 0,
+            'enable_fast_action_loss': True,
+            'fast_action_loss_weight': 1.0,
+            'fast_skip_tokens': 128,
+            'fast_tokenizer_cache_dir': '~/.cache/lerobot/fast_tokenizers',
+            'fast_tokenizer_fit_samples': 16384,
+            'fast_tokenizer_max_dim_rmse': 0.2,
+            'fast_tokenizer_max_reconstruction_rmse': 0.1,
+            'fast_tokenizer_validation_samples': 256,
+            'flow_loss_weight': 10.0,
+            'flow_num_repeats': 1,
+            'freeze_vision_encoder': False,
+            'gradient_checkpointing': True,
+            'image_resolution': [224, 224],
+            'input_features': {'observation.images.cam_high': {'shape': [3,
+                                                                         360,
+                                                                         640],
+                                                               'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.images.cam_left_wrist': {'shape': [3,
+                                                                               360,
+                                                                               640],
+                                                                     'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.images.cam_right_wrist': {'shape': [3,
+                                                                                360,
+                                                                                640],
+                                                                      'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.state': {'shape': [14],
+                                                     'type': <FeatureType.STATE: 'STATE'>}},
+            'knowledge_insulation': True,
+            'license': None,
+            'lm_head_lr_scale': 1.0,
+            'manual_attention_scope': 'all',
+            'max_action_dim': 32,
+            'max_action_tokens': 384,
+            'max_period': 4.0,
+            'max_state_dim': 32,
+            'memory_frames': 6,
+            'memory_scratchpad': False,
+            'memory_stride': 30,
+            'memory_temporal_attention_every': 4,
+            'min_period': 0.004,
+            'n_action_steps': 50,
+            'n_obs_steps': 1,
+            'normalization_mapping': {'ACTION': <NormalizationMode.QUANTILES: 'QUANTILES'>,
+                                      'STATE': <NormalizationMode.QUANTILES: 'QUANTILES'>,
+                                      'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>},
+            'num_inference_steps': 10,
+            'optimizer_betas': [0.9, 0.95],
+            'optimizer_eps': 1e-08,
+            'optimizer_foreach': False,
+            'optimizer_fused': True,
+            'optimizer_grad_clip_norm': 1.0,
+            'optimizer_lr': 2.5e-05,
+            'optimizer_weight_decay': 1e-10,
+            'output_features': {'action': {'shape': [14],
+                                           'type': <FeatureType.ACTION: 'ACTION'>}},
+            'paligemma_variant': 'gemma_2b',
+            'pretrained_path': 'lerobot/fineart_vla_base',
+            'pretrained_revision': None,
+            'private': None,
+            'push_to_hub': False,
+            'recipe': {'bindings': None,
+                       'blend': {'high_level_subtask': {'bindings': None,
+                                                        'blend': None,
+                                                        'messages': [{'content': '${task}',
+                                                                      'if_present': None,
+                                                                      'role': 'user',
+                                                                      'stream': 'high_level',
+                                                                      'target': False,
+                                                                      'tool_calls_from': None},
+                                                                     {'content': '${subtask}',
+                                                                      'if_present': 'subtask',
+                                                                      'role': 'assistant',
+                                                                      'stream': 'high_level',
+                                                                      'target': True,
+                                                                      'tool_calls_from': None}],
+                                                        'route': None,
+                                                        'weight': 0.3},
+                                 'low_level_execution': {'bindings': None,
+                                                         'blend': None,
+                                                         'messages': [{'content': '${subtask}',
+                                                                       'if_present': 'subtask',
+                                                                       'role': 'user',
+                                                                       'stream': 'low_level',
+                                                                       'target': False,
+                                                                       'tool_calls_from': None}],
+                                                         'route': None,
+                                                         'weight': 0.7}},
+                       'messages': None,
+                       'route': None,
+                       'weight': None},
+            'recipe_path': None,
+            'relative_exclude_joints': ['gripper'],
+            'repo_id': None,
+            'rtc_config': None,
+            'rtc_training_max_delay': 0,
+            'scheduler_decay_lr': 5e-06,
+            'scheduler_decay_steps': 300000,
+            'scheduler_warmup_steps': 2000,
+            'tags': None,
+            'text_ce_z_loss_weight': 0.0001,
+            'text_loss_weight': 1.0,
+            'text_tokenizer_name': 'google/paligemma-3b-pt-224',
+            'time_sampling_beta_alpha': 1.5,
+            'time_sampling_beta_beta': 1.0,
+            'time_sampling_offset': 0.001,
+            'time_sampling_scale': 0.999,
+            'tokenizer_max_length': 128,
+            'train_expert_only': False,
+            'type': 'fineart_vla',
+            'unfreeze_lm_head': True,
+            'use_amp': False,
+            'use_compiled_text_ce': True,
+            'use_compiled_vision': False,
+            'use_flashrt_adarms': False,
+            'use_flex_attention': False,
+            'use_liger_kernels': False,
+            'use_manual_attention': False,
+            'use_peft': False,
+            'use_proprioceptive_memory': False,
+            'use_relative_actions': False,
+            'use_visual_memory': False},
+ 'prefetch_factor': 4,
+ 'rename_map': {},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 2,
+ 'scheduler': {'decay_lr': 5e-06,
+               'num_decay_steps': 300000,
+               'num_warmup_steps': 2000,
+               'peak_lr': 2.5e-05,
+               'type': 'cosine_decay_with_warmup'},
+ 'seed': 1000,
+ 'steps': 2,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-22 06:52:05 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-22 06:52:05 ot_train.py:589 Creating dataset
+WARNING 2026-11-22 06:52:05 ts/utils.py:270 Unknown fields in DatasetInfo: ['files_size_in_mb']. These will be ignored.
+WARNING 2026-11-22 06:52:05 ts/utils.py:270 Unknown fields in DatasetInfo: ['files_size_in_mb']. These will be ignored.
+INFO 2026-11-22 06:52:08 ot_train.py:628 Creating policy
+INFO 2026-11-22 06:53:33 ing_pi05.py:700 Enabled gradient checkpointing for PI05Pytorch model
+INFO 2026-11-22 06:53:35 eart_vla.py:740 FineART-VLA: knowledge insulation enabled — action→VLM K/V gradients are blocked in attention.
+WARNING 2026-11-22 06:53:38 ot_train.py:657 Language recipe fine-tuning rebuilds processors from the active configuration; saved processors from lerobot/fineart_vla_base will not be loaded.
+INFO 2026-11-22 06:53:38 okenizer.py:317 FAST tokenizer cache miss — fitting on dataset=local/fineart_aloha3 base=lerobot/fast-action-tokenizer n_samples=16384 chunk_size=50 → /root/.cache/lerobot/fast_tokenizers/d07b9f8a11e4ba09
+INFO 2026-11-22 06:53:38 okenizer.py:424 FAST fit: collected 16640 chunks of shape (50, 14) from 23 episodes
+
+
+
+INFO 2026-11-22 06:53:40 okenizer.py:470 FAST fit: saved fitted tokenizer to /root/.cache/lerobot/fast_tokenizers/d07b9f8a11e4ba09
+INFO 2026-11-22 06:53:41 ot_train.py:723 Creating optimizer and scheduler
+INFO 2026-11-22 06:53:41 hedulers.py:156 Auto-scaling LR scheduler: num_training_steps (2) < num_decay_steps (300000). Scaling warmup: 2000 → 0, decay: 300000 → 2 (scale factor: 0.000)
+AUTO_WRAP ['SiglipEncoderLayer', '_PiGemmaDecoderLayerBase']
+AUTO_WRAP ['SiglipEncoderLayer', '_PiGemmaDecoderLayerBase']
+/opt/venv/lib/python3.12/site-packages/torch/distributed/device_mesh.py:746: UserWarning: Slicing a flattened dim from root mesh will be deprecated in PT 2.11. Users need to bookkeep the flattened mesh directly. 
+  sliced_mesh_layout = self._get_slice_mesh_layout(mesh_dim_names)
+/opt/venv/lib/python3.12/site-packages/torch/distributed/device_mesh.py:746: UserWarning: Slicing a flattened dim from root mesh will be deprecated in PT 2.11. Users need to bookkeep the flattened mesh directly. 
+  sliced_mesh_layout = self._get_slice_mesh_layout(mesh_dim_names)
+INFO 2026-11-22 06:53:42 ot_train.py:784 Output dir: /outputs/rocm-train/cover-fineart-fsdp2
+INFO 2026-11-22 06:53:42 ot_train.py:791 cfg.steps=2 (2)
+INFO 2026-11-22 06:53:42 ot_train.py:792 dataset.num_frames=400 (400)
+INFO 2026-11-22 06:53:42 ot_train.py:793 dataset.num_episodes=1
+INFO 2026-11-22 06:53:42 ot_train.py:794 Effective batch size: 1 x 2 dp workers x 1 grad accum = 2 (topology: dp_replicate=1, dp_shard=2)
+INFO 2026-11-22 06:53:42 ot_train.py:799 num_learnable_params=4143404816 (4B)
+INFO 2026-11-22 06:53:42 ot_train.py:800 num_total_params=4143404816 (4B)
+Training:   0%|          | 0/2 [00:00<?, ?step/s]INFO 2026-11-22 06:53:42 ot_train.py:848 Start offline training on a fixed dataset, with effective batch size: 2
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/outputs/rocm-train/jobs/fsdp_autowrap_train.py", line 73, in <module>
+[rank0]:     lerobot_train.main()
+[rank0]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+[rank0]:     train()
+[rank0]:   File "/lerobot/src/lerobot/configs/parser.py", line 468, in wrapper_inner
+[rank0]:     response = fn(cfg, *args, **kwargs)
+[rank0]:                ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 864, in train
+[rank0]:     train_tracker, _ = update_policy(
+[rank0]:                        ^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 265, in update_policy
+[rank0]:     loss, output_dict = policy(batch)
+[rank0]:                         ^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1884, in _call_impl
+[rank0]:     return inner()
+[rank0]:            ^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1832, in inner
+[rank0]:     result = forward_call(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/fineart_vla/modeling_fineart_vla.py", line 832, in forward
+[rank0]:     flow_loss, text_loss, fast_loss = self._compute_all_losses_fused(
+[rank0]:                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/fineart_vla/modeling_fineart_vla.py", line 975, in _compute_all_losses_fused
+[rank0]:     prefix_out, flow_loss = self._combined_prefix_and_flow(
+[rank0]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/fineart_vla/modeling_fineart_vla.py", line 1047, in _combined_prefix_and_flow
+[rank0]:     (prefix_out, suffix_out), _ = self.model.paligemma_with_expert.forward(
+[rank0]:                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/pi05/modeling_pi05.py", line 572, in forward
+[rank0]:     inputs_embeds = torch.utils.checkpoint.checkpoint(
+[rank0]:                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/_compile.py", line 54, in inner
+[rank0]:     return disable_fn(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", line 1298, in _fn
+[rank0]:     return fn(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/utils/checkpoint.py", line 518, in checkpoint
+[rank0]:     ret = function(*args, **kwargs)
+[rank0]:           ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/pi05/modeling_pi05.py", line 237, in compute_layer_complete
+[rank0]:     hidden_states, gate = layernorm_forward(layer.input_layernorm, hidden_states, adarms_cond[i])
+[rank0]:                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/pi_gemma.py", line 83, in layernorm_forward
+[rank0]:     return layernorm(x)
+[rank0]:            ^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/lerobot/src/lerobot/policies/pi_gemma.py", line 125, in forward
+[rank0]:     normed = normed * (1.0 + self.weight.float())
+[rank0]:              ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[rank0]: RuntimeError: aten.mul.Tensor got mixed torch.Tensor and DTensor, need to convert all torch.Tensor to DTensor before calling distributed operators!
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/outputs/rocm-train/jobs/fsdp_autowrap_train.py", line 73, in <module>
+[rank1]:     lerobot_train.main()
+[rank1]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+[rank1]:     train()
+[rank1]:   File "/lerobot/src/lerobot/configs/parser.py", line 468, in wrapper_inner
+[rank1]:     response = fn(cfg, *args, **kwargs)
+[rank1]:                ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 864, in train
+[rank1]:     train_tracker, _ = update_policy(
+[rank1]:                        ^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/scripts/lerobot_train.py", line 265, in update_policy
+[rank1]:     loss, output_dict = policy(batch)
+[rank1]:                         ^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1884, in _call_impl
+[rank1]:     return inner()
+[rank1]:            ^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1832, in inner
+[rank1]:     result = forward_call(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/fineart_vla/modeling_fineart_vla.py", line 832, in forward
+[rank1]:     flow_loss, text_loss, fast_loss = self._compute_all_losses_fused(
+[rank1]:                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/fineart_vla/modeling_fineart_vla.py", line 975, in _compute_all_losses_fused
+[rank1]:     prefix_out, flow_loss = self._combined_prefix_and_flow(
+[rank1]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/fineart_vla/modeling_fineart_vla.py", line 1047, in _combined_prefix_and_flow
+[rank1]:     (prefix_out, suffix_out), _ = self.model.paligemma_with_expert.forward(
+[rank1]:                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/pi05/modeling_pi05.py", line 572, in forward
+[rank1]:     inputs_embeds = torch.utils.checkpoint.checkpoint(
+[rank1]:                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/_compile.py", line 54, in inner
+[rank1]:     return disable_fn(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", line 1298, in _fn
+[rank1]:     return fn(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/utils/checkpoint.py", line 518, in checkpoint
+[rank1]:     ret = function(*args, **kwargs)
+[rank1]:           ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/pi05/modeling_pi05.py", line 237, in compute_layer_complete
+[rank1]:     hidden_states, gate = layernorm_forward(layer.input_layernorm, hidden_states, adarms_cond[i])
+[rank1]:                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/pi_gemma.py", line 83, in layernorm_forward
+[rank1]:     return layernorm(x)
+[rank1]:            ^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/lerobot/src/lerobot/policies/pi_gemma.py", line 125, in forward
+[rank1]:     normed = normed * (1.0 + self.weight.float())
+[rank1]:              ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[rank1]: RuntimeError: aten.mul.Tensor got mixed torch.Tensor and DTensor, need to convert all torch.Tensor to DTensor before calling distributed operators!
+Training:   0%|          | 0/2 [00:09<?, ?step/s]
+E1122 06:53:54.105000 6 torch/distributed/elastic/multiprocessing/api.py:988] failed (exitcode: 1) local_rank: 0 (pid: 380) of binary: /opt/venv/bin/python
+Traceback (most recent call last):
+  File "/opt/venv/bin/accelerate", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/accelerate_cli.py", line 50, in main
+    args.func(args)
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/launch.py", line 1404, in launch_command
+    multi_gpu_launcher(args)
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/launch.py", line 1029, in multi_gpu_launcher
+    distrib_run.run(args)
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/run.py", line 1007, in run
+    elastic_launch(
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 191, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 371, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/outputs/rocm-train/jobs/fsdp_autowrap_train.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-11-22_06:53:54
+  host      : ad5c9b654308
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 381) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-11-22_06:53:54
+  host      : ad5c9b654308
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 380) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+RESULT cover-fineart-fsdp2 FAIL exit=1 seconds=146 dp_replicate=1 dp_shard=2 steps=[]
+----- 2026-11-22T06:53:55+00:00 BEGIN flux3-pr5213-fsdp2 devices=4,5 free=109G -----
+Using Python 3.12.3 environment at: /opt/venv
+Resolved 1 package in 216ms
+Downloading torchao (3.2MiB)
+ Downloaded torchao
+Prepared 1 package in 179ms
+Uninstalled 1 package in 29ms
+Installed 1 package in 22ms
+ - torchao==0.15.0+gite9c7bead9 (from file:///workspace/ao)
+ + torchao==0.18.0
+lerobot from /pr/src/lerobot/__init__.py natten available False
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.5s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/apex/transformer/functional/fused_rope.py:49: UserWarning: Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0
+  warnings.warn("Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0", UserWarning)
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+/opt/venv/lib/python3.12/site-packages/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+/opt/venv/lib/python3.12/site-packages/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+W1122 06:54:24.014000 682 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 06:54:24.014000 681 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 06:54:24.080000 682 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 06:54:24.080000 681 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+INFO 2026-11-22 06:54:31 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': True,
+                         'gradient_as_bucket_view': False,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': None,
+                                                     'reduce_dtype': None},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 1,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'bf16'},
+ 'batch_size': 1,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': [0],
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'lerobot/svla_so100_pickplace',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': None,
+             'root': None,
+             'storage_options': None,
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': None,
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': 'flux3',
+ 'log_freq': 1,
+ 'max_eval_samples': 0,
+ 'num_workers': 0,
+ 'optimizer': {'betas': [0.9, 0.999],
+               'eps': 1e-08,
+               'fused': None,
+               'grad_clip_norm': 1.0,
+               'lr': 0.0001,
+               'type': 'adamw',
+               'weight_decay': 0.0},
+ 'output_dir': '/outputs/rocm-train/flux3-pr5213-fsdp2',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 1,
+                 'dp_shard': 2},
+ 'peft': {'full_training_modules': None,
+          'init_type': None,
+          'lora_alpha': 8,
+          'method_type': 'LORA',
+          'r': 8,
+          'target_modules': None},
+ 'persistent_workers': True,
+ 'policy': {'action_channel_weights': [1.0, 1.0, 1.0, 1.0, 1.0, 2.0],
+            'action_feature_names': None,
+            'action_loss_weight': 0.5,
+            'action_modality': 'action',
+            'action_representation': 'delta',
+            'action_scale': 2.0,
+            'attn_mode': 'torch',
+            'augment': False,
+            'camera_keys': ['observation.images.scene',
+                            'observation.images.wrist'],
+            'camera_layout': 'side_by_side',
+            'canvas_hw': [256, 512],
+            'caption_dropout': 0.1,
+            'chunk_size': 42,
+            'compile_model': False,
+            'condition_on_past_actions': True,
+            'conditioning': 'history',
+            'conditioning_noise_max': 0.2,
+            'delta_absolute_dims': [-1],
+            'device': 'cuda',
+            'dit_config': None,
+            'dtype': 'bfloat16',
+            'fps': 30.0,
+            'gradient_checkpointing': False,
+            'gripper_flip_dims': [],
+            'guidance_scale': 3.0,
+            'guidance_scale_action': None,
+            'head_init_seed': 0,
+            'history_snapshots': 2,
+            'inference_seed': 42,
+            'input_features': {'observation.images.scene': {'shape': [3,
+                                                                      256,
+                                                                      256],
+                                                            'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.images.wrist': {'shape': [3,
+                                                                      256,
+                                                                      256],
+                                                            'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.state': {'shape': [6],
+                                                     'type': <FeatureType.STATE: 'STATE'>}},
+            'license': None,
+            'loss_reduction': 'modalities',
+            'n_action_steps': 32,
+            'n_obs_steps': 8,
+            'normalization_clip': 6.0,
+            'normalization_mapping': {'ACTION': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'STATE': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>},
+            'normalization_stats': None,
+            'num_inference_steps': 4,
+            'optimizer_betas': [0.9, 0.999],
+            'optimizer_eps': 1e-08,
+            'optimizer_grad_clip_norm': 1.0,
+            'optimizer_lr': 0.0001,
+            'optimizer_lr_heads_multiplier': 5.0,
+            'optimizer_weight_decay': 0.0,
+            'output_features': {'action': {'shape': [6],
+                                           'type': <FeatureType.ACTION: 'ACTION'>}},
+            'packer': None,
+            'pretrained_path': 'black-forest-labs/flux-3-action-so101',
+            'pretrained_revision': None,
+            'private': None,
+            'push_to_hub': False,
+            'relative_exclude_joints': ['gripper'],
+            'repo_id': None,
+            'sampler': 'euler',
+            'sampler_shift': 6.93,
+            'scheduler_cooldown_steps': 0,
+            'scheduler_decay_steps': 0,
+            'scheduler_freeze_backbone_steps': 0,
+            'scheduler_warmup_steps': 0,
+            'scheduler_warmup_steps_heads': 0,
+            'separate_timesteps': True,
+            'tags': None,
+            'text_encoder_id': 'black-forest-labs/flux-3-action-base:text_encoder@62878e2925e59b7a89ec14463ce89932624c490d',
+            'text_fixed_length': 320,
+            'train_timestep_shift': 42.0,
+            'train_timestep_width': 0.75,
+            'trunk_weights': None,
+            'type': 'flux3',
+            'use_amp': False,
+            'use_peft': True,
+            'use_relative_actions': False,
+            'video_logit_mean': 1.08,
+            'video_logit_std': 1.0,
+            'video_loss_weight': 1.0,
+            'video_position_fps': 24.0,
+            'video_vae_id': 'black-forest-labs/flux-3-action-base:video_vae.safetensors@62878e2925e59b7a89ec14463ce89932624c490d'},
+ 'prefetch_factor': 4,
+ 'rename_map': {'observation.images.top': 'observation.images.scene'},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 2,
+ 'scheduler': {'cooldown_steps': 0,
+               'decay_steps': 0,
+               'freeze_steps': 0,
+               'num_warmup_steps': 0,
+               'type': 'frozen_warmup_constant',
+               'warmup_steps_heads': 0},
+ 'seed': 1000,
+ 'steps': 2,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-22 06:54:31 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-22 06:54:31 ot_train.py:589 Creating dataset
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1427.97it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1890.18it/s]
+INFO 2026-11-22 06:54:33 ot_train.py:628 Creating policy
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1625.38it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2025.26it/s]
+Loading weights:   0%|          | 0/713 [00:00<?, ?it/s]Loading weights:   0%|          | 0/713 [00:00<?, ?it/s]Loading weights: 100%|██████████| 713/713 [00:00<00:00, 11237.09it/s]
+Loading weights: 100%|██████████| 713/713 [00:00<00:00, 11872.68it/s]
+INFO 2026-11-22 06:55:17 ot_train.py:646 Using PEFT! Wrapping model.
+INFO 2026-11-22 06:55:17 etrained.py:645 Wrapped flux3 with PEFT (LoraConfig)
+AUTO_WRAP ['ModeBlock', 'SingleStreamBlock']
+INFO 2026-11-22 06:55:20 ot_train.py:723 Creating optimizer and scheduler
+AUTO_WRAP ['ModeBlock', 'SingleStreamBlock']
+/opt/venv/lib/python3.12/site-packages/torch/distributed/device_mesh.py:746: UserWarning: Slicing a flattened dim from root mesh will be deprecated in PT 2.11. Users need to bookkeep the flattened mesh directly. 
+  sliced_mesh_layout = self._get_slice_mesh_layout(mesh_dim_names)
+/opt/venv/lib/python3.12/site-packages/torch/distributed/device_mesh.py:746: UserWarning: Slicing a flattened dim from root mesh will be deprecated in PT 2.11. Users need to bookkeep the flattened mesh directly. 
+  sliced_mesh_layout = self._get_slice_mesh_layout(mesh_dim_names)
+INFO 2026-11-22 06:55:20 dp_utils.py:822 [RANK 0] FSDP upcast of low precision parameters to fp32 (since mixed_precision != 'no') may affect the precision of model checkpoints. This effects 6 parameters: ['base_model.model.dit.emb_in.action.modules_to_save.default.weight', 'base_model.model.dit.emb_in.action_cond.modules_to_save.default.weight', 'base_model.model.dit.final_layer.action.modules_to_save.default.linear.weight', 'base_model.model.dit.final_layer.action.modules_to_save.default.adaLN_modulation.1.weight', 'base_model.model.dit.final_layer.action_cond.modules_to_save.default.linear.weight', 'base_model.model.dit.final_layer.action_cond.modules_to_save.default.adaLN_modulation.1.weight']...
+INFO 2026-11-22 06:55:20 ot_train.py:784 Output dir: /outputs/rocm-train/flux3-pr5213-fsdp2
+INFO 2026-11-22 06:55:20 ot_train.py:791 cfg.steps=2 (2)
+INFO 2026-11-22 06:55:20 ot_train.py:792 dataset.num_frames=454 (454)
+INFO 2026-11-22 06:55:20 ot_train.py:793 dataset.num_episodes=1
+INFO 2026-11-22 06:55:20 ot_train.py:794 Effective batch size: 1 x 2 dp workers x 1 grad accum = 2 (topology: dp_replicate=1, dp_shard=2)
+INFO 2026-11-22 06:55:20 ot_train.py:799 num_learnable_params=62607360 (63M)
+INFO 2026-11-22 06:55:20 ot_train.py:800 num_total_params=7009678592 (7B)
+Training:   0%|          | 0/2 [00:00<?, ?step/s]INFO 2026-11-22 06:55:20 ot_train.py:848 Start offline training on a fixed dataset, with effective batch size: 2
+WARNING 2026-11-22 06:55:22 ideo_vae.py:927 NATTEN is not installed, so the Video VAE computes its attention on CUDA in plain PyTorch, which is much slower. See docs/source/flux3.mdx to install NATTEN.
+Training:  50%|█████     | 1/2 [00:19<00:19, 19.40s/step]INFO 2026-11-22 06:55:40 ot_train.py:894 step:1 smpl:2 ep:0 epch:0.00 loss:0.135 grdn:0.515 lr:1.0e-04 data_s:0.304 prep_s:0.139 updt_s:19.054 step_s:19.500 smp/s:0 mem_gb:30.26 video_mse:0.121 action_mse:0.039 n_valid_windows:1.000
+Training: 100%|██████████| 2/2 [00:21<00:00,  9.21s/step]INFO 2026-11-22 06:55:42 ot_train.py:894 step:2 smpl:4 ep:0 epch:0.01 loss:0.181 grdn:1.160 lr:1.0e-04 data_s:0.171 prep_s:0.001 updt_s:1.806 step_s:1.978 smp/s:1 mem_gb:30.50 video_mse:0.116 action_mse:0.141 n_valid_windows:1.000
+INFO 2026-11-22 06:55:42 ot_train.py:936 Checkpoint policy after step 2
+INFO 2026-11-22 06:55:42 dp_utils.py:346 [RANK 0] Saving Optimizer state to /outputs/rocm-train/flux3-pr5213-fsdp2/checkpoints/000002/training_state/optimizer_0
+INFO 2026-11-22 06:55:43 dp_utils.py:352 [RANK 0] Optimizer state saved in /outputs/rocm-train/flux3-pr5213-fsdp2/checkpoints/000002/training_state/optimizer_0
+Training: 100%|██████████| 2/2 [00:23<00:00, 11.56s/step]
+INFO 2026-11-22 06:55:43 t_train.py:1026 End of training
+RESULT flux3-pr5213-fsdp2 PASS exit=0 seconds=112 dp_replicate=1 dp_shard=2 steps=[1 2]
+QUEUE END 2026-11-22T06:55:47+00:00 /dev/vda1       2.0T  1.9T  109G  95% /

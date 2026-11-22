@@ -1,6 +1,6 @@
 # LeRobot 0.7 ROCm 训练 smoke 报告
 
-更新：2026-11-22。数据来自 DOUni `/data/lerobot/outputs/rocm-train/results.txt` 和各批次日志。本文件在 `tmp/`（被 `.gitignore` 忽略），用 `git add -f` 提交在本地分支 `rocm-train`，没有推送。
+更新：2026-11-22。数据来自 DOUni `/data/lerobot/outputs/rocm-train/results.txt` 和各批次日志。文中的 `tmp/rocm-train/` 是验证时在 LeRobot 检出里的工作目录；本仓库里报告在 `reports/`，脚本在 `scripts/`（分布式部分在 `scripts/dist/`），上游原文在 `upstream/`，日志在 `logs/`。主机地址、内部路径已替换为占位。
 
 ## 当前状态
 
@@ -10,27 +10,25 @@
 
 | 类别 | 模型 | 单卡 | 多卡 | 节 |
 |---|---|---|---|---|
-| 策略 | Diffusion | PASS | DDP 2 / DDP 8 | 5、7 |
-| 策略 | ACT | PASS | FSDP 2 / FSDP 8 | 5、7 |
-| 策略 | DiT（`multi_task_dit`） | PASS | DDP 2 | 5、7 |
-| 策略 | SmolVLA | PASS | DDP 2 | 5 |
-| 策略 | X-VLA | PASS | DDP 2 | 5 |
-| 策略 | π0 / π0.5 / π0-FAST | PASS（π0 含 `compile_model`） | DDP 2 | 5、7 |
-| 策略 | EO1 | PASS | DDP 2 | 5 |
-| 策略 | G05（含 CoT） | PASS | DDP 2 | 5、8 |
-| 策略 | WALL-OSS 0.5（`wall_oss_05`） | PASS | DDP 2 / FSDP 2 | 5 |
-| 策略 | FastWAM | PASS | DDP 2 / FSDP 2 | 5 |
-| 策略 | Cosmos3 Edge / Nano | PASS | DDP 2 / FSDP 2 | 5 |
-| 策略 | LaWAM | PASS | DDP 2 / FSDP 2 | 5 |
-| 策略 | LingBot-VLA v2 | PASS | DDP 2 / FSDP 2 | 5 |
-| 策略 | MolmoAct2（fft 与 LoRA） | PASS | DDP 2 | 5、9 |
-| 策略 | VQ-BeT、TD-MPC、DM05、EVO1、VLA-JEPA、Long-WAM、LingBot-VA（LoRA）、FineART-VLA、GR00T N1.7、WALL-OSS flow（`wall_x`） | PASS | DDP 2 | 11、11.2 |
-| 策略 | FLUX3（LoRA） | 当前 `main` BLOCKED；上游 PR #5213 PASS | PR #5213 DDP 2 | 10、11.2 |
+| 策略 | Diffusion | PASS | DDP 2 / DDP 8 / FSDP 2 | 5、7、13 |
+| 策略 | ACT | PASS | DDP 2 / FSDP 2 / FSDP 8，DDP 和 FSDP resume、换分片 resume | 5、7、13 |
+| 策略 | DiT（`multi_task_dit`） | PASS | DDP 2 / 4、FSDP 2 / 4、HSDP 2×2 / 4×2，特性测试见第 13 节 | 5、7、13 |
+| 策略 | SmolVLA | PASS | DDP 2 / 4 / 8、FSDP 2、HSDP 2×2 | 5、13 |
+| 策略 | X-VLA、EVO1、VLA-JEPA、VQ-BeT、TD-MPC | PASS | DDP 2 / FSDP 2 | 5、11.2、13 |
+| 策略 | π0 | PASS（含 `compile_model`） | DDP 2 / FSDP 2 / FSDP 8 / HSDP 2×4 | 5、7、13 |
+| 策略 | π0.5、π0-FAST、EO1 | PASS | DDP 2 / FSDP 2 | 5、13 |
+| 策略 | GR00T N1.7 | PASS | DDP 2 / DDP 8 / FSDP 2 | 11.2、13 |
+| 策略 | MolmoAct2（fft 与 LoRA） | PASS | DDP 2 / DDP 8 / FSDP 2 | 5、9、13 |
+| 策略 | DM05、LingBot-VA（LoRA） | PASS | DDP 2 / FSDP 2 | 11.2、13 |
+| 策略 | WALL-OSS 0.5（`wall_oss_05`）、FastWAM、Cosmos3 | PASS | DDP 2 / FSDP 2；FSDP 8（WALL-OSS 0.5、FastWAM、Cosmos3 Edge） | 5、13 |
+| 策略 | LaWAM、LingBot-VLA v2 | PASS | DDP 2 / FSDP 2 | 5 |
+| 策略 | G05（含 CoT）、FineART-VLA、WALL-OSS flow（`wall_x`）、Long-WAM | PASS | DDP 2；FSDP 失败（层内混合 dtype 或绕过 `forward` 调用子模块，见 13.3） | 5、8、11.2、13 |
+| 策略 | FLUX3（LoRA） | 当前 `main` BLOCKED；上游 PR #5213 PASS | PR #5213 DDP 2 / FSDP 2 | 10、11.2、13 |
 | 奖励模型 | SARM、reward_classifier | PASS（训练） | — | 11 |
 | 奖励模型 | Robometer、TOPReward | 零样本推理 PASS；RA-BC 打分 + SmolVLA 加权训练 PASS | — | 11.1 |
 | RL | HIL-SERL（Gaussian actor + SAC） | PASS | — | 11 |
 
-训练特性：从 checkpoint 恢复、训练中仿真评估（MuJoCo，OSMesa 渲染）、`num_workers=2`、`torch.compile`、bf16 混合精度、PEFT LoRA 都已通过，见第 4、7 节。
+训练特性：从 checkpoint 恢复、训练中仿真评估（MuJoCo，OSMesa 渲染）、`num_workers=2`、`torch.compile`、bf16 混合精度、PEFT LoRA 都已通过，见第 4、7 节。分布式特性（梯度累积、HSDP、fp16 / bf16 / FSDP 混合精度策略、CPU offload、DDP 选项、分布式 resume、换分片 resume、DCP checkpoint 格式、多卡评估）见第 13 节。
 
 未完成：多机训练（两台机器都没有 InfiniBand，待后续）。推 Hub 不做（smoke checkpoint 不值得上传）。
 
@@ -424,3 +422,83 @@ PR 描述、留言和 issue 草稿在 `tmp/rocm-train/upstream/`。2026-11-20 �
 | NATTEN issue | 已提交 [SHI-Labs/NATTEN#354](https://github.com/SHI-Labs/NATTEN/issues/354)（alexhegit，2026-11-22）。提交约一分钟后更正了正文：T=42 因果的独立复现是通过的 | ROCm 上 `get_device_cc()` 返回 0，编译版 flex 被禁用；强制打开后 3D 大尺寸 mask 有时启动失败，成功时编译也很慢。纯 NATTEN 复现：T=8 OK 42.9 s；T=42 非因果 `CUDA driver error: 1`；T=42 因果 OK 861.4 s。FLUX3 VAE 内同形状因果两次失败。最新版 0.21.7 和 master 仍是同样的 `get_device_cc()` |
 | LeRobot ROCm 文档 | 本地分支 `docs/rocm-known-issues`（worktree `~/Repo/lerobot-rocm-docs`），commit `77beb7e2`，基于 `origin/main`，未推送 | 在 `docs/source/torch_accelerators.mdx` 的 ROCm 小节下加「Known issues on ROCm」（render 组 gid、MIOpen 首步慢、MuJoCo 用 OSMesa、LoRA 要 `torchao>0.16`、没有 FlashAttention、FLUX3 需要 NATTEN）和「Policies trained on ROCm」。prettier 和 typos 通过 |
 | PyTorch issue | 不提 | 纯 PyTorch 的 `torch.compile(create_block_mask)`，1-D 局部窗口 mask，65,536 / 262,144 / 1,048,576 token 都通过（13.4 / 4.0 / 7.1 s）。问题集中在 NATTEN 的 3D mask，先在 NATTEN issue 里说明 |
+## 13. 分布式训练特性（2026-11-22 14:00–20:15，UTC+8）
+
+脚本在 `tmp/rocm-train/dist/`：通用队列 `run-dist-queue.sh`（由单卡脚本生成多卡任务，额外参数接在 `--output_dir` 之后）、各队列文件 `queue-*.txt`、resume 与拓扑任务生成器、FSDP 包装 `fsdp_autowrap_train.py`、缓存清理 `prune-hf-models.py`。日志 DOUni `run-dist-{a,b,a2,c,d,e,f,g1,g2,h1,h2,i,j,k}.log`。每项 PASS 后删除 checkpoint。69 项（另有 3 项诊断），最终 59 PASS、10 FAIL。`results.txt` 保留每次尝试，以同名最后一条为准。
+
+### 13.1 FSDP 切分单元
+
+- 只有 ACT、WALL-OSS 0.5、FastWAM、LingBot-VLA v2、LaWAM、Cosmos3 声明了 `_fsdp_wrap_modules`。其他策略必须在命令行给切分规则。
+- **`--accelerator.fsdp.min_num_params`（按参数量切分）不可用**：accelerate 的 FSDP2 size-based 策略会把整个 `nn.ModuleList` 当成单元，`fully_shard does not support containers that do not implement forward`。DiT、VQ-BeT、DiT 的梯度累积 / HSDP / fp16 / cpu_offload 等首轮都因此失败。与 ROCm 无关。
+- 改用 `--accelerator.fsdp.wrap_modules`（按类名）。为了不逐个手查，`fsdp_autowrap_train.py` 在 `accelerator.prepare` 前把 `ModuleList` 里重复出现、带子模块的层类作为单元，并打印 `AUTO_WRAP [...]`，与手写 `wrap_modules` 等价。跳过叶子层（`Linear` 等），否则会拆开 tied 的 `lm_head`。
+- 可选开关：`FSDP_CAST_DTYPE=float32|bfloat16` 在切分前把参数统一成一种 dtype；`FSDP_DTYPE_REPORT=1` 打印每个单元和根单元的 dtype 分布。
+
+各模型最终使用的单元和精度：
+
+| 模型 | FSDP 单元 | 精度处理 |
+|---|---|---|
+| DiT | `CLIPEncoderLayer`、`TransformerBlock` | — |
+| VQ-BeT | `Block` | — |
+| TD-MPC | `Sequential` | — |
+| X-VLA | `BartEncoderLayer`、`Florence2VisionBlock`、`Florence2VisionConvEmbed`、`TransformerBlock` | — |
+| EVO1 | `BasicTransformerBlock`、`InternVLVisionLayer`、`Qwen2DecoderLayer` | — |
+| VLA-JEPA | `BasicTransformerBlock`、`Qwen3VLTextDecoderLayer`、`Qwen3VLVisionBlock`、`Qwen3VLVisionPatchMerger` | — |
+| GR00T N1.7 | 自动 | — |
+| LingBot-VA（LoRA） | 自动 | — |
+| π0-FAST | `SiglipEncoderLayer`、`_PiGemmaDecoderLayerBase` | `--policy.dtype=float32 --accelerator.mixed_precision=bf16` |
+| π0、π0.5 | 只 `SiglipEncoderLayer` | 同上 |
+| SmolVLA | 只 `SmolVLMEncoderLayer` | `FSDP_CAST_DTYPE=float32` + bf16 |
+| DM05 | 只 `SiglipEncoderLayer` | fp32 + bf16 |
+| EO1 | `Qwen2_5_VLDecoderLayer`、`Qwen2_5_VLVisionBlock` | fp32 + bf16 |
+| MolmoAct2 | 自动 | `FSDP_CAST_DTYPE=bfloat16` |
+| FLUX3（PR #5213，LoRA） | 自动 | `--policy.gradient_checkpointing=false` |
+| Diffusion | 自动 | — |
+
+规律：
+
+1. **混合 dtype**：多数 VLA 以 bf16 加载主干、fp32 保留动作头或 norm，FSDP2 报 `FSDP expects uniform original parameter dtype`。有 `dtype` 选项的用 fp32 权重加 bf16 autocast；没有的用 `FSDP_CAST_DTYPE`。
+2. **绕过 `forward`**：π0、π0.5、SmolVLA、DM05、FineART 的联合注意力直接调用语言层的子模块（`q_proj` 等），FSDP 的 all-gather 钩子不触发，报 `got mixed torch.Tensor and DTensor`。π0-FAST 不走这条路径所以整层可切。解法是只把视觉编码层作为单元，语言层留在根单元。
+3. **梯度检查点**：FLUX3 打开时，重算的张量 metadata 与前向不一致（`CheckpointError`）。关掉后通过，单卡也只用 27 GB。
+
+### 13.2 特性测试（DiT / SmolVLA / ACT）
+
+| 特性 | 任务 | 结果 |
+|---|---|---|
+| DDP 4 卡 | `dit-ddp4`、`smolvla-ddp4` | PASS |
+| DDP 8 卡 | `smolvla-ddp8`、`cover-groot-ddp8`、`molmo-ddp8` | PASS |
+| FSDP 自动推断分片数 `dp_shard=-1`（4 卡） | `dit-fsdp4-infer` | PASS |
+| HSDP | `dit-hsdp4`（2×2）、`smolvla-hsdp4`（2×2）、`dit-hsdp8`（4×2）、`pi0-hsdp8`（2×4） | PASS |
+| FSDP 8 卡 | `pi0-fsdp8`、`fastwam-fsdp8`、`wall-fsdp8`、`cosmos3edge-fsdp8` | PASS |
+| 梯度累积 2 | `dit-gradacc-ddp2`、`dit-gradacc-fsdp2`、`smolvla-gradacc-ddp2`；`sync_each_batch=true`：`dit-gradacc-sync-ddp2` | PASS |
+| fp16 + GradScaler | `dit-fp16-ddp2`、`dit-fp16-fsdp2` | PASS |
+| bf16 | `dit-bf16-fsdp2`、`smolvla-bf16-ddp2` | PASS |
+| FSDP 混合精度策略（param bf16、reduce fp32） | `dit-mpp-fsdp2` | PASS |
+| FSDP `reshard_after_forward=false` | `dit-noreshard-fsdp2` | PASS |
+| FSDP `cpu_offload=true` | `dit-cpuoffload-fsdp2` | PASS，需要 `--accelerator.init_process_group.backend=cpu:gloo,cuda:nccl`。默认只有 nccl 时报 `No backend type associated with device type cpu` |
+| DDP 选项（`find_unused_parameters=false`、`gradient_as_bucket_view`、`static_graph`） | `dit-ddpopts-ddp2` | PASS |
+| 用户指定 `wrap_modules` | `act-wrapoverride-fsdp2`（`["ACTEncoderLayer"]`） | PASS |
+| `num_workers=2` | `dit-workers-ddp2` | PASS |
+| 训练中仿真评估（OSMesa） | `dit-eval-ddp2` | PASS |
+| RA-BC | `smolvla-rabc-fsdp2` PASS；`smolvla-rabc-ddp2` FAIL，见 13.3 | — |
+| resume，2 → 4 步 | `dit-resume-ddp2`、`act-resume-ddp2`、`act-resume-fsdp2` PASS；`dit-resume-fsdp2` FAIL，见 13.3 | — |
+| 换分片 resume：FSDP 2 → FSDP 4 | `act-reshard-resume` | PASS |
+| 分片 → 非分片 resume 被拒绝 | `act-fsdp-to-ddp-reject` | PASS，报 `Cannot resume: the checkpoint was written with a sharded topology` |
+| `--checkpoint_format=dcp` / `safetensors_dcp` + resume | `act-fsdp2-dcp`、`act-fsdp2-stdcp` | PASS |
+
+### 13.3 失败与发现
+
+| 任务 | 原因 | 性质 |
+|---|---|---|
+| `smolvla-rabc-ddp2` | `'DistributedDataParallel' object has no attribute 'config'`。`lerobot_train.py` 在 `accelerator.prepare` 之后用包装过的 `policy` 创建 sample weighter，`_make_rabc_weighter` 读 `policy.config`。FSDP2 不改模块类所以不受影响 | **LeRobot bug**，最新 `main`（`e5be0c16`）仍在。本地修复分支 `fix/rabc-ddp-unwrap`（worktree `~/Repo/lerobot-rabc-ddp`）：传 `accelerator.unwrap_model(policy)`。修复后 `smolvla-rabc-ddp2-fix` PASS。未提交 |
+| `dit-resume-fsdp2` | 恢复时 `Missing key in checkpoint state_dict: optimizer.state...post_layernorm.weight.step`。DiT 的 CLIP 视觉塔 `post_layernorm` 可训练但前向没用到，保存时没有 optimizer 状态；加载时 torch `_init_optim_state` 为所有可训练参数造状态，键对不上。ACT（参数全参与）的 FSDP resume 通过 | LeRobot / accelerate 问题：带「可训练但未使用」参数的模型无法 FSDP resume。与 ROCm 无关。未提交 |
+| `smolvla-resume-fsdp2` | 用的是 SmolVLA 整层自动切分的早期配方（Tensor/DTensor 混用）。可用配方（只切 `SmolVLMEncoderLayer`）找到后没有重跑 | 未验证 |
+| `g05-fsdp2`、`cover-wallx-fsdp2`、`cover-fineart-fsdp2` | `FSDP_DTYPE_REPORT` 显示 G05、WALL-OSS flow 的单个 Transformer 层内同时有 bf16 和 fp32 参数，FineART 的根单元混有 bf16 PaliGemma 和 fp32 动作头。统一成 fp32 或 bf16 后，模型代码里写死的 dtype 又对不上（`mat1 and mat2 must have the same dtype`、`Index put requires the source and destination dtypes match`） | 需要模型侧声明 `_fsdp_wrap_modules` / 处理 dtype。DDP 正常 |
+| `cover-longwam-fsdp2`、`cover-longwam-fsdp8` | 自动切分把 Wan VAE 残差块也切了，特征缓存尺寸不对；只切 `WanTransformerBlock`、`UMT5Block` 后又报 Tensor/DTensor 混用 | 同上 |
+| `act-ddp2-to-1-resume` | `Parallelism degrees do not multiply to the world size: dp_replicate=2 ... != WORLD_SIZE=1`。checkpoint 记录了 `dp_replicate=2`，单卡恢复需要显式 `--parallelism.dp_replicate=1` | 用法要求；加参数后没有重跑 |
+| `dit-fsdp2-deploy` | FSDP 训练部分通过。单卡加载推理那一步同时设了 `CUDA_VISIBLE_DEVICES` 和 `HIP_VISIBLE_DEVICES`，ROCm 运行时 abort（`Conflicting visibility of agent`） | 测试脚本错误；部署未验证 |
+
+其他：
+
+- 队列 B 的执行脚本在运行中被覆盖，跑完最后一项后解析出错、没写 `QUEUE END`，手动补写。以后不在运行中改脚本。
+- Hugging Face 缓存的大文件在共享的 `hub/blobs`，删模型目录不释放空间。`prune-hf-models.py` 只删不被其他模型引用的 blob，清了 Qwen3-VL-8B、Robometer-4B、X-VLA、Qwen3-VL-2B、InternVL3-1B、VLA-JEPA 共 42.3 GB。
+- 这一轮原定 5 小时，实际约 6 小时 15 分。

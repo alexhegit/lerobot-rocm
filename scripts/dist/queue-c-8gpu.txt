@@ -1,0 +1,12 @@
+# 8-GPU scale: DDP 8, FSDP 8 (declared wrap units and size-based), HSDP 2x4 / 4x2. GPUs 0-7.
+dit-hsdp8|dit-1|0,1,2,3,4,5,6,7|8|--parallelism.dp_replicate=4 --parallelism.dp_shard=2 @AUTOWRAP|
+smolvla-ddp8|smolvla-1|0,1,2,3,4,5,6,7|8||
+pi0-fsdp8|pi0-1|0,1,2,3,4,5,6,7|8|--parallelism.dp_shard=8 --accelerator.fsdp.wrap_modules='["SiglipEncoderLayer"]' --policy.dtype=float32 --accelerator.mixed_precision=bf16|
+pi0-hsdp8|pi0-1|0,1,2,3,4,5,6,7|8|--parallelism.dp_replicate=2 --parallelism.dp_shard=4 --accelerator.fsdp.wrap_modules='["SiglipEncoderLayer"]' --policy.dtype=float32 --accelerator.mixed_precision=bf16|
+cover-groot-ddp8|cover-groot2|0,1,2,3,4,5,6,7|8||
+fastwam-fsdp8|fastwam-1|0,1,2,3,4,5,6,7|8|--parallelism.dp_shard=8|
+wall-fsdp8|wall-1|0,1,2,3,4,5,6,7|8|--parallelism.dp_shard=8 --policy.dtype=float32 --accelerator.mixed_precision=bf16|
+cosmos3edge-fsdp8|cosmos3edge-1|0,1,2,3,4,5,6,7|8|--parallelism.dp_shard=8|
+cover-longwam-fsdp8|cover-longwam2|0,1,2,3,4,5,6,7|8|--parallelism.dp_shard=8 --accelerator.fsdp.wrap_modules='["WanTransformerBlock","UMT5Block"]'|
+molmo-ddp8|molmo-1|0,1,2,3,4,5,6,7|8||bash /outputs/rocm-train/jobs/molmo-prep.sh
+smolvla-hsdp4|smolvla-1|0,1,2,3|4|--parallelism.dp_replicate=2 --parallelism.dp_shard=2 @AUTOWRAP --accelerator.fsdp.wrap_modules='["SmolVLMEncoderLayer"]' --accelerator.mixed_precision=bf16|export FSDP_CAST_FP32=1

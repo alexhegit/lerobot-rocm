@@ -1,0 +1,7 @@
+# Checkpoint topology and deployment, on small models (shares GPUs 4-7 with queue C).
+act-ddp2-to-1-resume|CUSTOM|6,7|2||
+act-fsdp-to-ddp-reject|CUSTOM|6,7|2||
+act-fsdp2-dcp|CUSTOM|6,7|2||
+act-fsdp2-stdcp|CUSTOM|6,7|2||
+dit-fsdp2-deploy|CUSTOM|6,7|2||
+act-reshard-resume|CUSTOM|4,5,6,7|4||

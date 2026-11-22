@@ -1,0 +1,5 @@
+# Second retry round on GPUs 6-7, after queue E: mixed-dtype FSDP with fp32 weights + bf16 autocast,
+# and DM05 with leaf layers excluded from the auto-picked wrap units (tied lm_head).
+g05-fsdp2|g05-1|6,7|2|--parallelism.dp_shard=2 @AUTOWRAP --policy.dtype=float32 --accelerator.mixed_precision=bf16|
+eo1-fsdp2|eo1-1|6,7|2|--parallelism.dp_shard=2 @AUTOWRAP --policy.dtype=float32 --accelerator.mixed_precision=bf16|bash /outputs/rocm-train/jobs/eo1-prep.sh
+cover-dm05-fsdp2|cover-dm05|6,7|2|--parallelism.dp_shard=2 @AUTOWRAP --policy.dtype=float32 --accelerator.mixed_precision=bf16|

@@ -1,0 +1,25 @@
+# Distributed training features, on DiT (small, aloha) and SmolVLA (VLA, SO100). GPUs 2-5.
+dit-gradacc-ddp2|dit-1|2,3|2|--accelerator.gradient_accumulation.steps=2|
+dit-gradacc-fsdp2|dit-1|2,3|2|--parallelism.dp_shard=2 --accelerator.fsdp.min_num_params=100000 --accelerator.gradient_accumulation.steps=2|
+dit-gradacc-sync-ddp2|dit-1|2,3|2|--accelerator.gradient_accumulation.steps=2 --accelerator.gradient_accumulation.sync_each_batch=true|
+dit-hsdp4|dit-1|2,3,4,5|4|--parallelism.dp_replicate=2 --parallelism.dp_shard=2 --accelerator.fsdp.min_num_params=100000|
+dit-fsdp4-infer|dit-1|2,3,4,5|4|--parallelism.dp_shard=-1 --accelerator.fsdp.min_num_params=100000|
+dit-ddp4|dit-1|2,3,4,5|4||
+dit-fp16-ddp2|dit-1|2,3|2|--accelerator.mixed_precision=fp16|
+dit-fp16-fsdp2|dit-1|2,3|2|--parallelism.dp_shard=2 --accelerator.fsdp.min_num_params=100000 --accelerator.mixed_precision=fp16|
+dit-bf16-fsdp2|dit-1|2,3|2|--parallelism.dp_shard=2 --accelerator.fsdp.min_num_params=100000 --accelerator.mixed_precision=bf16|
+dit-mpp-fsdp2|dit-1|2,3|2|--parallelism.dp_shard=2 --accelerator.fsdp.min_num_params=100000 --accelerator.mixed_precision=bf16 --accelerator.fsdp.mixed_precision_policy.param_dtype=bfloat16 --accelerator.fsdp.mixed_precision_policy.reduce_dtype=float32|
+dit-cpuoffload-fsdp2|dit-1|2,3|2|--parallelism.dp_shard=2 --accelerator.fsdp.min_num_params=100000 --accelerator.fsdp.cpu_offload=true|
+dit-noreshard-fsdp2|dit-1|2,3|2|--parallelism.dp_shard=2 --accelerator.fsdp.min_num_params=100000 --accelerator.fsdp.reshard_after_forward=false|
+dit-ddpopts-ddp2|dit-1|2,3|2|--accelerator.ddp.find_unused_parameters=false --accelerator.ddp.gradient_as_bucket_view=true --accelerator.ddp.static_graph=true|
+dit-workers-ddp2|dit-1|2,3|2|--num_workers=2|
+act-wrapoverride-fsdp2|act-base|2,3|2|--parallelism.dp_shard=2 --accelerator.fsdp.wrap_modules='["ACTEncoderLayer"]'|
+dit-resume-ddp2|CUSTOM|2,3|2||
+dit-resume-fsdp2|CUSTOM|2,3|2||
+dit-eval-ddp2|dit-eval|2,3|2||apt-get update -qq;;apt-get install -y -qq libosmesa6 libglu1-mesa;;export MUJOCO_GL=osmesa
+smolvla-gradacc-ddp2|smolvla-1|2,3|2|--accelerator.gradient_accumulation.steps=2|
+smolvla-hsdp4|smolvla-1|2,3,4,5|4|--parallelism.dp_replicate=2 --parallelism.dp_shard=2 --accelerator.fsdp.min_num_params=1000000|
+smolvla-bf16-ddp2|smolvla-1|2,3|2|--accelerator.mixed_precision=bf16|
+smolvla-rabc-ddp2|smolvla-1|2,3|2|--batch_size=4 --sample_weighting.type=rabc --sample_weighting.progress_path=/outputs/rocm-train/rabc/robometer_progress.parquet --sample_weighting.head_mode=sparse|
+smolvla-resume-fsdp2|CUSTOM|2,3|2||
+smolvla-ddp4|smolvla-1|2,3,4,5|4||

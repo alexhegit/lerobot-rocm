@@ -1,0 +1,5 @@
+# Diagnostics on GPUs 6-7 (shared with queue C): original dtypes, print the dtype of each wrap unit
+# and of the parameters left in the root unit. Expected to stop at FSDP's uniform-dtype check.
+diag-g05-fsdp2|g05-1|6,7|2|--parallelism.dp_shard=2 @AUTOWRAP|export FSDP_DTYPE_REPORT=1
+diag-wallx-fsdp2|cover-wallx|6,7|2|--parallelism.dp_shard=2 @AUTOWRAP|export FSDP_DTYPE_REPORT=1
+diag-fineart-fsdp2|cover-fineart3c|6,7|2|--parallelism.dp_shard=2 @AUTOWRAP --accelerator.fsdp.wrap_modules='["SiglipEncoderLayer"]'|export FSDP_DTYPE_REPORT=1

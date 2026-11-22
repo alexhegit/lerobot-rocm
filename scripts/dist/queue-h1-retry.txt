@@ -1,0 +1,5 @@
+# Retry round H1 on GPUs 4-5: one dtype per FSDP unit by casting everything to bf16, for policies
+# whose code feeds bf16 tensors into their layers (fp32 weights fail there).
+g05-fsdp2|g05-1|4,5|2|--parallelism.dp_shard=2 @AUTOWRAP|export FSDP_CAST_DTYPE=bfloat16
+cover-wallx-fsdp2|cover-wallx|4,5|2|--parallelism.dp_shard=2 @AUTOWRAP|export FSDP_CAST_DTYPE=bfloat16
+cover-fineart-fsdp2|cover-fineart3c|4,5|2|--parallelism.dp_shard=2 @AUTOWRAP --accelerator.fsdp.wrap_modules='["SiglipEncoderLayer"]'|export FSDP_CAST_DTYPE=bfloat16

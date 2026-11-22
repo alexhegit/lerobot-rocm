@@ -1,0 +1,9 @@
+# Retries on GPUs 6-7: resume jobs with the quoting fix, ACT resume as a control, and FSDP for
+# policies that load mixed bf16/fp32 weights (FSDP2 needs one dtype per unit).
+dit-resume-ddp2|CUSTOM|6,7|2||
+act-resume-ddp2|CUSTOM|6,7|2||
+act-resume-fsdp2|CUSTOM|6,7|2||
+smolvla-fsdp2|smolvla-1|6,7|2|--parallelism.dp_shard=2 @AUTOWRAP --accelerator.mixed_precision=bf16|export FSDP_CAST_FP32=1
+pi0fast-fsdp2|pi0fast-1|6,7|2|--parallelism.dp_shard=2 @AUTOWRAP --policy.dtype=float32 --accelerator.mixed_precision=bf16|
+pi0-fsdp2|pi0-1|6,7|2|--parallelism.dp_shard=2 @AUTOWRAP --policy.dtype=float32 --accelerator.mixed_precision=bf16|
+pi05-fsdp2|pi05-1|6,7|2|--parallelism.dp_shard=2 @AUTOWRAP --policy.dtype=float32 --accelerator.mixed_precision=bf16|

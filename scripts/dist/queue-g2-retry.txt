@@ -1,0 +1,7 @@
+# Retry round G2 on GPUs 4-5: fp32 weights for one dtype per FSDP unit, with the FSDP mixed
+# precision policy computing in bf16 (some policies cast inputs to bf16 themselves).
+g05-fsdp2|g05-1|4,5|2|--parallelism.dp_shard=2 @AUTOWRAP --policy.dtype=float32 --accelerator.mixed_precision=bf16 --accelerator.fsdp.mixed_precision_policy.param_dtype=bfloat16 --accelerator.fsdp.mixed_precision_policy.reduce_dtype=float32|
+cover-wallx-fsdp2|cover-wallx|4,5|2|--parallelism.dp_shard=2 @AUTOWRAP --accelerator.mixed_precision=bf16 --accelerator.fsdp.mixed_precision_policy.param_dtype=bfloat16 --accelerator.fsdp.mixed_precision_policy.reduce_dtype=float32|export FSDP_CAST_FP32=1
+cover-fineart-fsdp2|cover-fineart3c|4,5|2|--parallelism.dp_shard=2 @AUTOWRAP --policy.dtype=float32 --accelerator.mixed_precision=bf16 --accelerator.fsdp.mixed_precision_policy.param_dtype=bfloat16 --accelerator.fsdp.mixed_precision_policy.reduce_dtype=float32|
+# FLUX3: activation checkpoint recompute disagrees with FSDP2 unsharding; run without it.
+flux3-pr5213-fsdp2|flux3-pr5213|4,5|2|--parallelism.dp_shard=2 @AUTOWRAP --policy.gradient_checkpointing=false|

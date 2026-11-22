@@ -10,7 +10,6 @@ accelerate launch --num_processes=2 "$(which lerobot-train)" \
   --policy.gradient_checkpointing=true \
   --policy.compile_model=false \
   --rename_map='{"observation.images.top":"observation.images.base_0_rgb","observation.images.wrist":"observation.images.left_wrist_0_rgb"}' \
- \
   --dataset.repo_id=lerobot/svla_so100_pickplace \
   --dataset.episodes='[0]' \
   --batch_size=1 \
@@ -20,4 +19,4 @@ accelerate launch --num_processes=2 "$(which lerobot-train)" \
   --log_freq=1 \
   --num_workers=0 \
   --trackio.enable=false \
-  --output_dir=/outputs/rocm-train/pi05-fsdp2
+  --output_dir=/outputs/rocm-train/pi05-fsdp2 --parallelism.dp_shard=2 --accelerator.fsdp.wrap_modules='["SiglipEncoderLayer"]' --policy.dtype=float32 --accelerator.mixed_precision=bf16

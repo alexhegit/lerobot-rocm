@@ -1,0 +1,6 @@
+# Retry round H2 on GPUs 6-7.
+# DM05 runs its Gemma3 layers through submodules: only the vision encoder layers are FSDP units.
+cover-dm05-fsdp2|cover-dm05|6,7|2|--parallelism.dp_shard=2 --accelerator.fsdp.wrap_modules='["SiglipEncoderLayer"]' --policy.dtype=float32 --accelerator.mixed_precision=bf16|
+# Long-WAM: wrapping the Wan VAE residual blocks breaks their feature cache; shard the DiT and T5 only.
+cover-longwam-fsdp2|cover-longwam2|6,7|2|--parallelism.dp_shard=2 --accelerator.fsdp.wrap_modules='["WanTransformerBlock","UMT5Block"]'|
+molmo-fsdp2|molmo-1|6,7|2|--parallelism.dp_shard=2 @AUTOWRAP|bash /outputs/rocm-train/jobs/molmo-prep.sh;;export FSDP_CAST_DTYPE=bfloat16

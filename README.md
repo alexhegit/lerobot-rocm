@@ -8,6 +8,7 @@
 - **Reward models:** SARM and the reward classifier train, HIL-SERL runs, and the RA-BC flow works end to end with Robometer and TOPReward.
 - **FLUX3:** blocked on `main` because NATTEN has no usable ROCm path. With upstream PR [huggingface/lerobot#5213](https://github.com/huggingface/lerobot/pull/5213) it trains on ROCm without NATTEN (1 GPU and DDP 2).
 - **Upstream:** PRs [#5432](https://github.com/huggingface/lerobot/pull/5432) and [#5433](https://github.com/huggingface/lerobot/pull/5433), ROCm results on [#5213](https://github.com/huggingface/lerobot/pull/5213#issuecomment-7029511117), issue [SHI-Labs/NATTEN#354](https://github.com/SHI-Labs/NATTEN/issues/354).
+- **Distributed (2026-11-22):** 59 of 69 multi-GPU jobs pass. DDP up to 8 GPUs; FSDP2 on 2 GPUs for 21 policies and on 8 GPUs for π0, FastWAM, WALL-OSS 0.5 and Cosmos3; HSDP 2×2 / 2×4 / 4×2; gradient accumulation, fp16 / bf16 / FSDP mixed-precision policy, CPU offload, DDP options, resume (DDP, FSDP, FSDP 2→4 reshard), DCP checkpoint formats, multi-GPU eval. FSDP fails for G05, FineART, WALL-OSS flow and Long-WAM (mixed dtypes inside layers). Found two LeRobot issues: RA-BC crashes under DDP, and FSDP resume fails for models with unused trainable parameters.
 - **Open:** multi-node (no InfiniBand).
 
 ## 验证范围
@@ -22,7 +23,7 @@
 | 策略 | SmolVLA、X-VLA、π0、π0.5、π0-FAST、EO1、G05（含 CoT）、MolmoAct2（fft 与 LoRA） | PASS | DDP 2 |
 | 策略 | WALL-OSS 0.5、FastWAM、Cosmos3 Edge / Nano、LaWAM、LingBot-VLA v2 | PASS | DDP 2 / FSDP 2 |
 | 策略 | VQ-BeT、TD-MPC、DM05、EVO1、VLA-JEPA、Long-WAM、LingBot-VA（LoRA）、FineART-VLA、GR00T N1.7、WALL-OSS flow | PASS | DDP 2 |
-| 策略 | FLUX3（LoRA） | `main` BLOCKED；PR #5213 PASS | PR #5213 DDP 2 |
+| 策略 | FLUX3（LoRA） | `main` BLOCKED；PR #5213 PASS | PR #5213 DDP 2 / FSDP 2 |
 | 奖励模型 | SARM、reward_classifier | PASS（训练） | — |
 | 奖励模型 | Robometer、TOPReward | 零样本推理 + RA-BC 加权训练 PASS | — |
 | RL | HIL-SERL（Gaussian actor + SAC） | PASS | — |
@@ -30,6 +31,25 @@
 训练特性：从 checkpoint 恢复、训练中仿真评估（MuJoCo + OSMesa）、`num_workers=2`、`torch.compile`（π0）、bf16 混合精度、PEFT LoRA。
 
 完整结果、每个模型的 loss、失败原因和绕过方法见 [reports/smoke-report.md](reports/smoke-report.md)。
+
+## 分布式训练
+
+完整结果见报告第 13 节。要点：
+
+- **FSDP 切分单元**：只有 ACT、WALL-OSS 0.5、FastWAM、LingBot-VLA v2、LaWAM、Cosmos3 声明了 `_fsdp_wrap_modules`。其他策略用 `--accelerator.fsdp.wrap_modules='["类名", ...]'`。`--accelerator.fsdp.min_num_params` 在 FSDP2 下会把 `ModuleList` 当单元而报错，不可用。各模型可用的类名在报告 13.1。`scripts/dist/fsdp_autowrap_train.py` 能自动挑出重复的层类。
+- **混合 dtype**：bf16 主干 + fp32 动作头的策略，FSDP2 要求每个单元一种 dtype。有 `dtype` 选项的用 `--policy.dtype=float32 --accelerator.mixed_precision=bf16`。
+- **π0 / π0.5 / SmolVLA / DM05**：语言层通过子模块调用，只能把视觉编码层作为 FSDP 单元。
+- **CPU offload**：加 `--accelerator.init_process_group.backend=cpu:gloo,cuda:nccl`。
+- **resume**：DDP、FSDP、FSDP 换分片数都可以；分片与非分片之间会被拒绝；DDP 换卡数要显式改 `--parallelism.dp_replicate`。
+
+发现的 LeRobot 问题（与 ROCm 无关）：
+
+| 问题 | 状态 |
+|---|---|
+| RA-BC（`--sample_weighting`）在 DDP 下报 `'DistributedDataParallel' object has no attribute 'config'` | 本地修复已验证，未提交 |
+| 有「可训练但未使用」参数的模型（如 DiT）FSDP resume 报 `Missing key in checkpoint state_dict` | 已定位，未提交 |
+| `--accelerator.fsdp.min_num_params` 在 FSDP2 下不可用 | 已记录 |
+| FSDP `cpu_offload` 需要手动加 gloo 后端 | 已记录 |
 
 ## 环境
 

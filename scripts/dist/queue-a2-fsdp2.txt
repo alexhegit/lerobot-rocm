@@ -1,0 +1,23 @@
+# FSDP2 on 2 GPUs for models that only had DDP. None declare _fsdp_wrap_modules and the size-based
+# policy fails (fully_shard rejects ModuleList), so wrap classes come from fsdp_autowrap_train.py (@AUTOWRAP).
+dit-fsdp2|dit-1|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+cover-vqbet-fsdp2|cover-vqbet|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+cover-tdmpc-fsdp2|cover-tdmpc-pusht|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+smolvla-fsdp2|smolvla-1|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+xvla-fsdp2|xvla-1|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+cover-evo1-fsdp2|cover-evo1|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+cover-jepa-fsdp2|cover-jepa-rename|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+pi0fast-fsdp2|pi0fast-1|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+pi0-fsdp2|pi0-1|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+pi05-fsdp2|pi05-1|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+g05-fsdp2|g05-1|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+eo1-fsdp2|eo1-1|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|bash /outputs/rocm-train/jobs/eo1-prep.sh
+cover-groot-fsdp2|cover-groot2|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+cover-dm05-fsdp2|cover-dm05|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+cover-wallx-fsdp2|cover-wallx|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+cover-fineart-fsdp2|cover-fineart3c|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+cover-lingbotva-fsdp2|cover-lingbotva-torchao|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+flux3-pr5213-fsdp2|flux3-pr5213|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+cover-longwam-fsdp2|cover-longwam2|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+molmo-fsdp2|molmo-1|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|bash /outputs/rocm-train/jobs/molmo-prep.sh
+diffusion-fsdp2|diffusion-1|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|

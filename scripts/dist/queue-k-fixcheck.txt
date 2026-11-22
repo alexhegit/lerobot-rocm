@@ -1,0 +1,3 @@
+# RA-BC under DDP with the local fix (sample weighter built from accelerator.unwrap_model(policy)).
+# Unfixed, smolvla-rabc-ddp2 fails with "'DistributedDataParallel' object has no attribute 'config'".
+smolvla-rabc-ddp2-fix|smolvla-1|0,1|2|--batch_size=4 --sample_weighting.type=rabc --sample_weighting.progress_path=/outputs/rocm-train/rabc/robometer_progress.parquet --sample_weighting.head_mode=sparse|export PYTHONPATH=/outputs/rocm-train/fix-rabc-ddp/src;;python3 -c "import lerobot; print('lerobot from', lerobot.__file__)"

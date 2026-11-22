@@ -1,0 +1,9 @@
+# Retry round G1 on GPUs 2-3.
+# cpu_offload needs a gloo group for CPU tensors (LeRobot's default backend is nccl only).
+dit-cpuoffload-fsdp2|dit-1|2,3|2|--parallelism.dp_shard=2 @AUTOWRAP --accelerator.fsdp.cpu_offload=true --accelerator.init_process_group.backend=cpu:gloo,cuda:nccl|
+# pi0 / pi05 / SmolVLA run their language layers through submodules, not the layer's forward, so
+# only the vision encoder layers can be FSDP units; the language model stays in the root unit.
+pi0-fsdp2|pi0-1|2,3|2|--parallelism.dp_shard=2 --accelerator.fsdp.wrap_modules='["SiglipEncoderLayer"]' --policy.dtype=float32 --accelerator.mixed_precision=bf16|
+pi05-fsdp2|pi05-1|2,3|2|--parallelism.dp_shard=2 --accelerator.fsdp.wrap_modules='["SiglipEncoderLayer"]' --policy.dtype=float32 --accelerator.mixed_precision=bf16|
+smolvla-fsdp2|smolvla-1|2,3|2|--parallelism.dp_shard=2 @AUTOWRAP --accelerator.fsdp.wrap_modules='["SmolVLMEncoderLayer"]' --accelerator.mixed_precision=bf16|export FSDP_CAST_FP32=1
+smolvla-rabc-fsdp2|smolvla-1|2,3|2|--parallelism.dp_shard=2 @AUTOWRAP --accelerator.fsdp.wrap_modules='["SmolVLMEncoderLayer"]' --accelerator.mixed_precision=bf16 --batch_size=4 --sample_weighting.type=rabc --sample_weighting.progress_path=/outputs/rocm-train/rabc/robometer_progress.parquet --sample_weighting.head_mode=sparse|export FSDP_CAST_FP32=1
