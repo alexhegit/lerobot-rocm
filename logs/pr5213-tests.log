@@ -1,0 +1,54 @@
+
+Testing with DEVICE='cuda'
+................ss...................................................... [ 45%]
+..........s............................................................s [ 90%]
+s...............                                                         [100%]
+=============================== warnings summary ===============================
+../opt/venv/lib/python3.12/site-packages/torchao/quantization/quant_api.py:1542
+  /opt/venv/lib/python3.12/site-packages/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+    """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+../opt/venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 14 warnings
+  /opt/venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+../opt/venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:101
+../opt/venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:101
+../opt/venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:101
+../opt/venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:101
+../opt/venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:101
+  /opt/venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:101: DeprecationWarning: warmup, rep, and use_cuda_graph parameters are deprecated. See https://github.com/triton-lang/triton/pull/4496 for details.
+    warnings.warn(("warmup, rep, and use_cuda_graph parameters are deprecated. See "
+
+../opt/venv/lib/python3.12/site-packages/torch/jit/_script.py:1488
+../opt/venv/lib/python3.12/site-packages/torch/jit/_script.py:1488
+  /opt/venv/lib/python3.12/site-packages/torch/jit/_script.py:1488: DeprecationWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+tests/policies/flux3/test_flux3_lora.py::test_actual_trainer_peft_ema_checkpoint_and_resume
+tests/policies/flux3/test_flux3_lora.py::test_actual_trainer_peft_ema_checkpoint_and_resume
+  /opt/venv/lib/python3.12/site-packages/accelerate/scheduler.py:57: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+    self.scheduler.step(*args, **kwargs)
+
+tests/policies/flux3/test_flux3_video_vae.py::test_attention_block_exports
+  /opt/venv/lib/python3.12/site-packages/torch/backends/cudnn/__init__.py:175: UserWarning: cuDNN Benchmark limit is not supported in MIOpen and will have no effect. (Triggered internally at /__w/rockrel/rockrel/external-builds/pytorch/pytorch/torch/csrc/cuda/Module.cpp:1990.)
+    torch._C._cuda_set_cudnn_benchmark_limit(_benchmark_limit)
+
+tests/policies/flux3/test_flux3_video_vae.py::test_frame_encode_exports_within_tensorrt_dimensions
+  /usr/lib/python3.12/copyreg.py:99: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+    return cls.__new__(cls, *args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [2] tests/policies/flux3/test_flux3_lora.py:211: requires MPS
+SKIPPED [1] tests/policies/flux3/test_flux3_policy.py:538: needs MPS
+SKIPPED [2] tests/policies/flux3/test_flux3_video_vae.py:119: needs NATTEN and CUDA
+155 passed, 5 skipped, 28 warnings in 271.27s (0:04:31)
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+EXIT=0

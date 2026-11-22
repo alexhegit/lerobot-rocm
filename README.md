@@ -1,0 +1,111 @@
+# LeRobot on AMD ROCm
+
+在 AMD Instinct MI300X（ROCm）上验证 [LeRobot](https://github.com/huggingface/lerobot) 0.7 训练的过程记录、脚本和结论。
+
+## Summary (English)
+
+- **Coverage:** on 8× MI300X (ROCm 7.14, PyTorch 2.12), every policy in LeRobot 0.7 trains on a single GPU and on 2-GPU DDP, except FLUX3 on `main`. Many large models also pass FSDP, and Diffusion and ACT pass on 8 GPUs. Resume, sim eval, `torch.compile` and LoRA work.
+- **Reward models:** SARM and the reward classifier train, HIL-SERL runs, and the RA-BC flow works end to end with Robometer and TOPReward.
+- **FLUX3:** blocked on `main` because NATTEN has no usable ROCm path. With upstream PR [huggingface/lerobot#5213](https://github.com/huggingface/lerobot/pull/5213) it trains on ROCm without NATTEN (1 GPU and DDP 2).
+- **Upstream:** PRs [#5432](https://github.com/huggingface/lerobot/pull/5432) and [#5433](https://github.com/huggingface/lerobot/pull/5433), ROCm results on [#5213](https://github.com/huggingface/lerobot/pull/5213#issuecomment-7029511117), issue [SHI-Labs/NATTEN#354](https://github.com/SHI-Labs/NATTEN/issues/354).
+- **Open:** multi-node (no InfiniBand).
+
+## 验证范围
+
+通过标准：`steps=2`，有 loss，第 2 步 checkpoint 写完。只验证"能训练"，不评估策略质量。没有改 LeRobot 源码，没有重建镜像；兼容问题用启动参数、本地配置或一次性运行时补丁绕过。
+
+| 类别 | 模型 | 单卡 | 多卡 |
+|---|---|---|---|
+| 策略 | Diffusion | PASS | DDP 2 / DDP 8 |
+| 策略 | ACT | PASS | FSDP 2 / FSDP 8 |
+| 策略 | Multi-task DiT | PASS | DDP 2 |
+| 策略 | SmolVLA、X-VLA、π0、π0.5、π0-FAST、EO1、G05（含 CoT）、MolmoAct2（fft 与 LoRA） | PASS | DDP 2 |
+| 策略 | WALL-OSS 0.5、FastWAM、Cosmos3 Edge / Nano、LaWAM、LingBot-VLA v2 | PASS | DDP 2 / FSDP 2 |
+| 策略 | VQ-BeT、TD-MPC、DM05、EVO1、VLA-JEPA、Long-WAM、LingBot-VA（LoRA）、FineART-VLA、GR00T N1.7、WALL-OSS flow | PASS | DDP 2 |
+| 策略 | FLUX3（LoRA） | `main` BLOCKED；PR #5213 PASS | PR #5213 DDP 2 |
+| 奖励模型 | SARM、reward_classifier | PASS（训练） | — |
+| 奖励模型 | Robometer、TOPReward | 零样本推理 + RA-BC 加权训练 PASS | — |
+| RL | HIL-SERL（Gaussian actor + SAC） | PASS | — |
+
+训练特性：从 checkpoint 恢复、训练中仿真评估（MuJoCo + OSMesa）、`num_workers=2`、`torch.compile`（π0）、bf16 混合精度、PEFT LoRA。
+
+完整结果、每个模型的 loss、失败原因和绕过方法见 [reports/smoke-report.md](reports/smoke-report.md)。
+
+## 环境
+
+| 项 | 值 |
+|---|---|
+| GPU | 8× AMD Instinct MI300X VF（gfx942） |
+| 镜像 | 按 LeRobot `docker/Dockerfile.rocm` 构建，基座 `rocm/primus:v26.4`，`LEROBOT_EXTRAS=all` |
+| PyTorch | `2.12.0+rocm7.14.0a20260608`，HIP 7.14 |
+| LeRobot | 0.7.1（`v0.7.0` 之后一个提交） |
+
+## 快速上手
+
+```bash
+# 在 LeRobot 仓库根目录构建
+docker build -f docker/Dockerfile.rocm -t lerobot-rocm .
+
+# 单卡 2 步 smoke
+docker run --rm --ipc=host --shm-size 16g \
+  --device=/dev/kfd --device=/dev/dri \
+  --group-add $(getent group video | cut -d: -f3) --group-add $(getent group render | cut -d: -f3) \
+  -e HIP_VISIBLE_DEVICES=0 -e MIOPEN_FIND_MODE=2 \
+  -v /data/lerobot/outputs:/outputs \
+  -v ~/.cache/huggingface:/root/.cache/huggingface \
+  lerobot-rocm \
+  lerobot-train --policy.type=act --policy.device=cuda --policy.push_to_hub=false \
+    --dataset.repo_id=lerobot/aloha_sim_transfer_cube_human --dataset.episodes='[0]' \
+    --batch_size=1 --steps=2 --save_freq=2 --log_freq=1 --env_eval_freq=0 \
+    --output_dir=/outputs/act-smoke
+
+# 2 卡 DDP：HIP_VISIBLE_DEVICES=0,1，把 lerobot-train 换成
+#   accelerate launch --num_processes=2 "$(which lerobot-train)"
+# FSDP 再加 --parallelism.dp_shard=2
+```
+
+## 常见问题
+
+| 现象 | 处理 |
+|---|---|
+| `--group-add render` 失败 | 用宿主机的数字 gid（见上面的命令） |
+| 第一步要几十秒 | MIOpen 在查找卷积内核；设 `MIOPEN_FIND_MODE=2` |
+| PyPI 的 CUDA torch 把 ROCm torch 换掉 | 镜像用 `UV_OVERRIDE` 锁住 torch / torchvision / numpy；装完检查 `torch.version.hip` 和 torchvision 的 `+rocm` |
+| PEFT / LoRA 报 torchao 版本 | 镜像里是 0.15；当次容器里 `uv pip install 'torchao>0.16'` |
+| MuJoCo 评估 EGL / GLFW 失败 | MI300X 没有图形上下文；装 `libosmesa6 libglu1-mesa`，`MUJOCO_GL=osmesa` |
+| 需要 FlashAttention 的策略 | 换成策略自带的 PyTorch / SDPA 实现，例如 FLUX3 `--policy.attn_mode=torch` |
+| FLUX3 的 Video VAE 需要 NATTEN | NATTEN 没有 ROCm 轮子，源码构建只有 flex 后端，会 OOM；用 PR #5213 的纯 PyTorch 路径 |
+| QUANTILES 归一化缺 q01/q99 | 在本地算好写进数据集 `meta/stats.json`；官方脚本会推 Hub |
+| 门控模型 403 | 在 Hugging Face 页面接受授权；token 放在挂载的缓存目录，不写进脚本 |
+
+## 目录
+
+```
+reports/          smoke-report.md（完整报告）、计划文件、results.txt（每次运行的结果，含失败）
+scripts/runners/  批量队列脚本（生成单任务脚本并串行执行）
+scripts/jobs/     单任务脚本；remote/ 是 GPU 节点上实际执行过的版本
+scripts/patches/  一次性运行时补丁（LaWAM FSDP、MolmoAct2 LoRA）
+scripts/repro/    NATTEN / flex attention 复现脚本
+upstream/         提交给上游的 PR 描述、留言、issue 原文
+logs/             各批次的训练日志
+webui/            本地 WebUI：通过 ssh 在 GPU 节点上启动一次固定的 DiT 2 步训练
+```
+
+脚本里的输出目录 `/data/lerobot/outputs` 和主机名是占位，按你的环境替换。`DOUni` 是 8 卡节点的 ssh 别名。
+
+## WebUI
+
+```bash
+LEROBOT_ROCM_HOST=<ssh-alias> LEROBOT_OUTPUTS=<outputs-dir-on-node> python3 webui/server.py
+# 打开 http://127.0.0.1:8765/
+```
+
+## 上游跟进
+
+| 对象 | 状态 |
+|---|---|
+| [huggingface/lerobot#5432](https://github.com/huggingface/lerobot/pull/5432) TOPReward 单帧视频补帧 | 等待评审 |
+| [huggingface/lerobot#5433](https://github.com/huggingface/lerobot/pull/5433) RA-BC 不支持的策略提前报错 | 等待评审，已有社区复现 |
+| [huggingface/lerobot#5213](https://github.com/huggingface/lerobot/pull/5213) FLUX3 不依赖 NATTEN（他人 PR） | 已留言 ROCm 结果 |
+| [SHI-Labs/NATTEN#354](https://github.com/SHI-Labs/NATTEN/issues/354) ROCm 上编译版 flex 不可用 | 已提交 |
+| LeRobot `torch_accelerators.mdx` ROCm 已知问题 | 本地分支草稿，未提交 |

@@ -1,0 +1,1173 @@
+
+Testing with DEVICE='cuda'
+
+Testing with DEVICE='cuda'
+................ss....F....F............................................ [ 51%]
+.................s..............F.F.................................     [100%]
+=================================== FAILURES ===================================
+______________ test_actual_trainer_peft_ema_checkpoint_and_resume ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_actual_trainer_peft_ema_c0')
+
+    @pytest.mark.usefixtures("restore_torch_backend_flags")
+    def test_actual_trainer_peft_ema_checkpoint_and_resume(tmp_path):
+        for package in ("accelerate", "peft", "diffusers"):
+            pytest.importorskip(package)
+    
+        root = tmp_path / "dataset"
+        dataset = LeRobotDataset.create(
+            repo_id="test/so101",
+            fps=30,
+            root=root,
+            features={
+                "action": {"dtype": "float32", "shape": (6,), "names": None},
+                OBS_STATE: {"dtype": "float32", "shape": (6,), "names": None},
+                "observation.images.top": {
+                    "dtype": "image",
+                    "shape": (64, 96, 3),
+                    "names": ["height", "width", "channel"],
+                },
+            },
+        )
+        for t in range(66):
+            dataset.add_frame(
+                {
+                    ACTION: np.full(6, t / 100, dtype=np.float32),
+                    OBS_STATE: np.zeros(6, dtype=np.float32),
+                    "observation.images.top": np.full((64, 96, 3), t, dtype=np.uint8),
+                    "task": "pick box",
+                }
+            )
+        dataset.save_episode()
+        dataset.finalize()
+        cfg = task_config(push_to_hub=False)
+        base = tmp_path / "base"
+        pre, post = make_flux3_pre_post_processors(cfg, dataset.meta.stats)
+        policy = Flux3Policy(cfg)
+        cfg.normalization_stats = None
+        policy.save_pretrained(base)
+        pre.save_pretrained(base)
+        post.save_pretrained(base)
+    
+        def config(policy_config, steps):
+            result = TrainPipelineConfig(
+                dataset=DatasetConfig(repo_id="test/so101", root=str(root)),
+                policy=policy_config,
+                output_dir=tmp_path / "train",
+                batch_size=2,
+                num_workers=0,
+                steps=steps,
+                save_freq=4,
+                env_eval_freq=0,
+                log_freq=0,
+                seed=42,
+                peft=PeftConfig(r=32, lora_alpha=32),
+                ema=ConstantEMAConfig(decay=0.999),
+            )
+            result.accelerator.gradient_accumulation.steps = 2
+            result.optimizer = policy_config.get_optimizer_preset()
+            result.scheduler = policy_config.get_scheduler_preset()
+            result.validate = lambda: None
+            return result
+    
+        cfg.pretrained_path = str(base)
+    
+        loader_config = config(cfg, 4)
+        loader_config.max_eval_samples = 3
+        loaded_dataset = LeRobotDataset("test/so101", root=root)
+        _, eval_loader = make_dataloaders(
+            loader_config, loaded_dataset, loaded_dataset, 0, SimpleNamespace(device_type="cpu", dp_world_size=1)
+        )
+        assert len(eval_loader.dataset) == 3
+        assert [int(eval_loader.dataset[i]["frame_index"]) for i in range(3)] == [1, 2, 3]
+>       train(config(cfg, 4))
+
+tests/policies/flux3/test_flux3_lora.py:434: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/lerobot/configs/parser.py:468: in wrapper_inner
+    response = fn(cfg, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+src/lerobot/scripts/lerobot_train.py:648: in train
+    policy = policy.wrap_with_peft(peft_cli_overrides=peft_cli_overrides)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/lerobot/policies/pretrained.py:512: in wrap_with_peft
+    peft_model = get_peft_model(self, final_config, revision=self.config.pretrained_revision)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/mapping_func.py:114: in get_peft_model
+    return PeftModel(
+/opt/venv/lib/python3.12/site-packages/peft/peft_model.py:129: in __init__
+    self.base_model = cls(model, {adapter_name: peft_config}, adapter_name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:315: in __init__
+    self.inject_adapter(self.model, adapter_name, low_cpu_mem_usage=low_cpu_mem_usage, state_dict=state_dict)
+/opt/venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:913: in inject_adapter
+    self._create_and_replace(
+/opt/venv/lib/python3.12/site-packages/peft/tuners/lora/model.py:269: in _create_and_replace
+    new_module = self._create_new_module(lora_config, adapter_name, target, device_map=device_map, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/tuners/lora/model.py:418: in _create_new_module
+    new_module = dispatcher(target, adapter_name, config=lora_config, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/tuners/lora/torchao.py:142: in dispatch_torchao
+    if not is_torchao_available():
+           ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @lru_cache
+    def is_torchao_available():
+        if importlib.util.find_spec("torchao") is None:
+            return False
+    
+        TORCHAO_MINIMUM_VERSION = packaging.version.parse("0.16.0")
+        try:
+            torchao_version = packaging.version.parse(importlib_metadata.version("torchao"))
+        except importlib_metadata.PackageNotFoundError:
+            # Same idea as in diffusers:
+            # https://github.com/huggingface/diffusers/blob/9f06a0d1a4a998ac6a463c5be728c892f95320a8/src/diffusers/utils/import_utils.py#L351-L357
+            # It's not clear under what circumstances `importlib_metadata.version("torchao")` can raise an error even
+            # though `importlib.util.find_spec("torchao") is not None` but it has been observed, so adding this for
+            # precaution.
+            return False
+    
+        if torchao_version < TORCHAO_MINIMUM_VERSION:
+>           raise ImportError(
+                f"Found an incompatible version of torchao. Found version {torchao_version}, "
+                f"but only versions above {TORCHAO_MINIMUM_VERSION} are supported"
+            )
+E           ImportError: Found an incompatible version of torchao. Found version 0.15.0+gite9c7bead9, but only versions above 0.16.0 are supported
+
+/opt/venv/lib/python3.12/site-packages/peft/import_utils.py:143: ImportError
+----------------------------- Captured stdout call -----------------------------
+Loading weights from local directory
+----------------------------- Captured stderr call -----------------------------
+Map:   0%|          | 0/66 [00:00<?, ? examples/s]Map: 100%|██████████| 66/66 [00:00<00:00, 2020.72 examples/s]
+INFO 2026-11-20 01:47:18 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': True,
+                         'gradient_as_bucket_view': False,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': None,
+                                                     'reduce_dtype': None},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 2,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'no'},
+ 'batch_size': 2,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': None,
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'test/so101',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': None,
+             'root': '/tmp/pytest-of-root/pytest-0/test_actual_trainer_peft_ema_c0/dataset',
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': {'decay': 0.999, 'type': 'constant', 'update_after_step': 0},
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': None,
+ 'log_freq': 0,
+ 'max_eval_samples': 0,
+ 'num_workers': 0,
+ 'optimizer': {'betas': [0.9, 0.999],
+               'eps': 1e-08,
+               'fused': None,
+               'grad_clip_norm': 1.0,
+               'lr': 0.0001,
+               'type': 'adamw',
+               'weight_decay': 0.0},
+ 'output_dir': '/tmp/pytest-of-root/pytest-0/test_actual_trainer_peft_ema_c0/train',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 1,
+                 'dp_shard': 1},
+ 'peft': {'full_training_modules': None,
+          'init_type': None,
+          'lora_alpha': 32,
+          'method_type': 'LORA',
+          'r': 32,
+          'target_modules': None},
+ 'persistent_workers': True,
+ 'policy': {'action_channel_weights': [1, 1, 1, 1, 1, 2],
+            'action_feature_names': None,
+            'action_loss_weight': 0.5,
+            'action_modality': 'action',
+            'action_representation': 'delta',
+            'action_scale': 2.0,
+            'attn_mode': 'torch',
+            'augment': False,
+            'camera_keys': None,
+            'camera_layout': 'single',
+            'canvas_hw': [64, 96],
+            'caption_dropout': 0,
+            'chunk_size': 32,
+            'compile_model': False,
+            'condition_on_past_actions': False,
+            'conditioning': 'history',
+            'conditioning_noise_max': 0.2,
+            'delta_absolute_dims': [-1],
+            'device': 'cpu',
+            'dit_config': {'axes_dim': [8, 8, 8, 8],
+                           'context_in_dim': 32,
+                           'depth': 1,
+                           'depth_single_blocks': 1,
+                           'hidden_size': 64,
+                           'num_heads': 2},
+            'dtype': 'float32',
+            'fps': 30.0,
+            'gradient_checkpointing': True,
+            'gripper_flip_dims': [],
+            'guidance_scale': 4.0,
+            'guidance_scale_action': 1.0,
+            'head_init_seed': 0,
+            'history_snapshots': 1,
+            'inference_seed': 0,
+            'input_features': {'observation.images.top': {'shape': [3, 64, 96],
+                                                          'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.state': {'shape': [6],
+                                                     'type': <FeatureType.STATE: 'STATE'>}},
+            'license': None,
+            'loss_reduction': 'modalities',
+            'n_action_steps': 32,
+            'n_obs_steps': 1,
+            'normalization_clip': 6.0,
+            'normalization_mapping': {'ACTION': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'STATE': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>},
+            'normalization_stats': None,
+            'num_inference_steps': 4,
+            'optimizer_betas': [0.9, 0.999],
+            'optimizer_eps': 1e-08,
+            'optimizer_grad_clip_norm': 1.0,
+            'optimizer_lr': 0.0001,
+            'optimizer_lr_heads_multiplier': 5.0,
+            'optimizer_weight_decay': 0.0,
+            'output_features': {'action': {'shape': [6],
+                                           'type': <FeatureType.ACTION: 'ACTION'>}},
+            'packer': None,
+            'pretrained_path': '/tmp/pytest-of-root/pytest-0/test_actual_trainer_peft_ema_c0/base',
+            'pretrained_revision': None,
+            'private': None,
+            'push_to_hub': False,
+            'relative_exclude_joints': ['gripper'],
+            'repo_id': None,
+            'sampler': 'cosmos_unipc',
+            'sampler_shift': 5.0,
+            'scheduler_cooldown_steps': 0,
+            'scheduler_decay_steps': 0,
+            'scheduler_freeze_backbone_steps': 0,
+            'scheduler_warmup_steps': 0,
+            'scheduler_warmup_steps_heads': 0,
+            'separate_timesteps': True,
+            'tags': None,
+            'text_encoder_id': 'black-forest-labs/flux-3-action-base:text_encoder',
+            'text_fixed_length': 320,
+            'train_timestep_shift': 42.0,
+            'train_timestep_width': 0.75,
+            'trunk_weights': None,
+            'type': 'flux3',
+            'use_amp': False,
+            'use_peft': False,
+            'use_relative_actions': False,
+            'video_logit_mean': 1.08,
+            'video_logit_std': 1.0,
+            'video_loss_weight': 1.0,
+            'video_position_fps': 24.0,
+            'video_vae_id': None},
+ 'prefetch_factor': 4,
+ 'rename_map': {},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 4,
+ 'scheduler': {'cooldown_steps': 0,
+               'decay_steps': 0,
+               'freeze_steps': 0,
+               'num_warmup_steps': 0,
+               'type': 'frozen_warmup_constant',
+               'warmup_steps_heads': 0},
+ 'seed': 42,
+ 'steps': 4,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-20 01:47:18 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-20 01:47:18 ot_train.py:589 Creating dataset
+INFO 2026-11-20 01:47:18 ot_train.py:628 Creating policy
+INFO 2026-11-20 01:47:18 ot_train.py:646 Using PEFT! Wrapping model.
+___________ test_two_camera_base_supports_scene_only_peft_and_reload ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_two_camera_base_supports_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72ce446a1c10>
+
+    def test_two_camera_base_supports_scene_only_peft_and_reload(tmp_path, monkeypatch):
+        pytest.importorskip("peft")
+    
+        scene, wrist = "observation.images.top", "observation.images.front"
+        inputs = task_config().input_features
+        cfg = task_config(
+            camera_layout="side_by_side",
+            camera_keys=[scene, wrist],
+            input_features={**inputs, wrist: inputs[scene]},
+        )
+        base = tmp_path / "base"
+        policy = Flux3Policy(cfg)
+        pre, post = make_flux3_pre_post_processors(cfg)
+        cfg.normalization_stats = None
+        policy.save_pretrained(base)
+        pre.save_pretrained(base)
+        post.save_pretrained(base)
+    
+        cfg = Flux3Config.from_pretrained(
+            base, cli_overrides=["--camera_layout=single", f"--camera_keys={json.dumps([scene])}"]
+        )
+        cfg.pretrained_path = str(base)
+        features = {
+            scene: cfg.input_features[scene],
+            OBS_STATE: cfg.input_features[OBS_STATE],
+            **cfg.output_features,
+        }
+        monkeypatch.setattr(factory, "dataset_to_policy_features", lambda _: features)
+        metadata = SimpleNamespace(features={}, stats={})
+>       policy = factory.make_policy(cfg, ds_meta=metadata).wrap_with_peft(
+            peft_cli_overrides={"method_type": "LORA", "r": 2, "lora_alpha": 2}
+        )
+
+tests/policies/flux3/test_flux3_lora.py:622: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/lerobot/policies/pretrained.py:512: in wrap_with_peft
+    peft_model = get_peft_model(self, final_config, revision=self.config.pretrained_revision)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/mapping_func.py:114: in get_peft_model
+    return PeftModel(
+/opt/venv/lib/python3.12/site-packages/peft/peft_model.py:129: in __init__
+    self.base_model = cls(model, {adapter_name: peft_config}, adapter_name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:315: in __init__
+    self.inject_adapter(self.model, adapter_name, low_cpu_mem_usage=low_cpu_mem_usage, state_dict=state_dict)
+/opt/venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:913: in inject_adapter
+    self._create_and_replace(
+/opt/venv/lib/python3.12/site-packages/peft/tuners/lora/model.py:269: in _create_and_replace
+    new_module = self._create_new_module(lora_config, adapter_name, target, device_map=device_map, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/tuners/lora/model.py:418: in _create_new_module
+    new_module = dispatcher(target, adapter_name, config=lora_config, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/tuners/lora/torchao.py:142: in dispatch_torchao
+    if not is_torchao_available():
+           ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @lru_cache
+    def is_torchao_available():
+        if importlib.util.find_spec("torchao") is None:
+            return False
+    
+        TORCHAO_MINIMUM_VERSION = packaging.version.parse("0.16.0")
+        try:
+            torchao_version = packaging.version.parse(importlib_metadata.version("torchao"))
+        except importlib_metadata.PackageNotFoundError:
+            # Same idea as in diffusers:
+            # https://github.com/huggingface/diffusers/blob/9f06a0d1a4a998ac6a463c5be728c892f95320a8/src/diffusers/utils/import_utils.py#L351-L357
+            # It's not clear under what circumstances `importlib_metadata.version("torchao")` can raise an error even
+            # though `importlib.util.find_spec("torchao") is not None` but it has been observed, so adding this for
+            # precaution.
+            return False
+    
+        if torchao_version < TORCHAO_MINIMUM_VERSION:
+>           raise ImportError(
+                f"Found an incompatible version of torchao. Found version {torchao_version}, "
+                f"but only versions above {TORCHAO_MINIMUM_VERSION} are supported"
+            )
+E           ImportError: Found an incompatible version of torchao. Found version 0.15.0+gite9c7bead9, but only versions above 0.16.0 are supported
+
+/opt/venv/lib/python3.12/site-packages/peft/import_utils.py:143: ImportError
+----------------------------- Captured stdout call -----------------------------
+Loading weights from local directory
+----------------------------- Captured stderr call -----------------------------
+INFO 2026-11-20 01:47:19 n/_torch.py:299 Model weights successfully saved to /tmp/pytest-of-root/pytest-0/test_two_camera_base_supports_0/base!
+------------------------------ Captured log call -------------------------------
+DEBUG    /opt/venv/lib/python3.12/site-packages/huggingface_hub/serialization/_torch.py:_torch.py:282 Shard saved to model.safetensors
+INFO     /opt/venv/lib/python3.12/site-packages/huggingface_hub/serialization/_torch.py:_torch.py:299 Model weights successfully saved to /tmp/pytest-of-root/pytest-0/test_two_camera_base_supports_0/base!
+DEBUG    draccus.help_formatter:help_formatter.py:57 action type: None, Result: , nargs: 0, default metavar: None
+DEBUG    draccus.help_formatter:help_formatter.py:57 action type: <class 'str'>, Result: str, nargs: None, default metavar: None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at n_obs_steps has a default value of 1
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at input_features has a default value of {}
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at output_features has a default value of {}
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at device has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at dtype has a default value of torch.bfloat16
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at use_amp has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at use_peft has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at push_to_hub has a default value of True
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at repo_id has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at private has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at tags has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at license has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at pretrained_path has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at pretrained_revision has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at conditioning has a default value of history
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at packer has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at condition_on_past_actions has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at action_representation has a default value of delta
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at delta_absolute_dims has a default value of []
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at text_fixed_length has a default value of 320
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at video_position_fps has a default value of 24.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at history_snapshots has a default value of 1
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at normalization_stats has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at normalization_clip has a default value of 6.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at separate_timesteps has a default value of True
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at video_logit_mean has a default value of 1.08
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at video_logit_std has a default value of 1.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at conditioning_noise_max has a default value of 0.2
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at loss_reduction has a default value of modalities
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at action_channel_weights has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at gradient_checkpointing has a default value of True
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at chunk_size has a default value of 32
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at n_action_steps has a default value of 32
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at fps has a default value of 30.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at camera_layout has a default value of side_by_side
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at camera_keys has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at canvas_hw has a default value of (256, 512)
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at action_modality has a default value of action
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at action_scale has a default value of 2.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at gripper_flip_dims has a default value of []
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at use_relative_actions has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at relative_exclude_joints has a default value of ['gripper']
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at action_feature_names has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at normalization_mapping has a default value of {'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>, 'STATE': <NormalizationMode.IDENTITY: 'IDENTITY'>, 'ACTION': <NormalizationMode.IDENTITY: 'IDENTITY'>}
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at trunk_weights has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at video_vae_id has a default value of black-forest-labs/flux-3-action-base:video_vae.safetensors
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at text_encoder_id has a default value of black-forest-labs/flux-3-action-base:text_encoder
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at dit_config has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at attn_mode has a default value of torch
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at compile_model has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at sampler has a default value of cosmos_unipc
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at num_inference_steps has a default value of 4
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at guidance_scale has a default value of 4.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at guidance_scale_action has a default value of 1.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at sampler_shift has a default value of 5.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at inference_seed has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at head_init_seed has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at train_timestep_width has a default value of 0.75
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at train_timestep_shift has a default value of 42.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at action_loss_weight has a default value of 0.5
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at video_loss_weight has a default value of 1.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at caption_dropout has a default value of 0.1
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at augment has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_lr has a default value of 0.0001
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_lr_heads_multiplier has a default value of 5.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at optimizer_betas has a default value of (0.9, 0.999)
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_eps has a default value of 1e-08
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_weight_decay has a default value of 0.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_grad_clip_norm has a default value of 1.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_freeze_backbone_steps has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_warmup_steps has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_warmup_steps_heads has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_decay_steps has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_cooldown_steps has a default value of 0
+DEBUG    draccus.argparsing:argparsing.py:152 
+POST PROCESSING
+
+DEBUG    draccus.argparsing:argparsing.py:153 (raw) parsed args: Namespace(camera_layout='single', camera_keys='["observation.images.top"]')
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.policies.flux3.configuration_flux3.Flux3Config'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = n_obs_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = input_features, type = typing.Optional[dict[str, lerobot.configs.types.PolicyFeature]]
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.configs.types.PolicyFeature'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = type, type = <enum 'FeatureType'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = shape, type = tuple[int, ...]
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.configs.types.PolicyFeature'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = type, type = <enum 'FeatureType'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = shape, type = tuple[int, ...]
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.configs.types.PolicyFeature'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = type, type = <enum 'FeatureType'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = shape, type = tuple[int, ...]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = output_features, type = typing.Optional[dict[str, lerobot.configs.types.PolicyFeature]]
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.configs.types.PolicyFeature'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = type, type = <enum 'FeatureType'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = shape, type = tuple[int, ...]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = device, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = dtype, type = typing.Optional[torch.dtype]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = use_amp, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = use_peft, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = push_to_hub, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = repo_id, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = private, type = typing.Optional[bool]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = tags, type = typing.Optional[list[str]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = license, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = pretrained_path, type = typing.Optional[pathlib.Path]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = pretrained_revision, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = conditioning, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = packer, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = condition_on_past_actions, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_representation, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = delta_absolute_dims, type = list[int]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = text_fixed_length, type = typing.Optional[int]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_position_fps, type = typing.Optional[float]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = history_snapshots, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = normalization_stats, type = typing.Optional[dict[str, dict[str, list[float]]]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = normalization_clip, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = separate_timesteps, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_logit_mean, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_logit_std, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = conditioning_noise_max, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = loss_reduction, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_channel_weights, type = typing.Optional[list[float]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = gradient_checkpointing, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = chunk_size, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = n_action_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = fps, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = camera_layout, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = camera_keys, type = typing.Optional[list[str]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = canvas_hw, type = tuple[int, int]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_modality, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_scale, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = gripper_flip_dims, type = list[int]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = use_relative_actions, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = relative_exclude_joints, type = list[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_feature_names, type = typing.Optional[list[str]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = normalization_mapping, type = dict[str, lerobot.configs.types.NormalizationMode]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = trunk_weights, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_vae_id, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = text_encoder_id, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = dit_config, type = typing.Optional[dict[str, typing.Any]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = attn_mode, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = compile_model, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = sampler, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = num_inference_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = guidance_scale, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = guidance_scale_action, type = typing.Optional[float]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = sampler_shift, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = inference_seed, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = head_init_seed, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = train_timestep_width, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = train_timestep_shift, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_loss_weight, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_loss_weight, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = caption_dropout, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = augment, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_lr, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_lr_heads_multiplier, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_betas, type = tuple[float, float]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_eps, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_weight_decay, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_grad_clip_norm, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_freeze_backbone_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_warmup_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_warmup_steps_heads, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_decay_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_cooldown_steps, type = <class 'int'>
+________________ test_peft_requires_saved_base_and_round_trips _________________
+
+fake_vae = None
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_peft_requires_saved_base_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72d1c43a3020>
+
+    def test_peft_requires_saved_base_and_round_trips(fake_vae, tmp_path, monkeypatch):
+        peft = pytest.importorskip("peft")
+        normalization_mapping = {
+            "VISUAL": NormalizationMode.IDENTITY,
+            "STATE": NormalizationMode.MEAN_STD,
+            "ACTION": NormalizationMode.MEAN_STD,
+        }
+        policy = Flux3Policy(single_config(normalization_mapping=normalization_mapping))
+        policy.config.trunk_weights = "initialization-only.safetensors"
+        with pytest.raises(ValueError, match="saved pretrained flux3 policy"):
+            policy.wrap_with_peft(peft_cli_overrides={"method_type": "lora"})
+        base = tmp_path / "base"
+        policy.save_pretrained(base)
+        policy = Flux3Policy.from_pretrained(base)
+>       wrapped = policy.wrap_with_peft(peft_cli_overrides={"method_type": "lora"})
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/policies/flux3/test_flux3_policy.py:890: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/lerobot/policies/pretrained.py:512: in wrap_with_peft
+    peft_model = get_peft_model(self, final_config, revision=self.config.pretrained_revision)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/mapping_func.py:114: in get_peft_model
+    return PeftModel(
+/opt/venv/lib/python3.12/site-packages/peft/peft_model.py:129: in __init__
+    self.base_model = cls(model, {adapter_name: peft_config}, adapter_name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:315: in __init__
+    self.inject_adapter(self.model, adapter_name, low_cpu_mem_usage=low_cpu_mem_usage, state_dict=state_dict)
+/opt/venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:913: in inject_adapter
+    self._create_and_replace(
+/opt/venv/lib/python3.12/site-packages/peft/tuners/lora/model.py:269: in _create_and_replace
+    new_module = self._create_new_module(lora_config, adapter_name, target, device_map=device_map, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/tuners/lora/model.py:418: in _create_new_module
+    new_module = dispatcher(target, adapter_name, config=lora_config, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/tuners/lora/torchao.py:142: in dispatch_torchao
+    if not is_torchao_available():
+           ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @lru_cache
+    def is_torchao_available():
+        if importlib.util.find_spec("torchao") is None:
+            return False
+    
+        TORCHAO_MINIMUM_VERSION = packaging.version.parse("0.16.0")
+        try:
+            torchao_version = packaging.version.parse(importlib_metadata.version("torchao"))
+        except importlib_metadata.PackageNotFoundError:
+            # Same idea as in diffusers:
+            # https://github.com/huggingface/diffusers/blob/9f06a0d1a4a998ac6a463c5be728c892f95320a8/src/diffusers/utils/import_utils.py#L351-L357
+            # It's not clear under what circumstances `importlib_metadata.version("torchao")` can raise an error even
+            # though `importlib.util.find_spec("torchao") is not None` but it has been observed, so adding this for
+            # precaution.
+            return False
+    
+        if torchao_version < TORCHAO_MINIMUM_VERSION:
+>           raise ImportError(
+                f"Found an incompatible version of torchao. Found version {torchao_version}, "
+                f"but only versions above {TORCHAO_MINIMUM_VERSION} are supported"
+            )
+E           ImportError: Found an incompatible version of torchao. Found version 0.15.0+gite9c7bead9, but only versions above 0.16.0 are supported
+
+/opt/venv/lib/python3.12/site-packages/peft/import_utils.py:143: ImportError
+----------------------------- Captured stdout call -----------------------------
+Loading weights from local directory
+----------------------------- Captured stderr call -----------------------------
+INFO 2026-11-20 01:48:49 n/_torch.py:299 Model weights successfully saved to /tmp/pytest-of-root/pytest-0/test_peft_requires_saved_base_0/base!
+------------------------------ Captured log call -------------------------------
+DEBUG    /opt/venv/lib/python3.12/site-packages/huggingface_hub/serialization/_torch.py:_torch.py:282 Shard saved to model.safetensors
+INFO     /opt/venv/lib/python3.12/site-packages/huggingface_hub/serialization/_torch.py:_torch.py:299 Model weights successfully saved to /tmp/pytest-of-root/pytest-0/test_peft_requires_saved_base_0/base!
+DEBUG    draccus.help_formatter:help_formatter.py:57 action type: None, Result: , nargs: 0, default metavar: None
+DEBUG    draccus.help_formatter:help_formatter.py:57 action type: <class 'str'>, Result: str, nargs: None, default metavar: None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at n_obs_steps has a default value of 1
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at input_features has a default value of {}
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at output_features has a default value of {}
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at device has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at dtype has a default value of torch.bfloat16
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at use_amp has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at use_peft has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at push_to_hub has a default value of True
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at repo_id has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at private has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at tags has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at license has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at pretrained_path has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at pretrained_revision has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at conditioning has a default value of history
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at packer has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at condition_on_past_actions has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at action_representation has a default value of delta
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at delta_absolute_dims has a default value of []
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at text_fixed_length has a default value of 320
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at video_position_fps has a default value of 24.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at history_snapshots has a default value of 1
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at normalization_stats has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at normalization_clip has a default value of 6.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at separate_timesteps has a default value of True
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at video_logit_mean has a default value of 1.08
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at video_logit_std has a default value of 1.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at conditioning_noise_max has a default value of 0.2
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at loss_reduction has a default value of modalities
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at action_channel_weights has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at gradient_checkpointing has a default value of True
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at chunk_size has a default value of 32
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at n_action_steps has a default value of 32
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at fps has a default value of 30.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at camera_layout has a default value of side_by_side
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at camera_keys has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at canvas_hw has a default value of (256, 512)
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at action_modality has a default value of action
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at action_scale has a default value of 2.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at gripper_flip_dims has a default value of []
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at use_relative_actions has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at relative_exclude_joints has a default value of ['gripper']
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at action_feature_names has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at normalization_mapping has a default value of {'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>, 'STATE': <NormalizationMode.IDENTITY: 'IDENTITY'>, 'ACTION': <NormalizationMode.IDENTITY: 'IDENTITY'>}
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at trunk_weights has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at video_vae_id has a default value of black-forest-labs/flux-3-action-base:video_vae.safetensors
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at text_encoder_id has a default value of black-forest-labs/flux-3-action-base:text_encoder
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at dit_config has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at attn_mode has a default value of torch
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at compile_model has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at sampler has a default value of cosmos_unipc
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at num_inference_steps has a default value of 4
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at guidance_scale has a default value of 4.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at guidance_scale_action has a default value of 1.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at sampler_shift has a default value of 5.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at inference_seed has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at head_init_seed has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at train_timestep_width has a default value of 0.75
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at train_timestep_shift has a default value of 42.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at action_loss_weight has a default value of 0.5
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at video_loss_weight has a default value of 1.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at caption_dropout has a default value of 0.1
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at augment has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_lr has a default value of 0.0001
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_lr_heads_multiplier has a default value of 5.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at optimizer_betas has a default value of (0.9, 0.999)
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_eps has a default value of 1e-08
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_weight_decay has a default value of 0.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_grad_clip_norm has a default value of 1.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_freeze_backbone_steps has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_warmup_steps has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_warmup_steps_heads has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_decay_steps has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_cooldown_steps has a default value of 0
+DEBUG    draccus.argparsing:argparsing.py:152 
+POST PROCESSING
+
+DEBUG    draccus.argparsing:argparsing.py:153 (raw) parsed args: Namespace()
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.policies.flux3.configuration_flux3.Flux3Config'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = n_obs_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = input_features, type = typing.Optional[dict[str, lerobot.configs.types.PolicyFeature]]
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.configs.types.PolicyFeature'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = type, type = <enum 'FeatureType'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = shape, type = tuple[int, ...]
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.configs.types.PolicyFeature'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = type, type = <enum 'FeatureType'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = shape, type = tuple[int, ...]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = output_features, type = typing.Optional[dict[str, lerobot.configs.types.PolicyFeature]]
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.configs.types.PolicyFeature'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = type, type = <enum 'FeatureType'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = shape, type = tuple[int, ...]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = device, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = dtype, type = typing.Optional[torch.dtype]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = use_amp, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = use_peft, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = push_to_hub, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = repo_id, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = private, type = typing.Optional[bool]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = tags, type = typing.Optional[list[str]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = license, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = pretrained_path, type = typing.Optional[pathlib.Path]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = pretrained_revision, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = conditioning, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = packer, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = condition_on_past_actions, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_representation, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = delta_absolute_dims, type = list[int]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = text_fixed_length, type = typing.Optional[int]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_position_fps, type = typing.Optional[float]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = history_snapshots, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = normalization_stats, type = typing.Optional[dict[str, dict[str, list[float]]]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = normalization_clip, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = separate_timesteps, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_logit_mean, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_logit_std, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = conditioning_noise_max, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = loss_reduction, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_channel_weights, type = typing.Optional[list[float]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = gradient_checkpointing, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = chunk_size, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = n_action_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = fps, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = camera_layout, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = camera_keys, type = typing.Optional[list[str]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = canvas_hw, type = tuple[int, int]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_modality, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_scale, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = gripper_flip_dims, type = list[int]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = use_relative_actions, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = relative_exclude_joints, type = list[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_feature_names, type = typing.Optional[list[str]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = normalization_mapping, type = dict[str, lerobot.configs.types.NormalizationMode]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = trunk_weights, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_vae_id, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = text_encoder_id, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = dit_config, type = typing.Optional[dict[str, typing.Any]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = attn_mode, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = compile_model, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = sampler, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = num_inference_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = guidance_scale, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = guidance_scale_action, type = typing.Optional[float]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = sampler_shift, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = inference_seed, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = head_init_seed, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = train_timestep_width, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = train_timestep_shift, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_loss_weight, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_loss_weight, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = caption_dropout, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = augment, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_lr, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_lr_heads_multiplier, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_betas, type = tuple[float, float]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_eps, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_weight_decay, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_grad_clip_norm, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_freeze_backbone_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_warmup_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_warmup_steps_heads, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_decay_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_cooldown_steps, type = <class 'int'>
+____________________ test_lora_update_ema_resume_and_reload ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_lora_update_ema_resume_an0')
+fake_vae = None
+
+    def test_lora_update_ema_resume_and_reload(tmp_path, fake_vae):
+        pytest.importorskip("peft")
+        cfg = single_config(
+            gradient_checkpointing=True,
+            optimizer_lr=1e-4,
+            optimizer_lr_heads_multiplier=5,
+            augment=False,
+            caption_dropout=0,
+        )
+        base = tmp_path / "base"
+        Flux3Policy(cfg).save_pretrained(base)
+>       policy = Flux3Policy.from_pretrained(base).wrap_with_peft(
+            peft_cli_overrides={"method_type": "LORA", "r": 32, "lora_alpha": 32}
+        )
+
+tests/policies/flux3/test_flux3_policy.py:950: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/lerobot/policies/pretrained.py:512: in wrap_with_peft
+    peft_model = get_peft_model(self, final_config, revision=self.config.pretrained_revision)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/mapping_func.py:114: in get_peft_model
+    return PeftModel(
+/opt/venv/lib/python3.12/site-packages/peft/peft_model.py:129: in __init__
+    self.base_model = cls(model, {adapter_name: peft_config}, adapter_name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:315: in __init__
+    self.inject_adapter(self.model, adapter_name, low_cpu_mem_usage=low_cpu_mem_usage, state_dict=state_dict)
+/opt/venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:913: in inject_adapter
+    self._create_and_replace(
+/opt/venv/lib/python3.12/site-packages/peft/tuners/lora/model.py:269: in _create_and_replace
+    new_module = self._create_new_module(lora_config, adapter_name, target, device_map=device_map, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/tuners/lora/model.py:418: in _create_new_module
+    new_module = dispatcher(target, adapter_name, config=lora_config, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/venv/lib/python3.12/site-packages/peft/tuners/lora/torchao.py:142: in dispatch_torchao
+    if not is_torchao_available():
+           ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @lru_cache
+    def is_torchao_available():
+        if importlib.util.find_spec("torchao") is None:
+            return False
+    
+        TORCHAO_MINIMUM_VERSION = packaging.version.parse("0.16.0")
+        try:
+            torchao_version = packaging.version.parse(importlib_metadata.version("torchao"))
+        except importlib_metadata.PackageNotFoundError:
+            # Same idea as in diffusers:
+            # https://github.com/huggingface/diffusers/blob/9f06a0d1a4a998ac6a463c5be728c892f95320a8/src/diffusers/utils/import_utils.py#L351-L357
+            # It's not clear under what circumstances `importlib_metadata.version("torchao")` can raise an error even
+            # though `importlib.util.find_spec("torchao") is not None` but it has been observed, so adding this for
+            # precaution.
+            return False
+    
+        if torchao_version < TORCHAO_MINIMUM_VERSION:
+>           raise ImportError(
+                f"Found an incompatible version of torchao. Found version {torchao_version}, "
+                f"but only versions above {TORCHAO_MINIMUM_VERSION} are supported"
+            )
+E           ImportError: Found an incompatible version of torchao. Found version 0.15.0+gite9c7bead9, but only versions above 0.16.0 are supported
+
+/opt/venv/lib/python3.12/site-packages/peft/import_utils.py:143: ImportError
+----------------------------- Captured stdout call -----------------------------
+Loading weights from local directory
+----------------------------- Captured stderr call -----------------------------
+INFO 2026-11-20 01:48:49 n/_torch.py:299 Model weights successfully saved to /tmp/pytest-of-root/pytest-0/test_lora_update_ema_resume_an0/base!
+------------------------------ Captured log call -------------------------------
+DEBUG    /opt/venv/lib/python3.12/site-packages/huggingface_hub/serialization/_torch.py:_torch.py:282 Shard saved to model.safetensors
+INFO     /opt/venv/lib/python3.12/site-packages/huggingface_hub/serialization/_torch.py:_torch.py:299 Model weights successfully saved to /tmp/pytest-of-root/pytest-0/test_lora_update_ema_resume_an0/base!
+DEBUG    draccus.help_formatter:help_formatter.py:57 action type: None, Result: , nargs: 0, default metavar: None
+DEBUG    draccus.help_formatter:help_formatter.py:57 action type: <class 'str'>, Result: str, nargs: None, default metavar: None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at n_obs_steps has a default value of 1
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at input_features has a default value of {}
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at output_features has a default value of {}
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at device has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at dtype has a default value of torch.bfloat16
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at use_amp has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at use_peft has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at push_to_hub has a default value of True
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at repo_id has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at private has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at tags has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at license has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at pretrained_path has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at pretrained_revision has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at conditioning has a default value of history
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at packer has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at condition_on_past_actions has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at action_representation has a default value of delta
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at delta_absolute_dims has a default value of []
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at text_fixed_length has a default value of 320
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at video_position_fps has a default value of 24.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at history_snapshots has a default value of 1
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at normalization_stats has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at normalization_clip has a default value of 6.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at separate_timesteps has a default value of True
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at video_logit_mean has a default value of 1.08
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at video_logit_std has a default value of 1.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at conditioning_noise_max has a default value of 0.2
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at loss_reduction has a default value of modalities
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at action_channel_weights has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at gradient_checkpointing has a default value of True
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at chunk_size has a default value of 32
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at n_action_steps has a default value of 32
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at fps has a default value of 30.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at camera_layout has a default value of side_by_side
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at camera_keys has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at canvas_hw has a default value of (256, 512)
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at action_modality has a default value of action
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at action_scale has a default value of 2.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at gripper_flip_dims has a default value of []
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at use_relative_actions has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at relative_exclude_joints has a default value of ['gripper']
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at action_feature_names has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at normalization_mapping has a default value of {'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>, 'STATE': <NormalizationMode.IDENTITY: 'IDENTITY'>, 'ACTION': <NormalizationMode.IDENTITY: 'IDENTITY'>}
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at trunk_weights has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at video_vae_id has a default value of black-forest-labs/flux-3-action-base:video_vae.safetensors
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at text_encoder_id has a default value of black-forest-labs/flux-3-action-base:text_encoder
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at dit_config has a default value of None
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at attn_mode has a default value of torch
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at compile_model has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at sampler has a default value of cosmos_unipc
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at num_inference_steps has a default value of 4
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at guidance_scale has a default value of 4.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at guidance_scale_action has a default value of 1.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at sampler_shift has a default value of 5.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at inference_seed has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at head_init_seed has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at train_timestep_width has a default value of 0.75
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at train_timestep_shift has a default value of 42.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at action_loss_weight has a default value of 0.5
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at video_loss_weight has a default value of 1.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at caption_dropout has a default value of 0.1
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at augment has a default value of False
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_lr has a default value of 0.0001
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_lr_heads_multiplier has a default value of 5.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:214 wrapped field at optimizer_betas has a default value of (0.9, 0.999)
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_eps has a default value of 1e-08
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_weight_decay has a default value of 0.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at optimizer_grad_clip_norm has a default value of 1.0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_freeze_backbone_steps has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_warmup_steps has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_warmup_steps_heads has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_decay_steps has a default value of 0
+DEBUG    draccus.wrappers.dataclass_wrapper:dataclass_wrapper.py:181 wrapped field at scheduler_cooldown_steps has a default value of 0
+DEBUG    draccus.argparsing:argparsing.py:152 
+POST PROCESSING
+
+DEBUG    draccus.argparsing:argparsing.py:153 (raw) parsed args: Namespace()
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.policies.flux3.configuration_flux3.Flux3Config'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = n_obs_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = input_features, type = typing.Optional[dict[str, lerobot.configs.types.PolicyFeature]]
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.configs.types.PolicyFeature'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = type, type = <enum 'FeatureType'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = shape, type = tuple[int, ...]
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.configs.types.PolicyFeature'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = type, type = <enum 'FeatureType'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = shape, type = tuple[int, ...]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = output_features, type = typing.Optional[dict[str, lerobot.configs.types.PolicyFeature]]
+DEBUG    draccus.parsers.decoding:decoding.py:130 from_dict for <class 'lerobot.configs.types.PolicyFeature'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = type, type = <enum 'FeatureType'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = shape, type = tuple[int, ...]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = device, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = dtype, type = typing.Optional[torch.dtype]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = use_amp, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = use_peft, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = push_to_hub, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = repo_id, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = private, type = typing.Optional[bool]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = tags, type = typing.Optional[list[str]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = license, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = pretrained_path, type = typing.Optional[pathlib.Path]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = pretrained_revision, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = conditioning, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = packer, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = condition_on_past_actions, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_representation, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = delta_absolute_dims, type = list[int]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = text_fixed_length, type = typing.Optional[int]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_position_fps, type = typing.Optional[float]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = history_snapshots, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = normalization_stats, type = typing.Optional[dict[str, dict[str, list[float]]]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = normalization_clip, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = separate_timesteps, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_logit_mean, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_logit_std, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = conditioning_noise_max, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = loss_reduction, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_channel_weights, type = typing.Optional[list[float]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = gradient_checkpointing, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = chunk_size, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = n_action_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = fps, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = camera_layout, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = camera_keys, type = typing.Optional[list[str]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = canvas_hw, type = tuple[int, int]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_modality, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_scale, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = gripper_flip_dims, type = list[int]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = use_relative_actions, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = relative_exclude_joints, type = list[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_feature_names, type = typing.Optional[list[str]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = normalization_mapping, type = dict[str, lerobot.configs.types.NormalizationMode]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = trunk_weights, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_vae_id, type = typing.Optional[str]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = text_encoder_id, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = dit_config, type = typing.Optional[dict[str, typing.Any]]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = attn_mode, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = compile_model, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = sampler, type = <class 'str'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = num_inference_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = guidance_scale, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = guidance_scale_action, type = typing.Optional[float]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = sampler_shift, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = inference_seed, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = head_init_seed, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = train_timestep_width, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = train_timestep_shift, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = action_loss_weight, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = video_loss_weight, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = caption_dropout, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = augment, type = <class 'bool'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_lr, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_lr_heads_multiplier, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_betas, type = tuple[float, float]
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_eps, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_weight_decay, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = optimizer_grad_clip_norm, type = <class 'float'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_freeze_backbone_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_warmup_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_warmup_steps_heads, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_decay_steps, type = <class 'int'>
+DEBUG    draccus.parsers.decoding:decoding.py:150 Decode name = scheduler_cooldown_steps, type = <class 'int'>
+=============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+../opt/venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 14 warnings
+  /opt/venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+../opt/venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:101
+../opt/venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:101
+../opt/venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:101
+../opt/venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:101
+../opt/venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:101
+  /opt/venv/lib/python3.12/site-packages/triton/runtime/autotuner.py:101: DeprecationWarning: warmup, rep, and use_cuda_graph parameters are deprecated. See https://github.com/triton-lang/triton/pull/4496 for details.
+    warnings.warn(("warmup, rep, and use_cuda_graph parameters are deprecated. See "
+
+../opt/venv/lib/python3.12/site-packages/torch/jit/_script.py:1488
+../opt/venv/lib/python3.12/site-packages/torch/jit/_script.py:1488
+  /opt/venv/lib/python3.12/site-packages/torch/jit/_script.py:1488: DeprecationWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 10 durations =============================
+45.77s call     tests/policies/flux3/test_flux3_policy.py::test_policy_forward_predict_and_select_on_droid_layout
+12.91s call     tests/policies/flux3/test_flux3_dependencies.py::test_vae_dependency_errors[missing]
+12.69s call     tests/policies/flux3/test_flux3_dependencies.py::test_vae_dependency_errors[unrelated]
+12.62s call     tests/policies/flux3/test_flux3_dependencies.py::test_vae_dependency_errors[broken_natten]
+11.40s call     tests/policies/flux3/test_flux3_policy.py::test_grouped_training_keeps_gradients_and_aggregates_metrics[cuda]
+11.34s call     tests/policies/flux3/test_flux3_policy.py::test_compile_model_wraps_the_inference_dit_forward_only
+5.36s call     tests/policies/flux3/test_flux3_policy.py::test_lean_trunk_without_image_audio_streams_predicts_identically
+5.35s call     tests/policies/flux3/test_flux3_policy.py::test_lean_policy_round_trips_and_full_files_load_into_lean_policies
+3.73s call     tests/policies/flux3/test_flux3_lora.py::test_history_supports_other_dimensions_and_action_representations[7-False-delta-8]
+2.80s call     tests/policies/flux3/test_flux3_lora.py::test_history_supports_other_dimensions_and_action_representations[7-True-absolute-8]
+=========================== short test summary info ============================
+FAILED tests/policies/flux3/test_flux3_lora.py::test_actual_trainer_peft_ema_checkpoint_and_resume
+FAILED tests/policies/flux3/test_flux3_lora.py::test_two_camera_base_supports_scene_only_peft_and_reload
+FAILED tests/policies/flux3/test_flux3_policy.py::test_peft_requires_saved_base_and_round_trips
+FAILED tests/policies/flux3/test_flux3_policy.py::test_lora_update_ema_resume_and_reload
+4 failed, 133 passed, 3 skipped, 23 warnings in 150.14s (0:02:30)
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+EXIT=1

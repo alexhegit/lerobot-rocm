@@ -1,0 +1,7 @@
+diffusion-1 PASS exit=0 seconds=665
+diffusion-ddp2 PASS exit=0 seconds=664
+act-fsdp2 PASS exit=0 seconds=246
+dit-1 PASS exit=0 seconds=54
+dit-ddp2 PASS exit=0 seconds=63
+smolvla-1 PASS exit=0 seconds=80
+smolvla-ddp2 PASS exit=0 seconds=91

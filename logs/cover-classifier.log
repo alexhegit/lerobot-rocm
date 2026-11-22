@@ -1,0 +1,17 @@
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1552.44it/s]
+[transformers] A new version of the following files was downloaded from https://huggingface.co/lerobot/resnet10:
+- configuration_resnet.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+[transformers] A new version of the following files was downloaded from https://huggingface.co/lerobot/resnet10:
+- modeling_resnet.py
+. Make sure to double-check they do not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+frames [0, 22, 45, 68, 91, 114, 137, 160] rewards [0.19, 0.19, 0.19, 0.52, 0.36, 0.221, 0.337, 0.873] labels [0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0]
+Loading weights:   0%|          | 0/36 [00:00<?, ?it/s]Loading weights: 100%|██████████| 36/36 [00:00<00:00, 11614.10it/s]
+Loading weights:   0%|          | 0/36 [00:00<?, ?it/s]model_name lerobot/resnet10 trainable True params 1181441
+step 1 loss 0.6633 {'accuracy': 75.0, 'correct': 3, 'total': 4}
+step 2 loss 0.6481 {'accuracy': 50.0, 'correct': 2, 'total': 4}
+CLASSIFIER_REWARD [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0]
+Loading weights: 100%|██████████| 36/36 [00:00<00:00, 12410.20it/s]
+Loading weights from local directory
+CLASSIFIER_PASS reload ok
+RESULT cover-classifier PASS exit=0 seconds=26

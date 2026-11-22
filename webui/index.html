@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LeRobot 训练</title>
+<style>
+  :root {
+    --bg: #efeae2;
+    --ink: #1c1916;
+    --muted: #6d655c;
+    --line: #d8cfc3;
+    --panel: #f7f4ef;
+    --accent: #9a3b12;
+    --accent-soft: #f3e2d6;
+    --ok: #3d5c1e;
+    --run: #1e4d78;
+    --stop: #6b5420;
+    --bad: #8f2434;
+    --shadow: 0 1px 0 rgba(28, 25, 22, 0.04);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font: 14px/1.45 "Segoe UI", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+    color: var(--ink);
+    background:
+      linear-gradient(180deg, #f6f2eb 0%, var(--bg) 220px);
+  }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  .app { min-height: 100%; display: flex; flex-direction: column; }
+  header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(247, 244, 239, 0.92);
+    position: sticky; top: 0; z-index: 2;
+  }
+  header h1 { font-size: 18px; font-weight: 650; margin: 0; letter-spacing: 0.01em; }
+  .banner {
+    color: var(--muted); font-size: 12px;
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 3px 10px; background: #fff;
+  }
+  .status {
+    margin-left: auto; display: flex; align-items: center; gap: 8px;
+    font-weight: 650;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+  .status.idle .dot { background: var(--muted); }
+  .status.running .dot { background: var(--run); }
+  .status.stopped .dot { background: var(--stop); }
+  .status.done .dot { background: var(--ok); }
+  .status.failed .dot { background: var(--bad); }
+  main {
+    display: grid;
+    grid-template-columns: minmax(420px, 1.05fr) minmax(380px, 0.95fr);
+    gap: 16px;
+    padding: 16px 22px 28px;
+    align-items: start;
+  }
+  section, .observe {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+  }
+  .block { padding: 14px 16px 4px; border-bottom: 1px solid var(--line); }
+  .block:last-child { border-bottom: 0; padding-bottom: 14px; }
+  .block h2 {
+    margin: 0 0 10px; font-size: 13px; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--muted); font-weight: 700;
+  }
+  label.field { display: flex; flex-direction: column; gap: 4px; margin: 0 0 10px; }
+  label.field span, .choice legend, .hint { color: var(--muted); font-size: 12px; }
+  input[type="text"], input[type="number"], select, textarea {
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 7px 9px;
+  }
+  textarea { min-height: 72px; resize: vertical; font-family: ui-monospace, "Cascadia Mono", monospace; font-size: 12.5px; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .row > input, .row > select { flex: 1; }
+  .choice { border: 0; margin: 0 0 10px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 14px; }
+  .choice label { display: flex; gap: 6px; align-items: center; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
+  .hint { margin: -4px 0 10px; }
+  .warn { color: var(--accent); }
+  details { margin: 0 0 10px; }
+  details summary { cursor: pointer; color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  .btn, button.ghost {
+    border-radius: 8px; border: 1px solid var(--line); background: #fff; padding: 7px 12px;
+  }
+  button.ghost { white-space: nowrap; }
+  button.primary { background: var(--ink); color: #f7f4ef; border-color: var(--ink); }
+  button.danger { background: #fff; color: var(--bad); border-color: #e4c4c8; }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  pre.cmd, .term {
+    margin: 0;
+    background: #16130f;
+    color: #f3ecdf;
+    border-radius: 8px;
+    padding: 12px;
+    font: 12px/1.5 ui-monospace, "Cascadia Mono", monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    min-height: 120px;
+  }
+  .issues { margin: 8px 0 0; padding: 0; list-style: none; color: var(--bad); font-size: 12px; }
+  .issues:empty { display: none; }
+  .observe { position: sticky; top: 68px; overflow: hidden; }
+  .tabs { display: flex; border-bottom: 1px solid var(--line); }
+  .tabs button {
+    flex: 1; border: 0; background: transparent; padding: 10px;
+    color: var(--muted); border-bottom: 2px solid transparent;
+  }
+  .tabs button.on { color: var(--ink); border-bottom-color: var(--accent); font-weight: 650; }
+  .pane { display: none; padding: 12px; }
+  .pane.on { display: block; }
+  .term { min-height: 320px; max-height: 520px; overflow: auto; }
+  .metrics-tools { display: flex; flex-wrap: wrap; gap: 10px 14px; margin-bottom: 8px; font-size: 12px; }
+  canvas { width: 100%; height: 280px; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+  .tree { font-family: ui-monospace, monospace; font-size: 12.5px; line-height: 1.6; margin: 0; }
+  .picker {
+    margin: -4px 0 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff;
+    max-height: 140px; overflow: auto;
+  }
+  .picker button {
+    display: block; width: 100%; text-align: left; border: 0; background: transparent;
+    padding: 6px 9px; border-bottom: 1px solid var(--line);
+  }
+  .picker button:hover { background: var(--accent-soft); }
+  .picker .cap { padding: 6px 9px; color: var(--muted); font-size: 11px; }
+  .lang { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: #fff; }
+  .lang button { border: 0; background: transparent; padding: 4px 10px; color: var(--muted); }
+  .lang button.on { background: var(--ink); color: #f7f4ef; }
+  @media (max-width: 980px) {
+    main { grid-template-columns: 1fr; }
+    .observe { position: static; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1 data-i18n="title">LeRobot 训练</h1>
+    <div class="banner" data-i18n="banner">静态预览 · DOUni 上的 lerobot-rocm</div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="zh">中文</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
+    <div class="status idle" id="status"><span class="dot"></span><span id="statusText">空闲</span></div>
+  </header>
+  <main>
+    <form id="form" class="panel" autocomplete="off">
+      <div class="block">
+        <h2 data-i18n="section.run">运行位置</h2>
+        <label class="field"><span data-i18n="field.host">SSH 主机</span><input id="host" type="text" value="DOUni"></label>
+        <label class="field"><span data-i18n="field.image">镜像</span><input id="image" type="text" value="lerobot-rocm"></label>
+        <div class="grid2">
+          <label class="field"><span data-i18n="field.hostOut">宿主输出目录</span><input id="hostOut" type="text" value="/data/lerobot/outputs"></label>
+          <label class="field"><span data-i18n="field.mount">容器挂载点</span><input id="mountPoint" type="text" value="/outputs"></label>
+          <label class="field"><span data-i18n="field.shm">shm-size</span><input id="shm" type="text" value="16g"></label>
+          <label class="field"><span data-i18n="field.groups">group-add（gid）</span><input id="gpuGroups" type="text" value="44,992"></label>
+        </div>
+        <p class="hint" data-i18n-html="hint.device">8×MI300X · 镜像由 <code>docker/Dockerfile.rocm</code> 以 <code>rocm/primus:v26.4</code> 构建，代码在容器内 <code>/lerobot</code>。<code>policy.device=cuda</code>。Docker 认不出 render 组名，用 gid 44 和 992。</p>
+      </div>
+
+      <div class="block">
+        <h2 data-i18n="section.mode">任务模式</h2>
+        <fieldset class="choice">
+          <label><input type="radio" name="mode" value="scratch" checked><span data-i18n="mode.scratch">新训练 · 从零</span></label>
+          <label><input type="radio" name="mode" value="finetune"><span data-i18n="mode.finetune">新训练 · 微调</span></label>
+          <label><input type="radio" name="mode" value="resume"><span data-i18n="mode.resume">续训</span></label>
+        </fieldset>
+        <p class="hint" id="modeHint"></p>
+      </div>
+
+      <div class="block" id="dataBlock">
+        <h2 data-i18n="section.data">数据集</h2>
+        <label class="field"><span>dataset.repo_id</span><input id="repoId" type="text" value="lerobot/pusht" placeholder="lerobot/pusht"></label>
+        <fieldset class="choice">
+          <label><input type="radio" name="source" value="hub" checked><span>Hub</span></label>
+          <label><input type="radio" name="source" value="local"><span data-i18n="source.local">远端本地</span></label>
+        </fieldset>
+        <div id="rootWrap" hidden>
+          <label class="field"><span data-i18n="field.root">dataset.root（训练机上的目录）</span>
+            <span class="row"><input id="dataRoot" type="text" placeholder="/outputs/datasets/..."><button type="button" class="ghost" data-pick="data" data-i18n="action.list">列出</button></span>
+          </label>
+          <div class="picker" id="pickData" hidden></div>
+        </div>
+        <details>
+          <summary data-i18n="summary.advanced">高级</summary>
+          <label class="choice"><input id="streaming" type="checkbox">dataset.streaming</label>
+          <div class="grid2">
+            <label class="field"><span>eval_split</span><input id="evalSplit" type="number" min="0" max="0.99" step="0.05" value="0"></label>
+            <label class="field"><span data-i18n="field.episodes">episodes（逗号分隔，可空）</span><input id="episodes" type="text" placeholder="0,1,2"></label>
+          </div>
+        </details>
+      </div>
+
+      <div class="block" id="policyBlock">
+        <h2 data-i18n="section.policy">策略</h2>
+        <div id="scratchFields">
+          <label class="field"><span>policy.type</span>
+            <select id="policyType">
+              <option value="act">act</option>
+              <option value="diffusion">diffusion</option>
+              <option value="smolvla">smolvla</option>
+              <option value="pi0">pi0</option>
+              <option value="other" data-i18n="option.other">其他</option>
+            </select>
+          </label>
+          <label class="field" id="otherWrap" hidden><span data-i18n="field.customType">自定义 type</span><input id="policyOther" type="text" placeholder="pi05"></label>
+          <p class="hint" id="policyHint"></p>
+        </div>
+        <div id="finetuneFields" hidden>
+          <label class="field"><span data-i18n="field.path">policy.path（Hub repo 或远端 checkpoint）</span>
+            <span class="row"><input id="policyPath" type="text" data-i18n-placeholder="placeholder.path" placeholder="lerobot/pi0 或 .../pretrained_model"><button type="button" class="ghost" data-pick="policy" data-i18n="action.list">列出</button></span>
+          </label>
+          <div class="picker" id="pickPolicy" hidden></div>
+          <p class="hint" data-i18n="hint.path">类型从 checkpoint 读取，不再填写 policy.type。</p>
+        </div>
+        <div id="resumeFields" hidden>
+          <label class="field"><span>config_path</span>
+            <span class="row"><input id="configPath" type="text" placeholder=".../checkpoints/last/pretrained_model/train_config.json"><button type="button" class="ghost" data-pick="resume" data-i18n="action.list">列出</button></span>
+          </label>
+          <div class="picker" id="pickResume" hidden></div>
+          <p class="hint" data-i18n="hint.config">可指向 train_config.json、pretrained_model/、含 checkpoints/ 的输出目录，或 Hub repo。续训以 checkpoint 里的配置为准。</p>
+        </div>
+      </div>
+
+      <div class="block" id="outputBlock">
+        <h2 data-i18n="section.output">输出与发布</h2>
+        <label class="field"><span data-i18n="field.output">output_dir（容器内路径）</span><input id="outputDir" type="text" value="/outputs/act-pusht" placeholder="/outputs/act-pusht"></label>
+        <p class="hint" id="outHint"></p>
+        <label class="field"><span data-i18n="field.job">job_name（可空）</span><input id="jobName" type="text" placeholder="act_pusht"></label>
+        <label class="choice" id="pushWrap"><input id="pushHub" type="checkbox"><span data-i18n="push.label">推送到 Hub（默认关，避免缺少 repo_id 直接失败）</span></label>
+        <label class="field" id="hubRepoWrap" hidden><span>policy.repo_id</span><input id="hubRepo" type="text" placeholder="your-name/act-pusht"></label>
+      </div>
+
+      <div class="block">
+        <h2 data-i18n="section.hf">Hugging Face 账号</h2>
+        <p class="hint" data-i18n="hint.hf">浏览器不能替训练机完成 Hugging Face 网页登录。读私有数据集和推送模型都用 DORobot 上的身份。</p>
+        <p class="hint" id="hfStatus"></p>
+        <div class="controls">
+          <button type="button" class="ghost" id="hfCheck" data-i18n="action.hfCheck">检查远端登录</button>
+        </div>
+        <label class="field"><span data-i18n="field.hfToken">或粘贴 Access Token（hf_...）</span>
+          <input id="hfToken" type="password" autocomplete="off" spellcheck="false" placeholder="hf_...">
+        </label>
+        <p class="hint" data-i18n="hint.hfToken">Token 只作为这一次训练的 HF_TOKEN 传给训练机。命令预览不显示它，页面也不写入浏览器存储。</p>
+      </div>
+
+      <div class="block">
+        <h2 id="paramTitle" data-i18n="section.params">训练参数</h2>
+        <div class="grid2">
+          <label class="field"><span>steps</span><input id="steps" type="number" value="50000"></label>
+          <label class="field"><span>batch_size</span><input id="batch" type="number" value="8"></label>
+          <label class="field"><span>save_freq</span><input id="saveFreq" type="number" value="5000"></label>
+          <label class="field"><span>log_freq</span><input id="logFreq" type="number" value="200"></label>
+          <label class="field"><span>num_workers</span><input id="workers" type="number" value="4"></label>
+          <label class="field"><span>seed</span><input id="seed" type="number" value="1000"></label>
+        </div>
+        <label class="field"><span data-i18n="field.dist">分布</span>
+          <select id="distLayout">
+            <option value="single" data-i18n="dist.single">单卡</option>
+            <option value="ddp" selected data-i18n="dist.ddp">DDP（每张卡一份完整模型）</option>
+            <option value="fsdp" data-i18n="dist.fsdp">FSDP（参数切到各卡）</option>
+            <option value="hsdp" data-i18n="dist.hsdp">HSDP（组内切分，组间复制）</option>
+          </select>
+        </label>
+        <div class="grid2" id="gpuGrid">
+          <label class="field" id="gpuCountWrap"><span data-i18n="field.gpus">GPU 数量</span><input id="numGpu" type="number" min="1" value="8"></label>
+          <label class="field"><span data-i18n="field.devices">HIP_VISIBLE_DEVICES（可空）</span><input id="visibleDevices" type="text" value="0,1,2,3,4,5,6,7" placeholder="0,1,2,3,4,5,6,7"></label>
+          <label class="field" id="replicateWrap" hidden><span>parallelism.dp_replicate</span><input id="dpReplicate" type="number" min="1" value="2"></label>
+          <label class="field" id="shardWrap" hidden><span>parallelism.dp_shard</span><input id="dpShard" type="number" min="1" value="2"></label>
+          <label class="field"><span data-i18n="field.accum">梯度累积步数</span><input id="gradAccum" type="number" min="1" value="1"></label>
+        </div>
+        <p class="hint" id="distHint"></p>
+        <p class="hint" id="batchHint"></p>
+        <button type="button" class="ghost" id="applyPreset" data-i18n="action.preset">应用推荐</button>
+        <details>
+          <summary data-i18n="summary.advanced">高级</summary>
+          <label class="field"><span>accelerator.mixed_precision</span>
+            <select id="precision">
+              <option value="" data-i18n="precision.unset">不设置（默认 no）</option>
+              <option value="no">no</option>
+              <option value="bf16">bf16</option>
+              <option value="fp16">fp16</option>
+            </select>
+          </label>
+          <label class="field"><span data-i18n="field.extra">附加 CLI（每行一条，原样追加）</span><textarea id="extra" placeholder="--policy.freeze_vision_encoder=false"></textarea></label>
+        </details>
+      </div>
+
+      <div class="block">
+        <h2 data-i18n="section.cmd">命令预览</h2>
+        <pre class="cmd" id="cmd"></pre>
+        <ul class="issues" id="issues"></ul>
+      </div>
+
+      <div class="block">
+        <h2 data-i18n="section.control">控制</h2>
+        <div class="controls">
+          <button type="button" class="btn primary" id="btnStart" data-i18n="action.start">开始</button>
+          <button type="button" class="btn danger" id="btnStop" data-i18n="action.stop" disabled>停止</button>
+          <button type="button" class="btn" id="btnResume" data-i18n="action.resumeLast" disabled>续训上次</button>
+        </div>
+        <p class="hint" data-i18n="hint.control">开始会在 DOUni 上跑一次固定的 DiT 单卡 2 步。停止会删掉容器 rocm-webui-dit。页面不保存 token。</p>
+      </div>
+    </form>
+
+    <aside class="observe">
+      <div class="tabs">
+        <button type="button" class="on" data-tab="term" data-i18n="tab.term">终端</button>
+        <button type="button" data-tab="chart" data-i18n="tab.chart">指标</button>
+        <button type="button" data-tab="files" data-i18n="tab.files">产物</button>
+      </div>
+      <div class="pane on" id="pane-term"><pre class="term" id="term"></pre></div>
+      <div class="pane" id="pane-chart">
+        <div class="metrics-tools" id="series"></div>
+        <canvas id="chart" width="720" height="360"></canvas>
+      </div>
+      <div class="pane" id="pane-files">
+        <pre class="tree" id="tree"></pre>
+      </div>
+    </aside>
+  </main>
+</div>
+<script>
+const I18N = {
+  zh: {
+    title: "LeRobot 训练",
+    banner: "静态预览 · DOUni 上的 lerobot-rocm",
+    "status.idle": "空闲",
+    "status.running": "运行中",
+    "status.stopped": "已停止",
+    "status.done": "已完成",
+    "status.failed": "失败",
+    "section.run": "运行位置",
+    "field.host": "SSH 主机",
+    "field.image": "镜像",
+    "field.hostOut": "宿主输出目录",
+    "field.mount": "容器挂载点",
+    "field.shm": "shm-size",
+    "field.groups": "group-add（gid）",
+    "hint.device": "8×MI300X · 镜像由 <code>docker/Dockerfile.rocm</code> 以 <code>rocm/primus:v26.4</code> 构建，代码在容器内 <code>/lerobot</code>。<code>policy.device=cuda</code>。Docker 认不出 render 组名，用 gid 44 和 992。",
+    "section.mode": "任务模式",
+    "mode.scratch": "新训练 · 从零",
+    "mode.finetune": "新训练 · 微调",
+    "mode.resume": "续训",
+    "hint.mode.scratch": "从零训练使用 <code>--policy.type</code>。ACT、Diffusion 通常走这条。",
+    "hint.mode.finetune": "微调使用 <code>--policy.path</code>。类型和结构从 checkpoint 读取。",
+    "hint.mode.resume": "续训使用 <code>--resume=true --config_path</code>。CLI 只覆盖 checkpoint 里的配置。",
+    "section.data": "数据集",
+    "source.local": "远端本地",
+    "field.root": "dataset.root（训练机上的目录）",
+    "action.list": "列出",
+    "summary.advanced": "高级",
+    "field.episodes": "episodes（逗号分隔，可空）",
+    "section.policy": "策略",
+    "option.other": "其他",
+    "field.customType": "自定义 type",
+    "note.act": "单任务抓放的常见起点。MI300X 上 batch 可以再加大。",
+    "note.diffusion": "通常比 ACT 需要更长的训练。",
+    "note.smolvla": "预训练视觉骨干。专项任务常关掉 freeze_vision_encoder。",
+    "note.pi0": "显存占用高。有效 batch 不够时用梯度累积，而不是硬抬 batch。",
+    "note.other": "没有内置推荐。请按该策略文档填写。",
+    "field.path": "policy.path（Hub repo 或远端 checkpoint）",
+    "placeholder.path": "lerobot/pi0 或 .../pretrained_model",
+    "hint.path": "类型从 checkpoint 读取，不再填写 policy.type。",
+    "hint.config": "可指向 train_config.json、pretrained_model/、含 checkpoints/ 的输出目录，或 Hub repo。续训以 checkpoint 里的配置为准。",
+    "section.output": "输出与发布",
+    "field.output": "output_dir（容器内路径）",
+    "hint.output.empty": "留空会写进镜像里的 /lerobot/outputs。容器带 --rm，退出后 checkpoint 不会留在宿主上。",
+    "hint.output.set": "目录必须落在容器挂载点内，才会写到宿主输出目录。目录已存在且这次不是续训时，lerobot-train 会拒绝启动。",
+    "field.job": "job_name（可空）",
+    "push.label": "推送到 Hub（默认关，避免缺少 repo_id 直接失败）",
+    "section.hf": "Hugging Face 账号",
+    "hint.hf": "浏览器不能替训练机完成 Hugging Face 网页登录。读私有数据集和推送模型都用 DOUni 容器里的身份。",
+    "action.hfCheck": "检查远端登录",
+    "field.hfToken": "或粘贴 Access Token（hf_...）",
+    "hint.hfToken": "Token 只作为这一次训练的 HF_TOKEN 传给训练机。命令预览不显示它，页面也不写入浏览器存储。",
+    "hf.unknown": "尚未检查。静态预览不会真的连接 DOUni。",
+    "hf.user": "训练机上已有登录：",
+    "hf.token": "本次将使用输入的 token，不使用训练机上已有的登录。",
+    "hf.both": "本次使用输入的 token。训练机上已有登录：",
+    "comment.hfToken": "HF_TOKEN 由本次运行传入，不写在命令里",
+    "comment.hfUser": "使用训练机上已有的 Hugging Face 登录",
+    "issue.hf": "推送到 Hub 需要训练机已登录，或在上面填入 Access Token。",
+    "section.params": "训练参数",
+    "field.dist": "分布",
+    "dist.single": "单卡",
+    "dist.ddp": "DDP（每张卡一份完整模型）",
+    "dist.fsdp": "FSDP（参数切到各卡）",
+    "dist.hsdp": "HSDP（组内切分，组间复制）",
+    "field.gpus": "GPU 数量",
+    "field.devices": "HIP_VISIBLE_DEVICES（可空）",
+    "field.accum": "梯度累积步数",
+    "hint.dist.single": "容器里单进程直接运行 lerobot-train。",
+    "hint.dist.ddp": "容器里 accelerate launch，不写 parallelism。DOUni 上 8 卡 DDP 已跑通。",
+    "hint.dist.fsdp": "dp_shard 等于 GPU 数量。策略若没有声明切分单元，需要在附加 CLI 里写 accelerator.fsdp.wrap_modules。",
+    "hint.dist.hsdp": "dp_replicate × dp_shard 必须等于 GPU 数量。",
+    "hint.batch": "有效 batch = batch_size × GPU 数 × 梯度累积。学习率和 steps 不会自动跟着变。",
+    "issue.gpus": "DDP / FSDP / HSDP 至少需要 2 张 GPU。",
+    "issue.hsdp": "HSDP 要求 dp_replicate × dp_shard 等于 GPU 数量。",
+    "issue.devices": "HIP_VISIBLE_DEVICES 里的卡数必须等于 GPU 数量。",
+    "section.paramsOverride": "覆盖项（可选）",
+    "action.preset": "应用推荐",
+    "precision.unset": "不设置（默认 no）",
+    "field.extra": "附加 CLI（每行一条，原样追加）",
+    "section.cmd": "命令预览",
+    "section.control": "控制",
+    "action.start": "开始",
+    "action.stop": "停止",
+    "action.resumeLast": "续训上次",
+    "hint.control": "开始会在 DOUni 上跑一次固定的 DiT 单卡 2 步。停止会删掉容器 rocm-webui-dit。页面不保存 token。",
+    "tab.term": "终端",
+    "tab.chart": "指标",
+    "tab.files": "产物",
+    "picker.sample": "示例列表，未连接训练机",
+    "issue.repo": "新训练需要 dataset.repo_id。",
+    "issue.root": "远端本地数据集需要 dataset.root。",
+    "issue.type": "从零训练需要 policy.type。",
+    "issue.path": "微调需要 policy.path。",
+    "issue.config": "续训需要 config_path。",
+    "issue.hub": "打开 Hub 推送后必须填写 policy.repo_id，否则训练在启动前失败。",
+    "comment.output": "output_dir 留空；--rm 后容器内自动目录会消失",
+    "issue.outputMount": "output_dir 不在容器挂载点内，--rm 退出后 checkpoint 不会留在宿主上。",
+    "issue.outputRm": "未填写 output_dir。--rm 的容器退出后，自动生成的 checkpoint 不会留在宿主上。",
+    "log.preview": "# 静态预览：未启动训练进程",
+    "log.stopped": "# 已停止。最近 checkpoint 仍在 "
+  },
+  en: {
+    title: "LeRobot training",
+    banner: "Static preview · lerobot-rocm on DOUni",
+    "status.idle": "Idle",
+    "status.running": "Running",
+    "status.stopped": "Stopped",
+    "status.done": "Finished",
+    "status.failed": "Failed",
+    "section.run": "Where it runs",
+    "field.host": "SSH host",
+    "field.image": "Image",
+    "field.hostOut": "Host output directory",
+    "field.mount": "Container mount",
+    "field.shm": "shm-size",
+    "field.groups": "group-add (gids)",
+    "hint.device": "8×MI300X · image built from <code>docker/Dockerfile.rocm</code> on <code>rocm/primus:v26.4</code>. Code lives at <code>/lerobot</code> in the container. <code>policy.device=cuda</code>. Docker cannot resolve the render group name, so the gids are 44 and 992.",
+    "section.mode": "Task",
+    "mode.scratch": "New run · from scratch",
+    "mode.finetune": "New run · fine-tune",
+    "mode.resume": "Resume",
+    "hint.mode.scratch": "From scratch uses <code>--policy.type</code>. ACT and Diffusion usually take this path.",
+    "hint.mode.finetune": "Fine-tuning uses <code>--policy.path</code>. Type and structure come from the checkpoint.",
+    "hint.mode.resume": "Resume uses <code>--resume=true --config_path</code>. CLI flags only override the checkpoint config.",
+    "section.data": "Dataset",
+    "source.local": "Remote directory",
+    "field.root": "dataset.root (directory on the training machine)",
+    "action.list": "List",
+    "summary.advanced": "Advanced",
+    "field.episodes": "episodes (comma-separated, optional)",
+    "section.policy": "Policy",
+    "option.other": "Other",
+    "field.customType": "Custom type",
+    "note.act": "A usual starting point for a single-task grasp. On an MI300X the batch can go higher.",
+    "note.diffusion": "Usually needs a longer run than ACT.",
+    "note.smolvla": "Pretrained vision backbone. Specialized tasks often turn freeze_vision_encoder off.",
+    "note.pi0": "High memory use. Raise the effective batch with gradient accumulation instead of a larger batch.",
+    "note.other": "No built-in recommendation. Follow that policy's documentation.",
+    "field.path": "policy.path (Hub repo or remote checkpoint)",
+    "placeholder.path": "lerobot/pi0 or .../pretrained_model",
+    "hint.path": "The type is read from the checkpoint. Do not set policy.type.",
+    "hint.config": "Points at train_config.json, a pretrained_model/ directory, an output directory that contains checkpoints/, or a Hub repo. Resume uses the config stored in the checkpoint.",
+    "section.output": "Output and publish",
+    "field.output": "output_dir (path inside the container)",
+    "hint.output.empty": "Empty writes under /lerobot/outputs inside the image. The container uses --rm, so that checkpoint disappears when it exits.",
+    "hint.output.set": "The directory must sit under the container mount so it lands on the host. If it already exists and this is not a resume, lerobot-train refuses to start.",
+    "field.job": "job_name (optional)",
+    "push.label": "Push to the Hub (off by default; a missing repo_id fails validation)",
+    "section.hf": "Hugging Face account",
+    "hint.hf": "The browser cannot complete the Hugging Face website login for the training machine. Private datasets and model uploads both use the identity inside the DOUni container.",
+    "action.hfCheck": "Check remote login",
+    "field.hfToken": "Or paste an access token (hf_...)",
+    "hint.hfToken": "The token is sent to the training machine as HF_TOKEN for this run only. It is not shown in the command preview and is not stored in the browser.",
+    "hf.unknown": "Not checked yet. This static preview does not connect to DOUni.",
+    "hf.user": "Training machine is already logged in as ",
+    "hf.token": "This run will use the pasted token, not an existing login on the training machine.",
+    "hf.both": "This run uses the pasted token. The training machine is also logged in as ",
+    "comment.hfToken": "HF_TOKEN is supplied for this run and is not written into the command",
+    "comment.hfUser": "using the Hugging Face login already on the training machine",
+    "issue.hf": "Pushing to the Hub needs a login on the training machine, or an access token above.",
+    "section.params": "Training parameters",
+    "field.dist": "Layout",
+    "dist.single": "Single GPU",
+    "dist.ddp": "DDP (full model on every GPU)",
+    "dist.fsdp": "FSDP (shard parameters across GPUs)",
+    "dist.hsdp": "HSDP (shard within groups, replicate across groups)",
+    "field.gpus": "GPU count",
+    "field.devices": "HIP_VISIBLE_DEVICES (optional)",
+    "field.accum": "Gradient accumulation steps",
+    "hint.dist.single": "Inside the container, one process runs lerobot-train directly.",
+    "hint.dist.ddp": "Inside the container, accelerate launch with no parallelism flags. 8-GPU DDP already ran on DOUni.",
+    "hint.dist.fsdp": "dp_shard equals the GPU count. A policy without declared wrap units needs accelerator.fsdp.wrap_modules in the extra CLI.",
+    "hint.dist.hsdp": "dp_replicate × dp_shard must equal the GPU count.",
+    "hint.batch": "Effective batch = batch_size × GPUs × gradient accumulation. Learning rate and steps are not scaled automatically.",
+    "issue.gpus": "DDP, FSDP, and HSDP need at least 2 GPUs.",
+    "issue.hsdp": "HSDP requires dp_replicate × dp_shard to equal the GPU count.",
+    "issue.devices": "The number of IDs in HIP_VISIBLE_DEVICES must equal the GPU count.",
+    "section.paramsOverride": "Overrides (optional)",
+    "action.preset": "Apply recommendation",
+    "precision.unset": "Leave unset (default no)",
+    "field.extra": "Extra CLI (one flag per line, appended as written)",
+    "section.cmd": "Command preview",
+    "section.control": "Controls",
+    "action.start": "Start",
+    "action.stop": "Stop",
+    "action.resumeLast": "Resume last",
+    "hint.control": "Start runs one fixed single-GPU DiT smoke for 2 steps on DOUni. Stop removes the rocm-webui-dit container. The page does not store a token.",
+    "tab.term": "Terminal",
+    "tab.chart": "Metrics",
+    "tab.files": "Artifacts",
+    "picker.sample": "Sample list, training machine not connected",
+    "issue.repo": "A new run needs dataset.repo_id.",
+    "issue.root": "A remote local dataset needs dataset.root.",
+    "issue.type": "Training from scratch needs policy.type.",
+    "issue.path": "Fine-tuning needs policy.path.",
+    "issue.config": "Resume needs config_path.",
+    "issue.hub": "Turning Hub push on requires policy.repo_id, or training fails before it starts.",
+    "comment.output": "output_dir left empty; a generated directory inside --rm is discarded on exit",
+    "issue.outputMount": "output_dir is outside the container mount, so --rm will not leave the checkpoint on the host.",
+    "issue.outputRm": "output_dir is empty. With --rm, a generated checkpoint will not remain on the host.",
+    "log.preview": "# Static preview: training process was not started",
+    "log.stopped": "# Stopped. Latest checkpoint remains at "
+  }
+};
+const PRESETS = {
+  act:       { steps: 50000,  batch: 8, save: 5000,  log: 200 },
+  diffusion: { steps: 100000, batch: 8, save: 10000, log: 200 },
+  smolvla:   { steps: 50000,  batch: 4, save: 5000,  log: 200 },
+  pi0:       { steps: 50000,  batch: 2, save: 5000,  log: 200 },
+  other:     { steps: 20000,  batch: 8, save: 5000,  log: 200 }
+};
+const SAMPLES = {
+  data: ["/outputs/datasets/so101_pick", "/outputs/datasets/pusht_local"],
+  policy: ["/outputs/act-pusht/checkpoints/last/pretrained_model", "/outputs/smoke-rocm-ddp8/checkpoints/000002/pretrained_model"],
+  resume: ["/outputs/act-pusht/checkpoints/last/pretrained_model/train_config.json", "/outputs/act-pusht"]
+};
+const SERIES = {
+  loss:  [2.41, 1.92, 1.48, 1.21, 0.98, 0.84, 0.73, 0.66, 0.61, 0.57],
+  lr:    [1e-4, 1e-4, 9.6e-5, 8.8e-5, 7.6e-5, 6.1e-5, 4.5e-5, 2.9e-5, 1.4e-5, 4e-6],
+  grdn:  [4.2, 3.1, 2.4, 1.9, 1.6, 1.4, 1.25, 1.15, 1.08, 1.02],
+  "smp/s": [62, 71, 74, 76, 77, 78, 78, 79, 79, 80],
+  mem_gb: [18.2, 18.4, 18.4, 18.5, 18.5, 18.5, 18.6, 18.6, 18.6, 18.6]
+};
+const STEPS = [200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000];
+const state = { run: "idle", lastOut: "", lang: "zh", hfUser: "" };
+
+const $ = (id) => document.getElementById(id);
+const mode = () => document.querySelector('input[name=mode]:checked').value;
+const source = () => document.querySelector('input[name=source]:checked').value;
+const t = (key) => (I18N[state.lang] && I18N[state.lang][key]) || key;
+
+function applyLang() {
+  document.documentElement.lang = state.lang === "zh" ? "zh-CN" : "en";
+  document.title = t("title");
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+    el.innerHTML = t(el.dataset.i18nHtml);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+  document.querySelectorAll(".lang button").forEach((btn) => {
+    btn.classList.toggle("on", btn.dataset.lang === state.lang);
+    btn.setAttribute("aria-pressed", btn.dataset.lang === state.lang ? "true" : "false");
+  });
+  ["data", "policy", "resume"].forEach((kind) => {
+    const box = $({ data: "pickData", policy: "pickPolicy", resume: "pickResume" }[kind]);
+    if (!box.hidden) showPicker(kind);
+  });
+  syncMode();
+  setRun(state.run);
+}
+
+function setRun(next) {
+  state.run = next;
+  $("status").className = "status " + next;
+  $("statusText").textContent = t("status." + next);
+  $("btnStart").disabled = next === "running";
+  $("btnStop").disabled = next !== "running";
+  $("btnResume").disabled = !state.lastOut || next === "running";
+}
+
+function syncMode() {
+  const m = mode();
+  $("dataBlock").hidden = m === "resume";
+  $("scratchFields").hidden = m !== "scratch";
+  $("finetuneFields").hidden = m !== "finetune";
+  $("resumeFields").hidden = m !== "resume";
+  $("pushWrap").hidden = m === "resume";
+  $("paramTitle").textContent = m === "resume" ? t("section.paramsOverride") : t("section.params");
+  $("modeHint").innerHTML = t("hint.mode." + m);
+  $("rootWrap").hidden = source() !== "local";
+  $("otherWrap").hidden = $("policyType").value !== "other";
+  $("hubRepoWrap").hidden = !$("pushHub").checked || m === "resume";
+  const out = $("outputDir").value.trim();
+  $("outHint").textContent = out ? t("hint.output.set") : t("hint.output.empty");
+  $("policyHint").textContent = t("note." + $("policyType").value);
+  const layout = $("distLayout").value;
+  $("gpuCountWrap").hidden = layout === "single";
+  $("replicateWrap").hidden = layout !== "hsdp";
+  $("shardWrap").hidden = layout !== "hsdp";
+  $("distHint").textContent = t("hint.dist." + layout);
+  const plan = gpuPlan();
+  const batch = parseInt($("batch").value, 10) || 0;
+  const world = layout === "single" ? 1 : plan.n;
+  $("batchHint").textContent = t("hint.batch") + " = " + (batch * world * plan.accum);
+  updateHfStatus();
+  renderCommand();
+}
+
+function gpuPlan() {
+  const layout = $("distLayout").value;
+  const n = Math.max(1, parseInt($("numGpu").value, 10) || 1);
+  const repl = Math.max(1, parseInt($("dpReplicate").value, 10) || 1);
+  const shard = Math.max(1, parseInt($("dpShard").value, 10) || 1);
+  const accum = Math.max(1, parseInt($("gradAccum").value, 10) || 1);
+  const ids = $("visibleDevices").value.split(",").map((part) => part.trim()).filter(Boolean);
+  return { layout, n, repl, shard, accum, ids };
+}
+
+function updateHfStatus() {
+  const token = $("hfToken").value.trim();
+  if (token && state.hfUser) $("hfStatus").textContent = t("hf.both") + state.hfUser;
+  else if (token) $("hfStatus").textContent = t("hf.token");
+  else if (state.hfUser) $("hfStatus").textContent = t("hf.user") + state.hfUser;
+  else $("hfStatus").textContent = t("hf.unknown");
+}
+
+function flag(name, value) {
+  return "  --" + name + "=" + value + " \\";
+}
+
+function mountPoint() {
+  return ($("mountPoint").value.trim() || "/outputs").replace(/\/$/, "");
+}
+
+function toContainerPath(value) {
+  const host = $("hostOut").value.trim().replace(/\/$/, "");
+  const mount = mountPoint();
+  if (!value) return "";
+  if (value === mount || value.startsWith(mount + "/")) return value;
+  if (host && (value === host || value.startsWith(host + "/"))) return mount + value.slice(host.length);
+  return value;
+}
+
+function containerOutput() {
+  return toContainerPath($("outputDir").value.trim());
+}
+
+function renderCommand() {
+  const m = mode();
+  const plan = gpuPlan();
+  const issues = [];
+  const image = $("image").value.trim() || "lerobot-rocm";
+  const hostOut = $("hostOut").value.trim().replace(/\/$/, "");
+  const mount = mountPoint();
+  const shm = $("shm").value.trim() || "16g";
+  const groups = $("gpuGroups").value.split(",").map((part) => part.trim()).filter(Boolean);
+  let launch = "lerobot-train";
+  if (plan.layout !== "single") {
+    launch = "accelerate launch --num_processes=" + plan.n + " $(which lerobot-train)";
+    if (plan.n < 2) issues.push(t("issue.gpus"));
+  }
+  if (plan.ids.length && plan.ids.length !== (plan.layout === "single" ? 1 : plan.n)) issues.push(t("issue.devices"));
+  const lines = ["# ssh " + ($("host").value.trim() || "DOUni")];
+  lines.push("docker run --rm --ipc=host --shm-size " + shm + " \\");
+  lines.push("  --device=/dev/kfd --device=/dev/dri \\");
+  groups.forEach((gid) => lines.push("  --group-add " + gid + " \\"));
+  if (plan.ids.length) lines.push("  -e HIP_VISIBLE_DEVICES=" + plan.ids.join(",") + " \\");
+  lines.push("  -e MIOPEN_FIND_MODE=2 \\");
+  if ($("hfToken").value.trim()) lines.push("  -e HF_TOKEN \\");
+  if (hostOut) lines.push("  -v " + hostOut + ":" + mount + " \\");
+  lines.push("  " + image + " \\");
+  lines.push(launch + " \\");
+  if (m !== "resume") {
+    const repoId = $("repoId").value.trim();
+    lines.push(flag("dataset.repo_id", repoId || "<repo_id>"));
+    if (!repoId) issues.push(t("issue.repo"));
+    if (source() === "local") {
+      const root = toContainerPath($("dataRoot").value.trim());
+      lines.push(flag("dataset.root", root || "<root>"));
+      if (!root) issues.push(t("issue.root"));
+      else if (!(root === mount || root.startsWith(mount + "/"))) issues.push(t("issue.outputMount"));
+    }
+    if ($("streaming").checked) lines.push(flag("dataset.streaming", "true"));
+    const split = $("evalSplit").value.trim();
+    if (split && split !== "0") lines.push(flag("dataset.eval_split", split));
+    const eps = $("episodes").value.trim();
+    if (eps) lines.push(flag("dataset.episodes", "[" + eps + "]"));
+  }
+  if (m === "scratch") {
+    const type = $("policyType").value === "other" ? $("policyOther").value.trim() : $("policyType").value;
+    lines.push(flag("policy.type", type || "<type>"));
+    if (!type) issues.push(t("issue.type"));
+  } else if (m === "finetune") {
+    const path = toContainerPath($("policyPath").value.trim());
+    lines.push(flag("policy.path", path || "<path>"));
+    if (!path) issues.push(t("issue.path"));
+  } else {
+    lines.push(flag("resume", "true"));
+    const cfg = toContainerPath($("configPath").value.trim());
+    lines.push(flag("config_path", cfg || "<config_path>"));
+    if (!cfg) issues.push(t("issue.config"));
+  }
+  lines.push(flag("policy.device", "cuda"));
+  if (plan.layout === "fsdp") lines.push(flag("parallelism.dp_shard", String(plan.n)));
+  if (plan.layout === "hsdp") {
+    lines.push(flag("parallelism.dp_replicate", String(plan.repl)));
+    lines.push(flag("parallelism.dp_shard", String(plan.shard)));
+    if (plan.repl * plan.shard !== plan.n) issues.push(t("issue.hsdp"));
+  }
+  if (plan.accum > 1) lines.push(flag("accelerator.gradient_accumulation.steps", String(plan.accum)));
+  if (m !== "resume") {
+    if (!$("pushHub").checked) lines.push(flag("policy.push_to_hub", "false"));
+    else {
+      const hub = $("hubRepo").value.trim();
+      lines.push(flag("policy.repo_id", hub || "<repo_id>"));
+      if (!hub) issues.push(t("issue.hub"));
+      if (!state.hfUser && !$("hfToken").value.trim()) issues.push(t("issue.hf"));
+    }
+  }
+  if ($("hfToken").value.trim()) lines.push("  # " + t("comment.hfToken"));
+  else if (state.hfUser) lines.push("  # " + t("comment.hfUser") + ": " + state.hfUser);
+  for (const [id, name] of [["steps","steps"],["batch","batch_size"],["saveFreq","save_freq"],["logFreq","log_freq"],["workers","num_workers"],["seed","seed"]]) {
+    const v = $(id).value.trim();
+    if (v) lines.push(flag(name, v));
+  }
+  if ($("precision").value) lines.push(flag("accelerator.mixed_precision", $("precision").value));
+  const job = $("jobName").value.trim();
+  if (job) lines.push(flag("job_name", job));
+  const out = containerOutput();
+  if (out) {
+    lines.push(flag("output_dir", out));
+    if (!(out === mount || out.startsWith(mount + "/"))) issues.push(t("issue.outputMount"));
+  } else lines.push("  # " + t("comment.output"));
+  if (!out) issues.push(t("issue.outputRm"));
+  $("extra").value.split("\n").map(s => s.trim()).filter(Boolean).forEach(s => lines.push("  " + s + " \\"));
+  const last = lines[lines.length - 1];
+  if (last.endsWith(" \\")) lines[lines.length - 1] = last.slice(0, -2);
+  $("cmd").textContent = lines.join("\n");
+  $("issues").innerHTML = issues.map(t => "<li>" + t + "</li>").join("");
+}
+
+function showPicker(kind) {
+  const map = { data: ["pickData", "dataRoot"], policy: ["pickPolicy", "policyPath"], resume: ["pickResume", "configPath"] };
+  const [boxId, inputId] = map[kind];
+  const box = $(boxId);
+  box.hidden = false;
+  box.innerHTML = '<div class="cap">' + t("picker.sample") + '</div>' +
+    SAMPLES[kind].map(p => '<button type="button" data-fill="' + inputId + '" data-value="' + p + '">' + p + '</button>').join("");
+}
+
+function applyPreset() {
+  const key = $("policyType").value;
+  const p = PRESETS[key];
+  $("steps").value = p.steps;
+  $("batch").value = p.batch;
+  $("saveFreq").value = p.save;
+  $("logFreq").value = p.log;
+  renderCommand();
+}
+
+function drawChart() {
+  const canvas = $("chart");
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, w, h);
+  const selected = [...document.querySelectorAll('#series input:checked')].map(el => el.value);
+  const pad = { l: 48, r: 16, t: 16, b: 28 };
+  ctx.strokeStyle = "#e6dfd6";
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.t + (h - pad.t - pad.b) * i / 4;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
+  }
+  const colors = { loss: "#9a3b12", lr: "#1e4d78", grdn: "#3d5c1e", "smp/s": "#6b5420", mem_gb: "#5c4a72" };
+  selected.forEach(name => {
+    const data = SERIES[name];
+    const min = Math.min(...data), max = Math.max(...data);
+    const span = max - min || 1;
+    ctx.beginPath();
+    ctx.strokeStyle = colors[name];
+    ctx.lineWidth = 2;
+    data.forEach((v, i) => {
+      const x = pad.l + (w - pad.l - pad.r) * i / (data.length - 1);
+      const y = pad.t + (h - pad.t - pad.b) * (1 - (v - min) / span);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  });
+  ctx.fillStyle = "#6d655c";
+  ctx.font = "12px sans-serif";
+  ctx.fillText("step", w - 46, h - 8);
+  ctx.fillText(selected[0] || "metric", 8, 18);
+}
+
+function initChartToggles() {
+  const box = $("series");
+  Object.keys(SERIES).forEach(name => {
+    const label = document.createElement("label");
+    label.innerHTML = '<input type="checkbox" value="' + name + '"' + (name === "loss" ? " checked" : "") + '> ' + name;
+    box.appendChild(label);
+  });
+  box.addEventListener("change", drawChart);
+  drawChart();
+}
+
+function initTerm() {
+  $("term").textContent = [
+    "INFO Creating dataset",
+    "INFO Output dir: /outputs/act-pusht",
+    "INFO Effective batch size: 8 x 8 dp workers x 1 grad accum = 64 (topology: dp_replicate=8, dp_shard=1)",
+    "INFO steps=50000 (50K)",
+    "INFO Start offline training on a fixed dataset, with effective batch size: 64",
+    "INFO step:200 smpl:1.6K ep:4 epch:0.04 loss:1.842 grdn:2.104 lr:1.0e-04 data_s:0.021 prep_s:0.004 updt_s:0.081 step_s:0.109 smp/s:73 mem_gb:18.40",
+    "INFO step:400 smpl:3.2K ep:8 epch:0.07 loss:1.214 grdn:1.553 lr:1.0e-04 data_s:0.012 prep_s:0.003 updt_s:0.074 step_s:0.091 smp/s:88 mem_gb:18.52"
+  ].join("\n");
+  $("tree").textContent = [
+    "/outputs/act-pusht/",
+    "└── checkpoints/",
+    "    ├── 005000/",
+    "    │   ├── pretrained_model/",
+    "    │   │   ├── config.json",
+    "    │   │   ├── model.safetensors",
+    "    │   │   └── train_config.json",
+    "    │   └── training_state/",
+    "    │       ├── optimizer_state.safetensors",
+    "    │       └── training_step.json",
+    "    └── last -> 005000"
+  ].join("\n");
+}
+
+document.querySelectorAll(".tabs button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("on", b === btn));
+    document.querySelectorAll(".pane").forEach(p => p.classList.toggle("on", p.id === "pane-" + btn.dataset.tab));
+    if (btn.dataset.tab === "chart") drawChart();
+  });
+});
+
+$("form").addEventListener("input", syncMode);
+$("form").addEventListener("change", syncMode);
+$("applyPreset").addEventListener("click", applyPreset);
+$("distLayout").addEventListener("change", () => {
+  const layout = $("distLayout").value;
+  if ((layout === "ddp" || layout === "fsdp") && (parseInt($("numGpu").value, 10) || 1) < 2) {
+    $("numGpu").value = "2";
+  }
+  if (layout === "hsdp") {
+    const repl = parseInt($("dpReplicate").value, 10) || 2;
+    const shard = parseInt($("dpShard").value, 10) || 2;
+    $("numGpu").value = String(repl * shard);
+  }
+});
+$("hfCheck").addEventListener("click", () => {
+  state.hfUser = "preview-user";
+  updateHfStatus();
+  renderCommand();
+});
+document.querySelectorAll("[data-pick]").forEach(btn => btn.addEventListener("click", () => showPicker(btn.dataset.pick)));
+document.body.addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-fill]");
+  if (!btn) return;
+  $(btn.dataset.fill).value = btn.dataset.value;
+  btn.parentElement.hidden = true;
+  syncMode();
+});
+
+let logTimer = 0;
+async function pullLog() {
+  const response = await fetch("/api/log");
+  $("term").textContent = await response.text();
+  if ($("term").textContent.includes("EXIT:")) {
+    clearInterval(logTimer);
+    setRun("stopped");
+  }
+}
+$("btnStart").addEventListener("click", async () => {
+  const response = await fetch("/api/start", { method: "POST" });
+  const body = await response.json();
+  if (!body.ok) {
+    $("term").textContent += "\n" + (body.error || "start failed");
+    return;
+  }
+  setRun("running");
+  clearInterval(logTimer);
+  logTimer = setInterval(() => { pullLog().catch((err) => { $("term").textContent += "\n" + err; }); }, 2000);
+  pullLog().catch((err) => { $("term").textContent += "\n" + err; });
+});
+$("btnStop").addEventListener("click", async () => {
+  await fetch("/api/stop", { method: "POST" });
+  clearInterval(logTimer);
+  setRun("stopped");
+  pullLog().catch((err) => { $("term").textContent += "\n" + err; });
+});
+$("btnResume").addEventListener("click", () => {
+  document.querySelector('input[name=mode][value=resume]').checked = true;
+  $("configPath").value = state.lastOut + "/checkpoints/last/pretrained_model/train_config.json";
+  syncMode();
+});
+
+document.querySelectorAll(".lang button").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    state.lang = btn.dataset.lang;
+    localStorage.setItem("lerobot-webui-lang", state.lang);
+    applyLang();
+  });
+});
+
+const savedLang = localStorage.getItem("lerobot-webui-lang");
+const queryLang = new URLSearchParams(location.search).get("lang");
+state.lang = queryLang === "en" || queryLang === "zh" ? queryLang : (savedLang === "en" ? "en" : "zh");
+initTerm();
+initChartToggles();
+applyLang();
+</script>
+</body>
+</html>

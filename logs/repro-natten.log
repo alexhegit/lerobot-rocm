@@ -1,0 +1,18 @@
+=== 8 causal
+torch 2.12.0+rocm7.14.0a20260608 hip 7.14.60850 natten 0.21.7
+_FLEX_COMPILE_SUPPORTED (stock) False
+shape (1, 8, 64, 128, 4, 64) tokens 65536 causal True
+OK (1, 8, 64, 128, 4, 64) seconds 42.9
+exit=0
+=== 42 noncausal
+torch 2.12.0+rocm7.14.0a20260608 hip 7.14.60850 natten 0.21.7
+_FLEX_COMPILE_SUPPORTED (stock) False
+shape (1, 42, 64, 128, 4, 64) tokens 344064 causal False
+RuntimeError: CUDA driver error: 1
+exit=1
+=== 42 causal
+torch 2.12.0+rocm7.14.0a20260608 hip 7.14.60850 natten 0.21.7
+_FLEX_COMPILE_SUPPORTED (stock) False
+shape (1, 42, 64, 128, 4, 64) tokens 344064 causal True
+OK (1, 42, 64, 128, 4, 64) seconds 861.4
+exit=0

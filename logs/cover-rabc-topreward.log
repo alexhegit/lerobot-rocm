@@ -1,0 +1,48 @@
+----- 2026-11-20T00:50:55+00:00 BEGIN cover-rabc-topreward devices=3 -----
+hip 7.14.60850
+Loading weights:   0%|          | 0/750 [00:00<?, ?it/s]Loading weights: 100%|██████████| 750/750 [00:00<00:00, 11940.42it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1887.20it/s]
+Episodes:   0%|          | 0/1 [00:00<?, ?it/s][transformers] Qwen3VL video processing does not apply the per-frame pixel cap the reference implementation (qwen-vl-utils) applies, so some videos cost far more tokens than they would there. In v5.22 the capped behavior will become the default and `cap_pixels_per_frame` will be removed. Pass `cap_pixels_per_frame=True` to adopt the reference behavior now, or `False` to keep the current behavior and silence this warning.
+Episodes:   0%|          | 0/1 [00:03<?, ?it/s]
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/lerobot/src/lerobot/rewards/topreward/compute_rabc_weights.py", line 353, in <module>
+    main()
+  File "/lerobot/src/lerobot/rewards/topreward/compute_rabc_weights.py", line 310, in main
+    output_path = compute_topreward_progress(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lerobot/src/lerobot/rewards/topreward/compute_rabc_weights.py", line 211, in compute_topreward_progress
+    per_frame = compute_instruction_rewards_for_prefixes(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lerobot/src/lerobot/rewards/topreward/compute_rabc_weights.py", line 117, in compute_instruction_rewards_for_prefixes
+    encoded = encoder(transition)
+              ^^^^^^^^^^^^^^^^^^^
+  File "/lerobot/src/lerobot/rewards/topreward/processor_topreward.py", line 164, in __call__
+    encoded = self._encode_batch(videos, tasks, batch_size)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lerobot/src/lerobot/rewards/topreward/processor_topreward.py", line 228, in _encode_batch
+    result = self._processor(
+             ^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 677, in __call__
+    processed_videos, videos_replacements = self._process_videos(videos, **merged_kwargs["videos_kwargs"])
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/transformers/processing_utils.py", line 779, in _process_videos
+    processed_videos = self.video_processor(videos, **kwargs)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/transformers/video_processing_utils.py", line 87, in __call__
+    return self.preprocess(videos, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/transformers/video_processing_utils.py", line 137, in preprocess
+    preprocessed_videos = self._preprocess(videos=videos, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/transformers/models/qwen3_vl/video_processing_qwen3_vl.py", line 298, in _preprocess
+    stacked_videos = self.resize(
+                     ^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/transformers/models/qwen3_vl/video_processing_qwen3_vl.py", line 210, in resize
+    resized_height, resized_width = smart_resize(
+                                    ^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/transformers/models/qwen3_vl/video_processing_qwen3_vl.py", line 85, in smart_resize
+    raise ValueError(f"t:{num_frames} must be larger than temporal_factor:{temporal_factor}")
+ValueError: t:1 must be larger than temporal_factor:2
+RESULT cover-rabc-topreward FAIL exit=1 seconds=22
