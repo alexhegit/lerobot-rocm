@@ -1,0 +1,2 @@
+# Official diffusion_pusht, 50 PushT episodes (GPU 6).
+eval-diffusion-pusht|CUSTOM|6|1||

@@ -1,0 +1,6 @@
+# FSDP 2 for the four policies whose layers mix dtypes or run submodules directly, with one FSDP
+# unit per parameter-owning module (FSDP_WRAP_STRATEGY=params) and their original dtypes. GPUs 4-5.
+g05-fsdp2-pw|g05-1|4,5|2|--parallelism.dp_shard=2 @AUTOWRAP|export FSDP_WRAP_STRATEGY=params
+cover-wallx-fsdp2-pw|cover-wallx|4,5|2|--parallelism.dp_shard=2 @AUTOWRAP|export FSDP_WRAP_STRATEGY=params
+cover-fineart-fsdp2-pw|cover-fineart3c|4,5|2|--parallelism.dp_shard=2 @AUTOWRAP|export FSDP_WRAP_STRATEGY=params
+cover-longwam-fsdp2-pw|cover-longwam2|4,5|2|--parallelism.dp_shard=2 @AUTOWRAP|export FSDP_WRAP_STRATEGY=params

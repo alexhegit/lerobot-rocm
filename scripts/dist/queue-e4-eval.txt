@@ -1,0 +1,2 @@
+# GR00T N1.7 LIBERO-Spatial checkpoint, 10 tasks x 5 (GPU 6).
+eval-groot-libero|CUSTOM|6|1||

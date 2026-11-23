@@ -1,0 +1,3 @@
+# CPU-side slowdown under DDP: no dataloader workers, and OMP_NUM_THREADS=16 (GPUs 0-3).
+prof-act-4g-w0|CUSTOM|0,1,2,3|4||
+prof-act-4g-omp16|CUSTOM|0,1,2,3|4||

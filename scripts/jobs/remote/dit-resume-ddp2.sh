@@ -9,5 +9,6 @@ echo "== resume: steps 3-4"
 accelerate launch --num_processes=2 "$(which lerobot-train)" --resume=true \
   --config_path=/outputs/rocm-train/dit-resume-ddp2/checkpoints/000002/pretrained_model/train_config.json --steps=4
 test -d /outputs/rocm-train/dit-resume-ddp2/checkpoints/000004
-cat /outputs/rocm-train/dit-resume-ddp2/checkpoints/000004/training_state/training_step.json 2>/dev/null || find /outputs/rocm-train/dit-resume-ddp2/checkpoints/000004 -maxdepth 2
+find /outputs/rocm-train/dit-resume-ddp2/checkpoints/000004 -maxdepth 2 | sort
+cat /outputs/rocm-train/dit-resume-ddp2/checkpoints/000004/training_state/training_step.json 2>/dev/null || true
 echo "RESUME_OK"

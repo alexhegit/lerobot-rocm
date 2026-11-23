@@ -1,0 +1,20 @@
+# Latest upstream main (e5be0c16, mounted via PYTHONPATH) on GPUs 2-3: NAT VLA, then a regression
+# set of policies that passed on the image's code, single GPU and DDP 2.
+natvla-1g|natvla-1|2|1||
+natvla-ddp2|natvla-1|2,3|2||
+natvla-fsdp2|natvla-1|2,3|2|--parallelism.dp_shard=2 @AUTOWRAP|
+latest-act-1g|act-base|2|1||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-act-ddp2|act-base|2,3|2||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-act-fsdp2|act-base|2,3|2|--parallelism.dp_shard=2|export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-dit-1g|dit-1|2|1||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-dit-ddp2|dit-1|2,3|2||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-smolvla-1g|smolvla-1|2|1||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-smolvla-ddp2|smolvla-1|2,3|2||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-pi05-1g|pi05-1|2|1||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-pi05-ddp2|pi05-1|2,3|2||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-groot-1g|cover-groot2|2|1||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-groot-ddp2|cover-groot2|2,3|2||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-xvla-1g|xvla-1|2|1||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-xvla-ddp2|xvla-1|2,3|2||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-wall-1g|wall-1|2|1||export PYTHONPATH=/outputs/rocm-train/latest-main/src
+latest-wall-fsdp2|wall-1|2,3|2|--parallelism.dp_shard=2 --policy.dtype=float32 --accelerator.mixed_precision=bf16|export PYTHONPATH=/outputs/rocm-train/latest-main/src

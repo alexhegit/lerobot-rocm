@@ -1,0 +1,853 @@
+----- 2026-11-22T14:45:11+00:00 BEGIN rccl-bench devices=0,1,2,3,4,5,6,7 free=201G -----
+ALLREDUCE world=2 size=1MB time=0.043ms busbw=22.7GB/s
+ALLREDUCE world=2 size=8MB time=0.200ms busbw=39.0GB/s
+ALLREDUCE world=2 size=64MB time=1.459ms busbw=42.8GB/s
+ALLREDUCE world=2 size=256MB time=5.716ms busbw=43.7GB/s
+ALLREDUCE world=4 size=1MB time=0.041ms busbw=35.5GB/s
+ALLREDUCE world=4 size=8MB time=0.207ms busbw=56.6GB/s
+ALLREDUCE world=4 size=64MB time=0.809ms busbw=115.9GB/s
+ALLREDUCE world=4 size=256MB time=3.041ms busbw=123.3GB/s
+ALLREDUCE world=8 size=1MB time=0.036ms busbw=47.0GB/s
+ALLREDUCE world=8 size=8MB time=0.102ms busbw=133.9GB/s
+ALLREDUCE world=8 size=64MB time=0.542ms busbw=201.8GB/s
+ALLREDUCE world=8 size=256MB time=1.571ms busbw=278.5GB/s
+RESULT rccl-bench PASS exit=0 seconds=38 dp_replicate= dp_shard= steps=[]
+----- 2026-11-22T14:45:49+00:00 BEGIN scale2-act-8g-nounused devices=0,1,2,3,4,5,6,7 free=201G -----
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.4s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/apex/transformer/functional/fused_rope.py:49: UserWarning: Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0
+  warnings.warn("Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0", UserWarning)
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+INFO 2026-11-22 14:46:26 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': False,
+                         'gradient_as_bucket_view': False,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': None,
+                                                     'reduce_dtype': None},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 1,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'no'},
+ 'batch_size': 32,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': None,
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'lerobot/aloha_sim_transfer_cube_human',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': None,
+             'root': None,
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': None,
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': 'act',
+ 'log_freq': 20,
+ 'max_eval_samples': 0,
+ 'num_workers': 8,
+ 'optimizer': {'betas': [0.9, 0.999],
+               'eps': 1e-08,
+               'fused': None,
+               'grad_clip_norm': 10.0,
+               'lr': 1e-05,
+               'type': 'adamw',
+               'weight_decay': 0.0001},
+ 'output_dir': '/outputs/rocm-train/scale2-act-8g-nounused',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 8,
+                 'dp_shard': 1},
+ 'peft': None,
+ 'persistent_workers': True,
+ 'policy': {'chunk_size': 20,
+            'device': 'cuda',
+            'dim_feedforward': 3200,
+            'dim_model': 64,
+            'dropout': 0.1,
+            'dtype': None,
+            'feedforward_activation': 'relu',
+            'input_features': {},
+            'kl_weight': 10.0,
+            'latent_dim': 32,
+            'license': None,
+            'n_action_steps': 20,
+            'n_decoder_layers': 1,
+            'n_encoder_layers': 4,
+            'n_heads': 8,
+            'n_obs_steps': 1,
+            'n_vae_encoder_layers': 4,
+            'normalization_mapping': {'ACTION': <NormalizationMode.MEAN_STD: 'MEAN_STD'>,
+                                      'STATE': <NormalizationMode.MEAN_STD: 'MEAN_STD'>,
+                                      'VISUAL': <NormalizationMode.MEAN_STD: 'MEAN_STD'>},
+            'optimizer_fused': None,
+            'optimizer_lr': 1e-05,
+            'optimizer_lr_backbone': 1e-05,
+            'optimizer_weight_decay': 0.0001,
+            'output_features': {},
+            'pre_norm': False,
+            'pretrained_backbone_weights': 'ResNet18_Weights.IMAGENET1K_V1',
+            'pretrained_path': None,
+            'pretrained_revision': None,
+            'private': None,
+            'push_to_hub': False,
+            'replace_final_stride_with_dilation': False,
+            'repo_id': None,
+            'tags': None,
+            'temporal_ensemble_coeff': None,
+            'type': 'act',
+            'use_amp': False,
+            'use_peft': False,
+            'use_vae': True,
+            'vision_backbone': 'resnet18'},
+ 'prefetch_factor': 4,
+ 'rename_map': {},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 100000,
+ 'scheduler': None,
+ 'seed': 1000,
+ 'steps': 60,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-22 14:46:26 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-22 14:46:26 ot_train.py:589 Creating dataset
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 793.85it/s]
+WARNING 2026-11-22 14:46:26 ts/utils.py:270 Unknown fields in DatasetInfo: ['files_size_in_mb']. These will be ignored.
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1971.70it/s]
+WARNING 2026-11-22 14:46:27 ts/utils.py:270 Unknown fields in DatasetInfo: ['files_size_in_mb']. These will be ignored.
+INFO 2026-11-22 14:46:41 ot_train.py:628 Creating policy
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 600.47it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 593.61it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 688.38it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 534.60it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1214.77it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 594.92it/s]
+Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /root/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 407.42it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 785.63it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 957.22it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 466.20it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]  0%|          | 0.00/44.7M [00:00<?, ?B/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 871.09it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 374.88it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 348.98it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 367.52it/s]
+ 74%|███████▍  | 33.0M/44.7M [00:00<00:00, 340MB/s]100%|██████████| 44.7M/44.7M [00:00<00:00, 351MB/s]
+INFO 2026-11-22 14:46:42 ot_train.py:723 Creating optimizer and scheduler
+INFO 2026-11-22 14:46:43 ot_train.py:784 Output dir: /outputs/rocm-train/scale2-act-8g-nounused
+INFO 2026-11-22 14:46:43 ot_train.py:791 cfg.steps=60 (60)
+INFO 2026-11-22 14:46:43 ot_train.py:792 dataset.num_frames=20000 (20K)
+INFO 2026-11-22 14:46:43 ot_train.py:793 dataset.num_episodes=50
+INFO 2026-11-22 14:46:43 ot_train.py:794 Effective batch size: 32 x 8 dp workers x 1 grad accum = 256 (topology: dp_replicate=8, dp_shard=1)
+INFO 2026-11-22 14:46:43 ot_train.py:799 num_learnable_params=15096014 (15M)
+INFO 2026-11-22 14:46:43 ot_train.py:800 num_total_params=15096014 (15M)
+Training:   0%|          | 0/60 [00:00<?, ?step/s]INFO 2026-11-22 14:46:43 ot_train.py:848 Start offline training on a fixed dataset, with effective batch size: 256
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+Training:   2%|▏         | 1/60 [04:37<4:33:18, 277.93s/step]Training:   3%|▎         | 2/60 [04:40<1:51:57, 115.82s/step]Training:   5%|▌         | 3/60 [04:40<59:56, 63.10s/step]   Training:   7%|▋         | 4/60 [04:41<35:49, 38.38s/step]Training:   8%|▊         | 5/60 [04:41<22:42, 24.78s/step]Training:  10%|█         | 6/60 [04:42<14:56, 16.61s/step]Training:  12%|█▏        | 7/60 [04:43<10:07, 11.46s/step]Training:  13%|█▎        | 8/60 [04:44<07:01,  8.10s/step]Training:  15%|█▌        | 9/60 [04:45<04:59,  5.87s/step]Training:  17%|█▋        | 10/60 [04:46<03:37,  4.34s/step]Training:  18%|█▊        | 11/60 [04:47<02:41,  3.30s/step]Training:  20%|██        | 12/60 [04:48<02:03,  2.57s/step]Training:  22%|██▏       | 13/60 [04:48<01:37,  2.08s/step]Training:  23%|██▎       | 14/60 [04:49<01:19,  1.73s/step]Training:  25%|██▌       | 15/60 [04:50<01:06,  1.48s/step]Training:  27%|██▋       | 16/60 [04:51<00:57,  1.31s/step]Training:  28%|██▊       | 17/60 [04:52<00:50,  1.19s/step]Training:  30%|███       | 18/60 [04:53<00:45,  1.09s/step]Training:  32%|███▏      | 19/60 [04:54<00:42,  1.03s/step]Training:  33%|███▎      | 20/60 [04:55<00:39,  1.01step/s]INFO 2026-11-22 14:51:38 ot_train.py:894 step:20 smpl:5K ep:13 epch:0.26 loss:47.460 grdn:441.145 lr:1.0e-05 data_s:9.974 prep_s:0.126 updt_s:6.493 step_s:14.771 smp/s:17 mem_gb:4.95 l1_loss:0.779 kld_loss:4.668
+Training:  35%|███▌      | 21/60 [04:56<00:36,  1.06step/s]Training:  37%|███▋      | 22/60 [04:56<00:34,  1.10step/s]Training:  38%|███▊      | 23/60 [04:57<00:32,  1.14step/s]Training:  40%|████      | 24/60 [04:58<00:31,  1.16step/s]Training:  42%|████▏     | 25/60 [04:59<00:30,  1.15step/s]Training:  43%|████▎     | 26/60 [05:00<00:29,  1.14step/s]Training:  45%|████▌     | 27/60 [05:01<00:29,  1.13step/s]Training:  47%|████▋     | 28/60 [05:02<00:28,  1.12step/s]Training:  48%|████▊     | 29/60 [05:03<00:27,  1.13step/s]Training:  50%|█████     | 30/60 [05:03<00:25,  1.17step/s]Training:  52%|█████▏    | 31/60 [05:04<00:24,  1.16step/s]Training:  53%|█████▎    | 32/60 [05:05<00:24,  1.16step/s]Training:  55%|█████▌    | 33/60 [05:06<00:23,  1.17step/s]Training:  57%|█████▋    | 34/60 [05:07<00:22,  1.15step/s]Training:  58%|█████▊    | 35/60 [05:08<00:21,  1.15step/s]Training:  60%|██████    | 36/60 [05:09<00:20,  1.17step/s]Training:  62%|██████▏   | 37/60 [05:09<00:19,  1.18step/s]Training:  63%|██████▎   | 38/60 [05:10<00:18,  1.20step/s]Training:  65%|██████▌   | 39/60 [05:11<00:17,  1.18step/s]Training:  67%|██████▋   | 40/60 [05:12<00:16,  1.18step/s]INFO 2026-11-22 14:51:55 ot_train.py:894 step:40 smpl:10K ep:26 epch:0.51 loss:21.763 grdn:157.228 lr:1.0e-05 data_s:0.108 prep_s:0.006 updt_s:0.840 step_s:0.847 smp/s:302 mem_gb:4.95 l1_loss:0.604 kld_loss:2.116
+Training:  68%|██████▊   | 41/60 [05:13<00:16,  1.16step/s]Training:  70%|███████   | 42/60 [05:14<00:15,  1.16step/s]Training:  72%|███████▏  | 43/60 [05:14<00:14,  1.18step/s]Training:  73%|███████▎  | 44/60 [05:15<00:13,  1.20step/s]Training:  75%|███████▌  | 45/60 [05:16<00:12,  1.21step/s]Training:  77%|███████▋  | 46/60 [05:17<00:11,  1.21step/s]Training:  78%|███████▊  | 47/60 [05:18<00:10,  1.27step/s]Training:  80%|████████  | 48/60 [05:18<00:08,  1.41step/s]Training:  82%|████████▏ | 49/60 [05:18<00:06,  1.64step/s]Training:  83%|████████▎ | 50/60 [05:19<00:05,  1.99step/s]Training:  85%|████████▌ | 51/60 [05:19<00:03,  2.61step/s]Training:  88%|████████▊ | 53/60 [05:19<00:01,  3.98step/s]Training:  92%|█████████▏| 55/60 [05:19<00:00,  5.23step/s]Training:  95%|█████████▌| 57/60 [05:19<00:00,  6.41step/s]Training:  97%|█████████▋| 58/60 [05:20<00:00,  6.89step/s]Training: 100%|██████████| 60/60 [05:20<00:00,  7.94step/s]INFO 2026-11-22 14:52:03 ot_train.py:894 step:60 smpl:15K ep:38 epch:0.77 loss:12.901 grdn:91.771 lr:1.0e-05 data_s:0.022 prep_s:0.006 updt_s:0.380 step_s:0.384 smp/s:667 mem_gb:4.95 l1_loss:0.502 kld_loss:1.240
+INFO 2026-11-22 14:52:03 ot_train.py:936 Checkpoint policy after step 60
+INFO 2026-11-22 14:52:03 n/_torch.py:299 Model weights successfully saved to /outputs/rocm-train/scale2-act-8g-nounused/checkpoints/000060/pretrained_model!
+Training: 100%|██████████| 60/60 [05:20<00:00,  5.34s/step]
+INFO 2026-11-22 14:52:03 t_train.py:1026 End of training
+RESULT scale2-act-8g-nounused PASS exit=0 seconds=421 dp_replicate=8 dp_shard=1 steps=[20 40 60]
+----- 2026-11-22T14:52:50+00:00 BEGIN scale2-act-8g-w2 devices=0,1,2,3,4,5,6,7 free=201G -----
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.5s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/apex/transformer/functional/fused_rope.py:49: UserWarning: Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0
+  warnings.warn("Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0", UserWarning)
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+INFO 2026-11-22 14:53:28 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': True,
+                         'gradient_as_bucket_view': False,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': None,
+                                                     'reduce_dtype': None},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 1,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'no'},
+ 'batch_size': 32,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': None,
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'lerobot/aloha_sim_transfer_cube_human',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': None,
+             'root': None,
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': None,
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': 'act',
+ 'log_freq': 20,
+ 'max_eval_samples': 0,
+ 'num_workers': 2,
+ 'optimizer': {'betas': [0.9, 0.999],
+               'eps': 1e-08,
+               'fused': None,
+               'grad_clip_norm': 10.0,
+               'lr': 1e-05,
+               'type': 'adamw',
+               'weight_decay': 0.0001},
+ 'output_dir': '/outputs/rocm-train/scale2-act-8g-w2',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 8,
+                 'dp_shard': 1},
+ 'peft': None,
+ 'persistent_workers': True,
+ 'policy': {'chunk_size': 20,
+            'device': 'cuda',
+            'dim_feedforward': 3200,
+            'dim_model': 64,
+            'dropout': 0.1,
+            'dtype': None,
+            'feedforward_activation': 'relu',
+            'input_features': {},
+            'kl_weight': 10.0,
+            'latent_dim': 32,
+            'license': None,
+            'n_action_steps': 20,
+            'n_decoder_layers': 1,
+            'n_encoder_layers': 4,
+            'n_heads': 8,
+            'n_obs_steps': 1,
+            'n_vae_encoder_layers': 4,
+            'normalization_mapping': {'ACTION': <NormalizationMode.MEAN_STD: 'MEAN_STD'>,
+                                      'STATE': <NormalizationMode.MEAN_STD: 'MEAN_STD'>,
+                                      'VISUAL': <NormalizationMode.MEAN_STD: 'MEAN_STD'>},
+            'optimizer_fused': None,
+            'optimizer_lr': 1e-05,
+            'optimizer_lr_backbone': 1e-05,
+            'optimizer_weight_decay': 0.0001,
+            'output_features': {},
+            'pre_norm': False,
+            'pretrained_backbone_weights': 'ResNet18_Weights.IMAGENET1K_V1',
+            'pretrained_path': None,
+            'pretrained_revision': None,
+            'private': None,
+            'push_to_hub': False,
+            'replace_final_stride_with_dilation': False,
+            'repo_id': None,
+            'tags': None,
+            'temporal_ensemble_coeff': None,
+            'type': 'act',
+            'use_amp': False,
+            'use_peft': False,
+            'use_vae': True,
+            'vision_backbone': 'resnet18'},
+ 'prefetch_factor': 4,
+ 'rename_map': {},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 100000,
+ 'scheduler': None,
+ 'seed': 1000,
+ 'steps': 60,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-22 14:53:28 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-22 14:53:28 ot_train.py:589 Creating dataset
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1382.55it/s]
+WARNING 2026-11-22 14:53:28 ts/utils.py:270 Unknown fields in DatasetInfo: ['files_size_in_mb']. These will be ignored.
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1784.24it/s]
+WARNING 2026-11-22 14:53:28 ts/utils.py:270 Unknown fields in DatasetInfo: ['files_size_in_mb']. These will be ignored.
+INFO 2026-11-22 14:53:37 ot_train.py:628 Creating policy
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2323.71it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 695.77it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 579.06it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 587.29it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 406.75it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2244.74it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2365.99it/s]
+Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /root/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2039.54it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 588.39it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 778.16it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /root/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+  0%|          | 0.00/44.7M [00:00<?, ?B/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 624.45it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 345.08it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 372.71it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2597.49it/s]
+  0%|          | 0.00/44.7M [00:00<?, ?B/s] 72%|███████▏  | 32.2M/44.7M [00:00<00:00, 338MB/s]100%|██████████| 44.7M/44.7M [00:00<00:00, 345MB/s]
+ 90%|████████▉ | 40.1M/44.7M [00:00<00:00, 412MB/s]100%|██████████| 44.7M/44.7M [00:00<00:00, 422MB/s]
+INFO 2026-11-22 14:53:38 ot_train.py:723 Creating optimizer and scheduler
+INFO 2026-11-22 14:53:39 ot_train.py:784 Output dir: /outputs/rocm-train/scale2-act-8g-w2
+INFO 2026-11-22 14:53:39 ot_train.py:791 cfg.steps=60 (60)
+INFO 2026-11-22 14:53:39 ot_train.py:792 dataset.num_frames=20000 (20K)
+INFO 2026-11-22 14:53:39 ot_train.py:793 dataset.num_episodes=50
+INFO 2026-11-22 14:53:39 ot_train.py:794 Effective batch size: 32 x 8 dp workers x 1 grad accum = 256 (topology: dp_replicate=8, dp_shard=1)
+INFO 2026-11-22 14:53:39 ot_train.py:799 num_learnable_params=15096014 (15M)
+INFO 2026-11-22 14:53:39 ot_train.py:800 num_total_params=15096014 (15M)
+Training:   0%|          | 0/60 [00:00<?, ?step/s]INFO 2026-11-22 14:53:39 ot_train.py:848 Start offline training on a fixed dataset, with effective batch size: 256
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[rank6]:[W1122 14:55:10.157445280 reducer.cpp:1528] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank7]:[W1122 14:55:27.066540818 reducer.cpp:1528] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank5]:[W1122 14:55:27.133571334 reducer.cpp:1528] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank2]:[W1122 14:55:27.594533399 reducer.cpp:1528] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank3]:[W1122 14:55:28.981544626 reducer.cpp:1528] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank4]:[W1122 14:55:37.546458419 reducer.cpp:1528] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank1]:[W1122 14:55:38.058585685 reducer.cpp:1528] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank0]:[W1122 14:55:38.276044314 reducer.cpp:1528] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+Training:   2%|▏         | 1/60 [02:25<2:22:54, 145.32s/step]Training:   3%|▎         | 2/60 [02:26<58:44, 60.77s/step]   Training:   5%|▌         | 3/60 [02:27<31:36, 33.27s/step]Training:   7%|▋         | 4/60 [02:28<19:06, 20.48s/step]Training:   8%|▊         | 5/60 [02:29<12:16, 13.39s/step]Training:  10%|█         | 6/60 [02:30<08:13,  9.13s/step]Training:  12%|█▏        | 7/60 [02:30<05:40,  6.42s/step]Training:  13%|█▎        | 8/60 [02:31<04:01,  4.64s/step]Training:  15%|█▌        | 9/60 [02:32<02:55,  3.44s/step]Training:  17%|█▋        | 10/60 [02:33<02:11,  2.62s/step]Training:  18%|█▊        | 11/60 [02:33<01:39,  2.03s/step]Training:  20%|██        | 12/60 [02:34<01:14,  1.56s/step]Training:  22%|██▏       | 13/60 [02:34<00:56,  1.19s/step]Training:  23%|██▎       | 14/60 [02:35<00:44,  1.04step/s]Training:  25%|██▌       | 15/60 [02:35<00:35,  1.26step/s]Training:  27%|██▋       | 16/60 [02:36<00:30,  1.46step/s]Training:  28%|██▊       | 17/60 [02:36<00:24,  1.72step/s]Training:  30%|███       | 18/60 [02:37<00:28,  1.48step/s]Training:  32%|███▏      | 19/60 [02:37<00:28,  1.45step/s]Training:  33%|███▎      | 20/60 [02:38<00:30,  1.30step/s]INFO 2026-11-22 14:56:18 ot_train.py:894 step:20 smpl:5K ep:13 epch:0.26 loss:47.460 grdn:441.148 lr:1.0e-05 data_s:4.383 prep_s:0.101 updt_s:5.143 step_s:7.954 smp/s:32 mem_gb:4.94 l1_loss:0.779 kld_loss:4.668
+Training:  35%|███▌      | 21/60 [02:39<00:30,  1.29step/s]Training:  37%|███▋      | 22/60 [02:40<00:30,  1.23step/s]Training:  38%|███▊      | 23/60 [02:41<00:30,  1.19step/s]Training:  40%|████      | 24/60 [02:42<00:29,  1.21step/s]Training:  42%|████▏     | 25/60 [02:43<00:29,  1.17step/s]Training:  43%|████▎     | 26/60 [02:44<00:28,  1.18step/s]Training:  45%|████▌     | 27/60 [02:45<00:29,  1.12step/s]Training:  47%|████▋     | 28/60 [02:45<00:27,  1.17step/s]Training:  48%|████▊     | 29/60 [02:46<00:27,  1.14step/s]Training:  50%|█████     | 30/60 [02:47<00:25,  1.18step/s]Training:  52%|█████▏    | 31/60 [02:48<00:25,  1.13step/s]Training:  53%|█████▎    | 32/60 [02:49<00:23,  1.17step/s]Training:  55%|█████▌    | 33/60 [02:50<00:24,  1.12step/s]Training:  57%|█████▋    | 34/60 [02:50<00:21,  1.22step/s]Training:  58%|█████▊    | 35/60 [02:51<00:22,  1.13step/s]Training:  60%|██████    | 36/60 [02:52<00:19,  1.26step/s]Training:  62%|██████▏   | 37/60 [02:53<00:19,  1.17step/s]Training:  63%|██████▎   | 38/60 [02:54<00:17,  1.27step/s]Training:  65%|██████▌   | 39/60 [02:55<00:18,  1.14step/s]Training:  67%|██████▋   | 40/60 [02:55<00:15,  1.31step/s]INFO 2026-11-22 14:56:35 ot_train.py:894 step:40 smpl:10K ep:26 epch:0.51 loss:21.763 grdn:157.234 lr:1.0e-05 data_s:0.459 prep_s:0.000 updt_s:0.753 step_s:0.841 smp/s:304 mem_gb:4.95 l1_loss:0.604 kld_loss:2.116
+Training:  68%|██████▊   | 41/60 [02:56<00:16,  1.16step/s]Training:  70%|███████   | 42/60 [02:57<00:13,  1.32step/s]Training:  72%|███████▏  | 43/60 [02:58<00:14,  1.17step/s]Training:  73%|███████▎  | 44/60 [02:58<00:11,  1.34step/s]Training:  75%|███████▌  | 45/60 [02:59<00:12,  1.24step/s]Training:  77%|███████▋  | 46/60 [03:00<00:10,  1.37step/s]Training:  78%|███████▊  | 47/60 [03:01<00:10,  1.26step/s]Training:  80%|████████  | 48/60 [03:01<00:08,  1.38step/s]Training:  82%|████████▏ | 49/60 [03:02<00:08,  1.28step/s]Training:  83%|████████▎ | 50/60 [03:03<00:07,  1.42step/s]Training:  85%|████████▌ | 51/60 [03:04<00:07,  1.20step/s]Training:  87%|████████▋ | 52/60 [03:04<00:05,  1.41step/s]Training:  88%|████████▊ | 53/60 [03:06<00:05,  1.22step/s]Training:  90%|█████████ | 54/60 [03:06<00:04,  1.44step/s]Training:  92%|█████████▏| 55/60 [03:07<00:04,  1.24step/s]Training:  93%|█████████▎| 56/60 [03:07<00:02,  1.43step/s]Training:  95%|█████████▌| 57/60 [03:08<00:02,  1.29step/s]Training:  97%|█████████▋| 58/60 [03:09<00:01,  1.48step/s]Training:  98%|█████████▊| 59/60 [03:10<00:00,  1.32step/s]Training: 100%|██████████| 60/60 [03:10<00:00,  1.49step/s]INFO 2026-11-22 14:56:49 ot_train.py:894 step:60 smpl:15K ep:38 epch:0.77 loss:12.901 grdn:91.729 lr:1.0e-05 data_s:0.394 prep_s:0.000 updt_s:0.646 step_s:0.748 smp/s:342 mem_gb:4.95 l1_loss:0.502 kld_loss:1.240
+INFO 2026-11-22 14:56:49 ot_train.py:936 Checkpoint policy after step 60
+INFO 2026-11-22 14:56:50 n/_torch.py:299 Model weights successfully saved to /outputs/rocm-train/scale2-act-8g-w2/checkpoints/000060/pretrained_model!
+Training: 100%|██████████| 60/60 [03:11<00:00,  3.19s/step]
+INFO 2026-11-22 14:56:50 t_train.py:1026 End of training
+RESULT scale2-act-8g-w2 PASS exit=0 seconds=257 dp_replicate=8 dp_shard=1 steps=[20 40 60]
+----- 2026-11-22T14:57:07+00:00 BEGIN scale2-act-8g-nounused-w2 devices=0,1,2,3,4,5,6,7 free=201G -----
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.4s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/apex/transformer/functional/fused_rope.py:49: UserWarning: Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0
+  warnings.warn("Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0", UserWarning)
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+INFO 2026-11-22 14:57:44 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': False,
+                         'gradient_as_bucket_view': True,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': None,
+                                                     'reduce_dtype': None},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 1,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'no'},
+ 'batch_size': 32,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': None,
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'lerobot/aloha_sim_transfer_cube_human',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': None,
+             'root': None,
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': None,
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': 'act',
+ 'log_freq': 20,
+ 'max_eval_samples': 0,
+ 'num_workers': 2,
+ 'optimizer': {'betas': [0.9, 0.999],
+               'eps': 1e-08,
+               'fused': None,
+               'grad_clip_norm': 10.0,
+               'lr': 1e-05,
+               'type': 'adamw',
+               'weight_decay': 0.0001},
+ 'output_dir': '/outputs/rocm-train/scale2-act-8g-nounused-w2',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 8,
+                 'dp_shard': 1},
+ 'peft': None,
+ 'persistent_workers': True,
+ 'policy': {'chunk_size': 20,
+            'device': 'cuda',
+            'dim_feedforward': 3200,
+            'dim_model': 64,
+            'dropout': 0.1,
+            'dtype': None,
+            'feedforward_activation': 'relu',
+            'input_features': {},
+            'kl_weight': 10.0,
+            'latent_dim': 32,
+            'license': None,
+            'n_action_steps': 20,
+            'n_decoder_layers': 1,
+            'n_encoder_layers': 4,
+            'n_heads': 8,
+            'n_obs_steps': 1,
+            'n_vae_encoder_layers': 4,
+            'normalization_mapping': {'ACTION': <NormalizationMode.MEAN_STD: 'MEAN_STD'>,
+                                      'STATE': <NormalizationMode.MEAN_STD: 'MEAN_STD'>,
+                                      'VISUAL': <NormalizationMode.MEAN_STD: 'MEAN_STD'>},
+            'optimizer_fused': None,
+            'optimizer_lr': 1e-05,
+            'optimizer_lr_backbone': 1e-05,
+            'optimizer_weight_decay': 0.0001,
+            'output_features': {},
+            'pre_norm': False,
+            'pretrained_backbone_weights': 'ResNet18_Weights.IMAGENET1K_V1',
+            'pretrained_path': None,
+            'pretrained_revision': None,
+            'private': None,
+            'push_to_hub': False,
+            'replace_final_stride_with_dilation': False,
+            'repo_id': None,
+            'tags': None,
+            'temporal_ensemble_coeff': None,
+            'type': 'act',
+            'use_amp': False,
+            'use_peft': False,
+            'use_vae': True,
+            'vision_backbone': 'resnet18'},
+ 'prefetch_factor': 4,
+ 'rename_map': {},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 100000,
+ 'scheduler': None,
+ 'seed': 1000,
+ 'steps': 60,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-22 14:57:44 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-22 14:57:44 ot_train.py:589 Creating dataset
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2035.82it/s]
+WARNING 2026-11-22 14:57:44 ts/utils.py:270 Unknown fields in DatasetInfo: ['files_size_in_mb']. These will be ignored.
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2377.72it/s]
+WARNING 2026-11-22 14:57:45 ts/utils.py:270 Unknown fields in DatasetInfo: ['files_size_in_mb']. These will be ignored.
+INFO 2026-11-22 14:57:54 ot_train.py:628 Creating policy
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 895.36it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 834.19it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 817.09it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 876.60it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 284.69it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 244.05it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 681.36it/s]
+Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /root/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 693.42it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 332.48it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 697.16it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 707.99it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 720.58it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]  0%|          | 0.00/44.7M [00:00<?, ?B/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 554.62it/s]
+ 76%|███████▌  | 33.8M/44.7M [00:00<00:00, 331MB/s]100%|██████████| 44.7M/44.7M [00:00<00:00, 337MB/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 397.37it/s]
+INFO 2026-11-22 14:57:55 ot_train.py:723 Creating optimizer and scheduler
+INFO 2026-11-22 14:57:55 ot_train.py:784 Output dir: /outputs/rocm-train/scale2-act-8g-nounused-w2
+INFO 2026-11-22 14:57:55 ot_train.py:791 cfg.steps=60 (60)
+INFO 2026-11-22 14:57:55 ot_train.py:792 dataset.num_frames=20000 (20K)
+INFO 2026-11-22 14:57:55 ot_train.py:793 dataset.num_episodes=50
+INFO 2026-11-22 14:57:55 ot_train.py:794 Effective batch size: 32 x 8 dp workers x 1 grad accum = 256 (topology: dp_replicate=8, dp_shard=1)
+INFO 2026-11-22 14:57:55 ot_train.py:799 num_learnable_params=15096014 (15M)
+INFO 2026-11-22 14:57:55 ot_train.py:800 num_total_params=15096014 (15M)
+Training:   0%|          | 0/60 [00:00<?, ?step/s]INFO 2026-11-22 14:57:55 ot_train.py:848 Start offline training on a fixed dataset, with effective batch size: 256
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+Training:   2%|▏         | 1/60 [02:52<2:49:14, 172.11s/step]Training:   3%|▎         | 2/60 [02:54<1:10:06, 72.52s/step] Training:   5%|▌         | 3/60 [02:55<37:37, 39.60s/step]  Training:   7%|▋         | 4/60 [02:55<22:32, 24.16s/step]Training:   8%|▊         | 5/60 [02:56<14:19, 15.62s/step]Training:  10%|█         | 6/60 [02:56<09:25, 10.47s/step]Training:  12%|█▏        | 7/60 [02:57<06:22,  7.22s/step]Training:  13%|█▎        | 8/60 [02:57<04:23,  5.06s/step]Training:  15%|█▌        | 9/60 [02:58<03:04,  3.62s/step]Training:  17%|█▋        | 10/60 [02:58<02:12,  2.65s/step]Training:  18%|█▊        | 11/60 [02:59<01:36,  1.97s/step]Training:  20%|██        | 12/60 [02:59<01:13,  1.53s/step]Training:  22%|██▏       | 13/60 [03:00<00:57,  1.22s/step]Training:  23%|██▎       | 14/60 [03:01<00:57,  1.25s/step]Training:  25%|██▌       | 15/60 [03:02<00:49,  1.11s/step]Training:  27%|██▋       | 16/60 [03:03<00:47,  1.08s/step]Training:  28%|██▊       | 17/60 [03:04<00:42,  1.01step/s]Training:  30%|███       | 18/60 [03:05<00:41,  1.00step/s]Training:  32%|███▏      | 19/60 [03:05<00:37,  1.09step/s]Training:  33%|███▎      | 20/60 [03:06<00:34,  1.17step/s]INFO 2026-11-22 15:01:02 ot_train.py:894 step:20 smpl:5K ep:13 epch:0.26 loss:47.460 grdn:441.144 lr:1.0e-05 data_s:3.720 prep_s:0.101 updt_s:5.739 step_s:9.326 smp/s:27 mem_gb:4.95 l1_loss:0.779 kld_loss:4.668
+Training:  35%|███▌      | 21/60 [03:07<00:30,  1.27step/s]Training:  37%|███▋      | 22/60 [03:07<00:29,  1.29step/s]Training:  38%|███▊      | 23/60 [03:08<00:28,  1.31step/s]Training:  40%|████      | 24/60 [03:09<00:28,  1.26step/s]Training:  42%|████▏     | 25/60 [03:10<00:27,  1.29step/s]Training:  43%|████▎     | 26/60 [03:11<00:26,  1.27step/s]Training:  45%|████▌     | 27/60 [03:11<00:26,  1.25step/s]Training:  47%|████▋     | 28/60 [03:12<00:24,  1.29step/s]Training:  48%|████▊     | 29/60 [03:13<00:24,  1.27step/s]Training:  50%|█████     | 30/60 [03:14<00:23,  1.27step/s]Training:  52%|█████▏    | 31/60 [03:14<00:22,  1.31step/s]Training:  53%|█████▎    | 32/60 [03:15<00:21,  1.27step/s]Training:  55%|█████▌    | 33/60 [03:16<00:20,  1.33step/s]Training:  57%|█████▋    | 34/60 [03:17<00:19,  1.33step/s]Training:  58%|█████▊    | 35/60 [03:17<00:18,  1.36step/s]Training:  60%|██████    | 36/60 [03:18<00:17,  1.34step/s]Training:  62%|██████▏   | 37/60 [03:19<00:16,  1.37step/s]Training:  63%|██████▎   | 38/60 [03:20<00:16,  1.33step/s]Training:  65%|██████▌   | 39/60 [03:20<00:16,  1.31step/s]Training:  67%|██████▋   | 40/60 [03:21<00:15,  1.29step/s]INFO 2026-11-22 15:01:17 ot_train.py:894 step:40 smpl:10K ep:26 epch:0.51 loss:21.763 grdn:157.220 lr:1.0e-05 data_s:0.639 prep_s:0.000 updt_s:0.641 step_s:0.760 smp/s:337 mem_gb:4.95 l1_loss:0.604 kld_loss:2.116
+Training:  68%|██████▊   | 41/60 [03:22<00:13,  1.39step/s]Training:  70%|███████   | 42/60 [03:23<00:13,  1.36step/s]Training:  72%|███████▏  | 43/60 [03:23<00:12,  1.37step/s]Training:  73%|███████▎  | 44/60 [03:24<00:12,  1.29step/s]Training:  75%|███████▌  | 45/60 [03:25<00:11,  1.35step/s]Training:  77%|███████▋  | 46/60 [03:26<00:10,  1.31step/s]Training:  78%|███████▊  | 47/60 [03:26<00:09,  1.37step/s]Training:  80%|████████  | 48/60 [03:27<00:09,  1.30step/s]Training:  82%|████████▏ | 49/60 [03:28<00:08,  1.36step/s]Training:  83%|████████▎ | 50/60 [03:29<00:07,  1.32step/s]Training:  85%|████████▌ | 51/60 [03:29<00:06,  1.37step/s]Training:  87%|████████▋ | 52/60 [03:30<00:06,  1.32step/s]Training:  88%|████████▊ | 53/60 [03:31<00:05,  1.36step/s]Training:  90%|█████████ | 54/60 [03:32<00:04,  1.34step/s]Training:  92%|█████████▏| 55/60 [03:32<00:03,  1.36step/s]Training:  93%|█████████▎| 56/60 [03:33<00:03,  1.33step/s]Training:  95%|█████████▌| 57/60 [03:34<00:02,  1.37step/s]Training:  97%|█████████▋| 58/60 [03:35<00:01,  1.34step/s]Training:  98%|█████████▊| 59/60 [03:35<00:00,  1.33step/s]Training: 100%|██████████| 60/60 [03:36<00:00,  1.32step/s]INFO 2026-11-22 15:01:32 ot_train.py:894 step:60 smpl:15K ep:38 epch:0.77 loss:12.900 grdn:91.772 lr:1.0e-05 data_s:0.605 prep_s:0.000 updt_s:0.641 step_s:0.743 smp/s:345 mem_gb:4.95 l1_loss:0.502 kld_loss:1.240
+INFO 2026-11-22 15:01:32 ot_train.py:936 Checkpoint policy after step 60
+INFO 2026-11-22 15:01:32 n/_torch.py:299 Model weights successfully saved to /outputs/rocm-train/scale2-act-8g-nounused-w2/checkpoints/000060/pretrained_model!
+Training: 100%|██████████| 60/60 [03:37<00:00,  3.62s/step]
+INFO 2026-11-22 15:01:33 t_train.py:1026 End of training
+RESULT scale2-act-8g-nounused-w2 PASS exit=0 seconds=283 dp_replicate=8 dp_shard=1 steps=[20 40 60]
+QUEUE END 2026-11-22T15:01:50+00:00 /dev/vda1       2.0T  1.8T  201G  90% /

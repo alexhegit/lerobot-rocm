@@ -33,7 +33,8 @@ $(resume 4 --parallelism.dp_shard=4)
 $check4"
 
 job act-ddp2-to-1-resume "$(seed 2 '' '')
-lerobot-train --resume=true --config_path=\$OUT/checkpoints/000002/pretrained_model/train_config.json --steps=4
+lerobot-train --resume=true --config_path=\$OUT/checkpoints/000002/pretrained_model/train_config.json --steps=4 \
+  --parallelism.dp_replicate=1
 $check4"
 
 job act-fsdp-to-ddp-reject "$(seed 2 --parallelism.dp_shard=2 '')
@@ -62,7 +63,7 @@ DIT="--policy.type=multi_task_dit --policy.device=cuda --policy.push_to_hub=fals
   --dataset.repo_id=lerobot/aloha_sim_transfer_cube_human --dataset.episodes='[0]'"
 job dit-fsdp2-deploy "accelerate launch --num_processes=2 /outputs/rocm-train/jobs/fsdp_autowrap_train.py $DIT --parallelism.dp_shard=2 \
   --batch_size=1 --steps=2 --env_eval_freq=0 --save_freq=2 --log_freq=1 --num_workers=0 --trackio.enable=false --output_dir=\$OUT
-CUDA_VISIBLE_DEVICES=0 HIP_VISIBLE_DEVICES=\${HIP_VISIBLE_DEVICES%%,*} python3 - \$OUT/checkpoints/000002/pretrained_model <<'PY'
+HIP_VISIBLE_DEVICES=\${HIP_VISIBLE_DEVICES%%,*} python3 - \$OUT/checkpoints/000002/pretrained_model <<'PY'
 import sys
 import torch
 from lerobot.datasets import LeRobotDataset

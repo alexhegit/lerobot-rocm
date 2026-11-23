@@ -1,0 +1,5 @@
+# Praxis-1 (27.2B) LoRA after the prefetch: 1 GPU, DDP 2, FSDP 4 (declared TransformerBlock /
+# ActionExpertBlock units). Latest main via PYTHONPATH.
+praxis-lora-1g|praxis-lora-1|0|1||
+praxis-lora-ddp2|praxis-lora-1|0,1|2||
+praxis-lora-fsdp4|praxis-lora-1|0,1,2,3|4|--parallelism.dp_shard=4|

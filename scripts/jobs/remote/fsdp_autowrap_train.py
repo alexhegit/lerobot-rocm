@@ -90,7 +90,44 @@ def _set_fsdp_wrap_modules(accelerator, policy) -> None:
     _original(accelerator, policy)
 
 
-lerobot_train.set_fsdp_wrap_modules = _set_fsdp_wrap_modules
+def _param_owner_policy(model: nn.Module):
+    """FSDP_WRAP_STRATEGY=params: every module that directly owns parameters is its own unit.
+
+    Each unit then holds one module's parameters, so it has one dtype, and a submodule called on its
+    own (not through its parent's forward) gathers its own shard. Modules owning tied parameters stay
+    in their parent's unit. Slow (many small units); meant to check that sharding works at all.
+    """
+    uses: dict[int, int] = {}
+    for _, param in model.named_parameters(remove_duplicate=False):
+        uses[id(param)] = uses.get(id(param), 0) + 1
+    chosen: set[int] = set()
+    for name, module in model.named_modules():
+        if not name or isinstance(module, _CONTAINERS):
+            continue
+        own = list(module.parameters(recurse=False))
+        if own and all(uses[id(p)] == 1 for p in own):
+            chosen.add(id(module))
+    print(f"PARAM_OWNER_WRAP units={len(chosen)}", flush=True)
+    return lambda module: id(getattr(module, "_checkpoint_wrapped_module", module)) in chosen
+
+
+def _patch_accelerate_wrap_policy(policy_model: nn.Module) -> None:
+    from accelerate.utils import fsdp_utils
+
+    policy = _param_owner_policy(policy_model)
+    fsdp_utils.fsdp2_prepare_auto_wrap_policy = lambda plugin, model: policy
+
+
+_orig_set = _set_fsdp_wrap_modules
+
+
+def _set_fsdp_wrap_modules_with_strategy(accelerator, policy) -> None:
+    if os.environ.get("FSDP_WRAP_STRATEGY") == "params" and getattr(accelerator.state, "fsdp_plugin", None):
+        _patch_accelerate_wrap_policy(factory.unwrap_peft_model(policy))
+    _orig_set(accelerator, policy)
+
+
+lerobot_train.set_fsdp_wrap_modules = _set_fsdp_wrap_modules_with_strategy
 
 if __name__ == "__main__":
     lerobot_train.main()

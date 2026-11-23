@@ -1,0 +1,600 @@
+----- 2026-11-22T16:17:01+00:00 BEGIN prof-act-1g devices=0 free=188G -----
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.7s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/apex/transformer/functional/fused_rope.py:49: UserWarning: Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0
+  warnings.warn("Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0", UserWarning)
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+INFO 2026-11-22 16:17:34 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': True,
+                         'gradient_as_bucket_view': False,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': None,
+                                                     'reduce_dtype': None},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 1,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'no'},
+ 'batch_size': 32,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': None,
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'lerobot/aloha_sim_transfer_cube_human',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': None,
+             'root': None,
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': None,
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': 'act',
+ 'log_freq': 42,
+ 'max_eval_samples': 0,
+ 'num_workers': 8,
+ 'optimizer': {'betas': [0.9, 0.999],
+               'eps': 1e-08,
+               'fused': None,
+               'grad_clip_norm': 10.0,
+               'lr': 1e-05,
+               'type': 'adamw',
+               'weight_decay': 0.0001},
+ 'output_dir': '/outputs/rocm-train/prof-act-1g-1795364221',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 1,
+                 'dp_shard': 1},
+ 'peft': None,
+ 'persistent_workers': True,
+ 'policy': {'chunk_size': 20,
+            'device': 'cuda',
+            'dim_feedforward': 3200,
+            'dim_model': 64,
+            'dropout': 0.1,
+            'dtype': None,
+            'feedforward_activation': 'relu',
+            'input_features': {},
+            'kl_weight': 10.0,
+            'latent_dim': 32,
+            'license': None,
+            'n_action_steps': 20,
+            'n_decoder_layers': 1,
+            'n_encoder_layers': 4,
+            'n_heads': 8,
+            'n_obs_steps': 1,
+            'n_vae_encoder_layers': 4,
+            'normalization_mapping': {'ACTION': <NormalizationMode.MEAN_STD: 'MEAN_STD'>,
+                                      'STATE': <NormalizationMode.MEAN_STD: 'MEAN_STD'>,
+                                      'VISUAL': <NormalizationMode.MEAN_STD: 'MEAN_STD'>},
+            'optimizer_fused': None,
+            'optimizer_lr': 1e-05,
+            'optimizer_lr_backbone': 1e-05,
+            'optimizer_weight_decay': 0.0001,
+            'output_features': {},
+            'pre_norm': False,
+            'pretrained_backbone_weights': 'ResNet18_Weights.IMAGENET1K_V1',
+            'pretrained_path': None,
+            'pretrained_revision': None,
+            'private': None,
+            'push_to_hub': False,
+            'replace_final_stride_with_dilation': False,
+            'repo_id': None,
+            'tags': None,
+            'temporal_ensemble_coeff': None,
+            'type': 'act',
+            'use_amp': False,
+            'use_peft': False,
+            'use_vae': True,
+            'vision_backbone': 'resnet18'},
+ 'prefetch_factor': 4,
+ 'rename_map': {},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 100000,
+ 'scheduler': None,
+ 'seed': 1000,
+ 'steps': 42,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-22 16:17:34 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-22 16:17:34 ot_train.py:589 Creating dataset
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1683.11it/s]
+WARNING 2026-11-22 16:17:34 ts/utils.py:270 Unknown fields in DatasetInfo: ['files_size_in_mb']. These will be ignored.
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1769.00it/s]
+WARNING 2026-11-22 16:17:34 ts/utils.py:270 Unknown fields in DatasetInfo: ['files_size_in_mb']. These will be ignored.
+INFO 2026-11-22 16:17:34 ot_train.py:628 Creating policy
+  0%|          | 0.00/44.7M [00:00<?, ?B/s]Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /root/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+ 90%|█████████ | 40.2M/44.7M [00:00<00:00, 420MB/s]100%|██████████| 44.7M/44.7M [00:00<00:00, 412MB/s]
+INFO 2026-11-22 16:17:35 ot_train.py:723 Creating optimizer and scheduler
+INFO 2026-11-22 16:17:35 ot_train.py:784 Output dir: /outputs/rocm-train/prof-act-1g-1795364221
+INFO 2026-11-22 16:17:35 ot_train.py:791 cfg.steps=42 (42)
+INFO 2026-11-22 16:17:35 ot_train.py:792 dataset.num_frames=20000 (20K)
+INFO 2026-11-22 16:17:35 ot_train.py:793 dataset.num_episodes=50
+INFO 2026-11-22 16:17:35 ot_train.py:794 Effective batch size: 32 x 1 dp workers x 1 grad accum = 32 (topology: dp_replicate=1, dp_shard=1)
+INFO 2026-11-22 16:17:35 ot_train.py:799 num_learnable_params=15096014 (15M)
+INFO 2026-11-22 16:17:35 ot_train.py:800 num_total_params=15096014 (15M)
+Training:   0%|          | 0/42 [00:00<?, ?step/s]INFO 2026-11-22 16:17:35 ot_train.py:848 Start offline training on a fixed dataset, with effective batch size: 32
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+Training:   2%|▏         | 1/42 [00:42<29:14, 42.79s/step]Training:   7%|▋         | 3/42 [00:42<07:14, 11.14s/step]Training:  12%|█▏        | 5/42 [00:43<03:21,  5.44s/step]Training:  17%|█▋        | 7/42 [00:43<01:50,  3.16s/step]Training:  21%|██▏       | 9/42 [00:43<01:05,  1.99s/step]Training:  26%|██▌       | 11/42 [00:43<00:40,  1.31s/step]Training:  31%|███       | 13/42 [00:43<00:25,  1.12step/s]Training:  36%|███▌      | 15/42 [00:43<00:16,  1.61step/s]Training:  40%|████      | 17/42 [00:43<00:11,  2.26step/s]Training:  45%|████▌     | 19/42 [00:43<00:07,  3.10step/s]Training:  50%|█████     | 21/42 [00:43<00:05,  4.16step/s]Training:  55%|█████▍    | 23/42 [00:44<00:03,  5.45step/s]Training:  60%|█████▉    | 25/42 [00:44<00:02,  6.94step/s]Training:  64%|██████▍   | 27/42 [00:44<00:01,  8.50step/s]Training:  69%|██████▉   | 29/42 [00:44<00:01, 10.13step/s]/opt/venv/lib/python3.12/site-packages/torch/profiler/profiler.py:272: UserWarning: Warning: Profiler clears events at the end of each cycle.Only events from the current cycle will be reported.To keep events across cycles, set acc_events=True.
+  _warn_once(
+USDT:2026-11-22 16:18:19 379:379 ActivityProfilerController.cpp:415] profiler_start
+Training:  74%|███████▍  | 31/42 [00:44<00:00, 11.51step/s]Training:  79%|███████▊  | 33/42 [00:44<00:00, 12.76step/s]Training:  83%|████████▎ | 35/42 [00:44<00:00, 13.72step/s]Training:  88%|████████▊ | 37/42 [00:44<00:00, 14.54step/s]USDT:2026-11-22 16:18:20 379:379 ActivityProfilerController.cpp:455] profiler_stop
+[W1122 16:18:20.487335496 collection.cpp:1182] Warning: ROCTracer produced duplicate flow start: 6 (function operator())
+PROFILE_STEP_S [0.0581, 0.0566, 0.0567, 0.0573, 0.0604, 0.0564, 0.0582, 0.0569, 0.0589, 0.0594]
+PROFILE_BY_DEVICE
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                             aten::convolution_backward         3.45%      17.562ms         5.20%      26.481ms     126.100us     194.269ms        39.29%     194.682ms     927.055us           210  
+     miopenSp3AsmConv_v30_3_1_gfx9_fp32_f2x3_stride1.kd         0.00%       0.000us         0.00%       0.000us       0.000us     107.000ms        21.64%     107.000ms     534.998us           200  
+                               aten::miopen_convolution         1.94%       9.878ms         2.72%      13.831ms      65.863us      94.208ms        19.06%      94.280ms     448.950us           210  
+                                              aten::mul         1.55%       7.894ms         2.98%      15.173ms      11.854us      29.142ms         5.89%      29.142ms      22.767us          1280  
+igemm_wrw_gtcx3_nhwc_fp32_bx0_ex1_bt256x128x16_wt32x...         0.00%       0.000us         0.00%       0.000us       0.000us      27.012ms         5.46%      27.012ms     450.199us            60  
+igemm_wrw_gtcx3_nhwc_fp32_bx0_ex1_bt64x128x16_wt32x3...         0.00%       0.000us         0.00%       0.000us       0.000us      26.184ms         5.30%      26.184ms     654.590us            40  
+void at::native::elementwise_kernel_manual_unroll<12...         0.00%       0.000us         0.00%       0.000us       0.000us      22.958ms         4.64%      22.958ms      57.394us           400  
+                       batched_transpose_32x32_dword.kd         0.00%       0.000us         0.00%       0.000us       0.000us      18.548ms         3.75%      18.548ms      68.695us           270  
+                                               aten::mm         5.32%      27.082ms         6.97%      35.450ms      27.696us      17.998ms         3.64%      17.998ms      14.061us          1280  
+igemm_wrw_gtcx3_nhwc_fp32_bx0_ex1_bt128x128x16_wt32x...         0.00%       0.000us         0.00%       0.000us       0.000us      17.409ms         3.52%      17.409ms     435.213us            40  
+                                              aten::add         1.30%       6.617ms         2.30%      11.687ms      13.176us      15.144ms         3.06%      15.144ms      17.074us           887  
+igemm_bwd_gtcx3_nhwc_fp32_bx0_ex1_bt128x128x16_wt32x...         0.00%       0.000us         0.00%       0.000us       0.000us      15.052ms         3.04%      15.052ms     501.749us            30  
+                               aten::threshold_backward         0.31%       1.574ms         0.60%       3.040ms      11.692us      14.613ms         2.96%      14.613ms      56.203us           260  
+void at::native::vectorized_elementwise_kernel<4, at...         0.00%       0.000us         0.00%       0.000us       0.000us      14.613ms         2.96%      14.613ms      56.203us           260  
+igemm_fwd_gtcx3_nhwc_fp32_bx0_ex1_bt128x128x16_wt32x...         0.00%       0.000us         0.00%       0.000us       0.000us      14.023ms         2.84%      14.023ms     467.421us            30  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 508.858ms
+Self CUDA time total: 494.386ms
+
+Training:  93%|█████████▎| 39/42 [00:54<00:04,  1.45s/step]PROFILE_BY_CPU
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                   hipStreamSynchronize        33.29%     169.402ms        33.29%     169.418ms       4.235ms       0.000us         0.00%      13.910us       0.348us            40  
+                                        hipLaunchKernel        10.27%      52.255ms        10.27%      52.260ms       6.453us       0.000us         0.00%       5.171us       0.001us          8099  
+                                               aten::mm         5.32%      27.082ms         6.97%      35.450ms      27.696us      17.998ms         3.64%      17.998ms      14.061us          1280  
+                               hipExtModuleLaunchKernel         4.72%      24.013ms         4.72%      24.013ms       5.313us       0.000us         0.00%       0.000us       0.000us          4520  
+                             aten::convolution_backward         3.45%      17.562ms         5.20%      26.481ms     126.100us     194.269ms        39.29%     194.682ms     927.055us           210  
+                                            aten::addmm         3.14%      15.978ms         3.93%      20.014ms      33.356us       7.915ms         1.60%       7.915ms      13.192us           600  
+    autograd::engine::evaluate_function: AddmmBackward0         2.33%      11.873ms        11.61%      59.063ms      98.439us       0.000us         0.00%      27.147ms      45.245us           600  
+                                              aten::bmm         2.29%      11.640ms         2.98%      15.150ms      27.054us      12.450ms         2.52%      12.450ms      22.232us           560  
+                              Optimizer.step#AdamW.step         2.10%      10.691ms         3.87%      19.673ms       1.967ms       0.000us         0.00%       6.933ms     693.310us            10  
+                               aten::miopen_convolution         1.94%       9.878ms         2.72%      13.831ms      65.863us      94.208ms        19.06%      94.280ms     448.950us           210  
+                                              aten::mul         1.55%       7.894ms         2.98%      15.173ms      11.854us      29.142ms         5.89%      29.142ms      22.767us          1280  
+                                    hipMemcpyWithStream         1.41%       7.151ms         1.41%       7.151ms      79.459us       0.000us         0.00%       0.000us       0.000us            90  
+                                           aten::select         1.31%       6.687ms         1.75%       8.889ms       0.718us       0.000us         0.00%       0.000us       0.000us         12378  
+                                              aten::add         1.30%       6.617ms         2.30%      11.687ms      13.176us      15.144ms         3.06%      15.144ms      17.074us           887  
+                                              aten::sum         1.16%       5.927ms         2.54%      12.949ms      17.038us      11.215ms         2.27%      11.299ms      14.867us           760  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 508.858ms
+Self CUDA time total: 494.386ms
+
+Training:  98%|█████████▊| 41/42 [00:54<00:01,  1.03s/step]INFO 2026-11-22 16:18:29 ot_train.py:894 step:42 smpl:1K ep:3 epch:0.07 loss:34.306 grdn:311.692 lr:1.0e-05 data_s:0.356 prep_s:0.005 updt_s:0.712 step_s:1.293 smp/s:25 mem_gb:4.89 l1_loss:0.718 kld_loss:3.359
+INFO 2026-11-22 16:18:29 ot_train.py:936 Checkpoint policy after step 42
+INFO 2026-11-22 16:18:29 n/_torch.py:299 Model weights successfully saved to /outputs/rocm-train/prof-act-1g-1795364221/checkpoints/000042/pretrained_model!
+Training: 100%|██████████| 42/42 [00:54<00:00,  1.30s/step]
+INFO 2026-11-22 16:18:29 t_train.py:1026 End of training
+RESULT prof-act-1g PASS exit=0 seconds=94 dp_replicate=1 dp_shard=1 steps=[42]
+----- 2026-11-22T16:18:35+00:00 BEGIN prof-act-4g devices=0,1,2,3 free=187G -----
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.8s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/apex/transformer/functional/fused_rope.py:49: UserWarning: Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0
+  warnings.warn("Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0", UserWarning)
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+INFO 2026-11-22 16:19:11 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': True,
+                         'gradient_as_bucket_view': False,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': None,
+                                                     'reduce_dtype': None},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 1,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'no'},
+ 'batch_size': 32,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': None,
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'lerobot/aloha_sim_transfer_cube_human',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': None,
+             'root': None,
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': None,
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': 'act',
+ 'log_freq': 42,
+ 'max_eval_samples': 0,
+ 'num_workers': 8,
+ 'optimizer': {'betas': [0.9, 0.999],
+               'eps': 1e-08,
+               'fused': None,
+               'grad_clip_norm': 10.0,
+               'lr': 1e-05,
+               'type': 'adamw',
+               'weight_decay': 0.0001},
+ 'output_dir': '/outputs/rocm-train/prof-act-4g-1795364316',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 4,
+                 'dp_shard': 1},
+ 'peft': None,
+ 'persistent_workers': True,
+ 'policy': {'chunk_size': 20,
+            'device': 'cuda',
+            'dim_feedforward': 3200,
+            'dim_model': 64,
+            'dropout': 0.1,
+            'dtype': None,
+            'feedforward_activation': 'relu',
+            'input_features': {},
+            'kl_weight': 10.0,
+            'latent_dim': 32,
+            'license': None,
+            'n_action_steps': 20,
+            'n_decoder_layers': 1,
+            'n_encoder_layers': 4,
+            'n_heads': 8,
+            'n_obs_steps': 1,
+            'n_vae_encoder_layers': 4,
+            'normalization_mapping': {'ACTION': <NormalizationMode.MEAN_STD: 'MEAN_STD'>,
+                                      'STATE': <NormalizationMode.MEAN_STD: 'MEAN_STD'>,
+                                      'VISUAL': <NormalizationMode.MEAN_STD: 'MEAN_STD'>},
+            'optimizer_fused': None,
+            'optimizer_lr': 1e-05,
+            'optimizer_lr_backbone': 1e-05,
+            'optimizer_weight_decay': 0.0001,
+            'output_features': {},
+            'pre_norm': False,
+            'pretrained_backbone_weights': 'ResNet18_Weights.IMAGENET1K_V1',
+            'pretrained_path': None,
+            'pretrained_revision': None,
+            'private': None,
+            'push_to_hub': False,
+            'replace_final_stride_with_dilation': False,
+            'repo_id': None,
+            'tags': None,
+            'temporal_ensemble_coeff': None,
+            'type': 'act',
+            'use_amp': False,
+            'use_peft': False,
+            'use_vae': True,
+            'vision_backbone': 'resnet18'},
+ 'prefetch_factor': 4,
+ 'rename_map': {},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 100000,
+ 'scheduler': None,
+ 'seed': 1000,
+ 'steps': 42,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-22 16:19:11 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-22 16:19:11 ot_train.py:589 Creating dataset
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2363.65it/s]
+WARNING 2026-11-22 16:19:11 ts/utils.py:270 Unknown fields in DatasetInfo: ['files_size_in_mb']. These will be ignored.
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2568.47it/s]
+WARNING 2026-11-22 16:19:11 ts/utils.py:270 Unknown fields in DatasetInfo: ['files_size_in_mb']. These will be ignored.
+INFO 2026-11-22 16:19:15 ot_train.py:628 Creating policy
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 557.16it/s]
+Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 629.66it/s]
+Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /root/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 663.50it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2408.44it/s]
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 2558.28it/s]
+  0%|          | 0.00/44.7M [00:00<?, ?B/s]Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 590.19it/s]
+Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /root/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+ 53%|█████▎    | 23.6M/44.7M [00:00<00:00, 248MB/s]  0%|          | 0.00/44.7M [00:00<?, ?B/s]100%|██████████| 44.7M/44.7M [00:00<00:00, 228MB/s]
+ 70%|██████▉   | 31.2M/44.7M [00:00<00:00, 328MB/s]100%|██████████| 44.7M/44.7M [00:00<00:00, 332MB/s]
+INFO 2026-11-22 16:19:16 ot_train.py:723 Creating optimizer and scheduler
+INFO 2026-11-22 16:19:16 ot_train.py:784 Output dir: /outputs/rocm-train/prof-act-4g-1795364316
+INFO 2026-11-22 16:19:16 ot_train.py:791 cfg.steps=42 (42)
+INFO 2026-11-22 16:19:16 ot_train.py:792 dataset.num_frames=20000 (20K)
+INFO 2026-11-22 16:19:16 ot_train.py:793 dataset.num_episodes=50
+INFO 2026-11-22 16:19:16 ot_train.py:794 Effective batch size: 32 x 4 dp workers x 1 grad accum = 128 (topology: dp_replicate=4, dp_shard=1)
+INFO 2026-11-22 16:19:16 ot_train.py:799 num_learnable_params=15096014 (15M)
+INFO 2026-11-22 16:19:16 ot_train.py:800 num_total_params=15096014 (15M)
+Training:   0%|          | 0/42 [00:00<?, ?step/s]INFO 2026-11-22 16:19:16 ot_train.py:848 Start offline training on a fixed dataset, with effective batch size: 128
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[rank2]:[W1122 16:20:43.496462337 reducer.cpp:1528] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank1]:[W1122 16:20:44.704935026 reducer.cpp:1528] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank3]:[W1122 16:20:46.203400541 reducer.cpp:1528] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank0]:[W1122 16:20:46.205056517 reducer.cpp:1528] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+Training:   2%|▏         | 1/42 [01:51<1:16:02, 111.29s/step]Training:   7%|▋         | 3/42 [01:51<18:47, 28.91s/step]   Training:  12%|█▏        | 5/42 [01:51<08:42, 14.11s/step]Training:  14%|█▍        | 6/42 [01:51<06:12, 10.35s/step]Training:  17%|█▋        | 7/42 [01:52<04:23,  7.54s/step]Training:  19%|█▉        | 8/42 [01:52<03:05,  5.46s/step]Training:  21%|██▏       | 9/42 [01:52<02:09,  3.94s/step]Training:  24%|██▍       | 10/42 [01:52<01:31,  2.86s/step]Training:  26%|██▌       | 11/42 [01:52<01:04,  2.09s/step]Training:  29%|██▊       | 12/42 [01:53<00:45,  1.53s/step]Training:  31%|███       | 13/42 [01:53<00:32,  1.13s/step]Training:  33%|███▎      | 14/42 [01:53<00:23,  1.18step/s]Training:  36%|███▌      | 15/42 [01:53<00:17,  1.57step/s]Training:  38%|███▊      | 16/42 [01:53<00:12,  2.06step/s]Training:  40%|████      | 17/42 [01:53<00:09,  2.61step/s]Training:  43%|████▎     | 18/42 [01:54<00:07,  3.24step/s]Training:  45%|████▌     | 19/42 [01:54<00:06,  3.73step/s]Training:  48%|████▊     | 20/42 [01:54<00:05,  4.16step/s]Training:  50%|█████     | 21/42 [01:54<00:04,  4.86step/s]Training:  52%|█████▏    | 22/42 [01:54<00:03,  5.66step/s]Training:  55%|█████▍    | 23/42 [01:54<00:03,  6.19step/s]Training:  57%|█████▋    | 24/42 [01:54<00:02,  6.85step/s]Training:  60%|█████▉    | 25/42 [01:54<00:02,  7.50step/s]Training:  62%|██████▏   | 26/42 [01:55<00:02,  7.41step/s]Training:  64%|██████▍   | 27/42 [01:55<00:01,  7.86step/s]Training:  67%|██████▋   | 28/42 [01:55<00:01,  7.60step/s]Training:  69%|██████▉   | 29/42 [01:55<00:01,  7.76step/s]/opt/venv/lib/python3.12/site-packages/torch/profiler/profiler.py:272: UserWarning: Warning: Profiler clears events at the end of each cycle.Only events from the current cycle will be reported.To keep events across cycles, set acc_events=True.
+  _warn_once(
+USDT:2026-11-22 16:21:11 382:382 ActivityProfilerController.cpp:415] profiler_start
+Training:  71%|███████▏  | 30/42 [01:55<00:01,  6.63step/s]Training:  74%|███████▍  | 31/42 [01:55<00:01,  6.23step/s]Training:  76%|███████▌  | 32/42 [01:55<00:01,  6.09step/s]Training:  79%|███████▊  | 33/42 [01:56<00:01,  5.98step/s]Training:  81%|████████  | 34/42 [01:56<00:01,  5.76step/s]Training:  83%|████████▎ | 35/42 [01:56<00:01,  5.65step/s]Training:  86%|████████▌ | 36/42 [01:56<00:01,  5.58step/s]Training:  88%|████████▊ | 37/42 [01:56<00:00,  5.69step/s]USDT:2026-11-22 16:21:13 382:382 ActivityProfilerController.cpp:455] profiler_stop
+[rank0]:[W1122 16:21:13.526784574 collection.cpp:1182] Warning: ROCTracer produced duplicate flow start: 2 (function operator())
+PROFILE_STEP_S [0.1922, 0.1682, 0.161, 0.1622, 0.1807, 0.1794, 0.1784, 0.1594, 0.0731, 0.1789]
+PROFILE_BY_DEVICE
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                        DistributedDataParallel.forward         0.00%       0.000us         0.00%       0.000us       0.000us     581.061ms       112.02%     581.061ms      58.106ms            10  
+                             aten::convolution_backward         3.06%      47.649ms         6.61%     102.880ms     489.903us     199.600ms        38.48%     200.015ms     952.455us           210  
+     miopenSp3AsmConv_v30_3_1_gfx9_fp32_f2x3_stride1.kd         0.00%       0.000us         0.00%       0.000us       0.000us     110.638ms        21.33%     110.638ms     553.192us           200  
+                               aten::miopen_convolution         2.13%      33.242ms         3.16%      49.148ms     234.037us      96.345ms        18.57%      96.498ms     459.516us           210  
+                              Optimizer.step#AdamW.step         0.00%       0.000us         0.00%       0.000us       0.000us      71.818ms        13.85%      71.818ms       7.182ms            10  
+                                              aten::mul         3.04%      47.411ms         7.04%     109.697ms      39.038us      34.894ms         6.73%      34.903ms      12.421us          2810  
+igemm_wrw_gtcx3_nhwc_fp32_bx0_ex1_bt256x128x16_wt32x...         0.00%       0.000us         0.00%       0.000us       0.000us      27.452ms         5.29%      27.452ms     457.531us            60  
+igemm_wrw_gtcx3_nhwc_fp32_bx0_ex1_bt64x128x16_wt32x3...         0.00%       0.000us         0.00%       0.000us       0.000us      26.706ms         5.15%      26.706ms     667.655us            40  
+void at::native::elementwise_kernel_manual_unroll<12...         0.00%       0.000us         0.00%       0.000us       0.000us      23.150ms         4.46%      23.150ms      57.874us           400  
+                       batched_transpose_32x32_dword.kd         0.00%       0.000us         0.00%       0.000us       0.000us      18.972ms         3.66%      18.972ms      70.265us           270  
+                                               aten::mm         5.61%      87.302ms         7.35%     114.545ms      89.488us      18.055ms         3.48%      18.055ms      14.106us          1280  
+igemm_wrw_gtcx3_nhwc_fp32_bx0_ex1_bt128x128x16_wt32x...         0.00%       0.000us         0.00%       0.000us       0.000us      17.807ms         3.43%      17.807ms     445.179us            40  
+igemm_bwd_gtcx3_nhwc_fp32_bx0_ex1_bt128x128x16_wt32x...         0.00%       0.000us         0.00%       0.000us       0.000us      15.204ms         2.93%      15.204ms     506.806us            30  
+                                              aten::add         1.12%      17.388ms         1.80%      28.020ms      31.590us      14.988ms         2.89%      14.988ms      16.898us           887  
+                               aten::threshold_backward         0.69%      10.785ms         0.80%      12.413ms      47.742us      14.753ms         2.84%      14.753ms      56.744us           260  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 1.557s
+Self CUDA time total: 518.719ms
+
+Training:  93%|█████████▎| 39/42 [02:08<00:08,  2.86s/step]PROFILE_BY_CPU
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                        hipLaunchKernel        12.46%     194.033ms        12.46%     194.036ms      20.130us       0.000us         0.00%       4.929us       0.001us          9639  
+                               hipExtModuleLaunchKernel         8.13%     126.629ms         8.13%     126.632ms      28.016us       0.000us         0.00%       2.044us       0.000us          4520  
+                        DistributedDataParallel.forward         7.18%     111.786ms        37.59%     585.467ms      58.547ms       0.000us         0.00%     178.683ms      17.868ms            10  
+                                               aten::mm         5.61%      87.302ms         7.35%     114.545ms      89.488us      18.055ms         3.48%      18.055ms      14.106us          1280  
+                                           aten::select         4.05%      62.997ms         5.84%      90.927ms       5.578us       0.000us         0.00%       0.000us       0.000us         16302  
+                                         hipMemcpyAsync         3.82%      59.486ms         3.82%      59.486ms      24.994us       0.000us         0.00%       0.000us       0.000us          2380  
+                                            aten::addmm         3.78%      58.803ms         5.42%      84.434ms     140.723us       7.805ms         1.50%       7.807ms      13.011us           600  
+    autograd::engine::evaluate_function: AddmmBackward0         3.36%      52.295ms        13.99%     217.897ms     363.161us       0.000us         0.00%      26.753ms      44.588us           600  
+                                              aten::bmm         3.06%      47.651ms         4.37%      68.045ms     121.509us      12.308ms         2.37%      12.308ms      21.978us           560  
+                             aten::convolution_backward         3.06%      47.649ms         6.61%     102.880ms     489.903us     199.600ms        38.48%     200.015ms     952.455us           210  
+                                              aten::mul         3.04%      47.411ms         7.04%     109.697ms      39.038us      34.894ms         6.73%      34.903ms      12.421us          2810  
+                              Optimizer.step#AdamW.step         2.94%      45.801ms         4.91%      76.544ms       7.654ms       0.000us         0.00%       6.681ms     668.077us            10  
+                                       aten::as_strided         2.91%      45.359ms         2.91%      45.359ms       1.742us       0.000us         0.00%       0.000us       0.000us         26042  
+                                        aten::transpose         2.58%      40.117ms         3.39%      52.750ms      11.517us       0.000us         0.00%       0.000us       0.000us          4580  
+                               aten::miopen_convolution         2.13%      33.242ms         3.16%      49.148ms     234.037us      96.345ms        18.57%      96.498ms     459.516us           210  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 1.557s
+Self CUDA time total: 518.719ms
+
+Training:  98%|█████████▊| 41/42 [02:09<00:01,  1.75s/step]Training: 100%|██████████| 42/42 [02:09<00:00,  1.39s/step]INFO 2026-11-22 16:21:25 ot_train.py:894 step:42 smpl:5K ep:13 epch:0.27 loss:33.846 grdn:293.674 lr:1.0e-05 data_s:1.990 prep_s:0.008 updt_s:1.264 step_s:3.075 smp/s:42 mem_gb:4.95 l1_loss:0.693 kld_loss:3.315
+INFO 2026-11-22 16:21:25 ot_train.py:936 Checkpoint policy after step 42
+INFO 2026-11-22 16:21:25 n/_torch.py:299 Model weights successfully saved to /outputs/rocm-train/prof-act-4g-1795364316/checkpoints/000042/pretrained_model!
+Training: 100%|██████████| 42/42 [02:09<00:00,  3.08s/step]
+INFO 2026-11-22 16:21:25 t_train.py:1026 End of training
+RESULT prof-act-4g PASS exit=0 seconds=188 dp_replicate=4 dp_shard=1 steps=[42]
+QUEUE END 2026-11-22T16:21:43+00:00 /dev/vda1       2.0T  1.8T  187G  91% /

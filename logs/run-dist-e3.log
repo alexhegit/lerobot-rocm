@@ -1,0 +1,27 @@
+----- 2026-11-22T16:14:42+00:00 BEGIN eval-evo1-libero devices=5 free=194G -----
+W: GPG error: https://repo.radeon.com/amdainic/pensando/ubuntu/1.117.5-a-77 noble InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 9386B48A1A693C5C
+W: The repository 'https://repo.radeon.com/amdainic/pensando/ubuntu/1.117.5-a-77 noble InRelease' is not signed.
+debconf: delaying package configuration, since apt-utils is not installed
+task 0 done
+task 1 done
+task 2 done
+task 3 done
+task 4 done
+task 5 done
+task 6 done
+task 7 done
+task 8 done
+task 9 done
+task-0 5 / 5
+task-1 5 / 5
+task-2 4 / 5
+task-3 5 / 5
+task-4 4 / 5
+task-5 1 / 5
+task-6 5 / 5
+task-7 5 / 5
+task-8 3 / 5
+task-9 5 / 5
+EVAL libero_spatial 42/50 = 84.0%
+RESULT eval-evo1-libero PASS exit=0 seconds=1780 dp_replicate= dp_shard= steps=[]
+QUEUE END 2026-11-22T16:44:22+00:00 /dev/vda1       2.0T  1.8T  188G  91% /

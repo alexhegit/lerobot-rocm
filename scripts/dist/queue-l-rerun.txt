@@ -1,0 +1,4 @@
+# Re-runs of the three unverified items from 2026-11-22, with the corrected scripts. GPUs 0-1.
+act-ddp2-to-1-resume|CUSTOM|0,1|2||
+dit-fsdp2-deploy|CUSTOM|0,1|2||
+smolvla-resume-fsdp2|CUSTOM|0,1|2||

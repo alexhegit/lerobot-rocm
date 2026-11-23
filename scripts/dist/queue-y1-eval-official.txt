@@ -1,0 +1,2 @@
+# Official ACT transfer-cube checkpoint, 50 sim episodes on ROCm (GPU 7, CPU rendering with OSMesa).
+act-aloha-eval-official|CUSTOM|7|1||

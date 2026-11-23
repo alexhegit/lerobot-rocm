@@ -1,0 +1,2 @@
+# ACT official recipe (1 GPU, batch 8, 100k steps) + 50 sim episodes, on GPU 7.
+act-aloha-official-recipe|CUSTOM|7|1||

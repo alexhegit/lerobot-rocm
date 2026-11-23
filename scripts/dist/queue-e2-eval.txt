@@ -1,0 +1,2 @@
+# Official smolvla_libero, LIBERO-Spatial 10 tasks x 5 episodes (GPU 5).
+eval-smolvla-libero|CUSTOM|5|1||

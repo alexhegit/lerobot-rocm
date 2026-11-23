@@ -1,0 +1,14 @@
+# Throughput scaling with a fixed per-GPU batch: 40 steps, samples/s read from the step 31-40 log
+# window. Runs alone on the node (started after the other queues).
+scale-act-1g|act-base|0|1|--batch_size=32 --steps=40 --log_freq=10 --save_freq=100000 --num_workers=8|
+scale-act-2g|act-base|0,1|2|--batch_size=32 --steps=40 --log_freq=10 --save_freq=100000 --num_workers=8|
+scale-act-4g|act-base|0,1,2,3|4|--batch_size=32 --steps=40 --log_freq=10 --save_freq=100000 --num_workers=8|
+scale-act-8g|act-base|0,1,2,3,4,5,6,7|8|--batch_size=32 --steps=40 --log_freq=10 --save_freq=100000 --num_workers=8|
+scale-smolvla-1g|smolvla-1|0|1|--batch_size=8 --steps=40 --log_freq=10 --save_freq=100000 --num_workers=8|
+scale-smolvla-2g|smolvla-1|0,1|2|--batch_size=8 --steps=40 --log_freq=10 --save_freq=100000 --num_workers=8|
+scale-smolvla-4g|smolvla-1|0,1,2,3|4|--batch_size=8 --steps=40 --log_freq=10 --save_freq=100000 --num_workers=8|
+scale-smolvla-8g|smolvla-1|0,1,2,3,4,5,6,7|8|--batch_size=8 --steps=40 --log_freq=10 --save_freq=100000 --num_workers=8|
+scale-pi0-1g|pi0-1|0|1|--batch_size=4 --steps=40 --log_freq=10 --save_freq=100000 --num_workers=8|
+scale-pi0-2g|pi0-1|0,1|2|--batch_size=4 --steps=40 --log_freq=10 --save_freq=100000 --num_workers=8|
+scale-pi0-4g|pi0-1|0,1,2,3|4|--batch_size=4 --steps=40 --log_freq=10 --save_freq=100000 --num_workers=8|
+scale-pi0-8g|pi0-1|0,1,2,3,4,5,6,7|8|--batch_size=4 --steps=40 --log_freq=10 --save_freq=100000 --num_workers=8|

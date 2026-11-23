@@ -1,0 +1,5 @@
+# Dataloader workers vs DDP throughput, ACT batch 32 per GPU (GPUs 0-3).
+scale3-act-1g-w0|act-base|0|1|--batch_size=32 --steps=60 --log_freq=20 --save_freq=100000 --dataset.episodes=null --num_workers=0|export MIOPEN_USER_DB_PATH=/outputs/rocm-train/miopen/fast/db;;export MIOPEN_CUSTOM_CACHE_DIR=/outputs/rocm-train/miopen/fast/cache
+scale3-act-4g-w0|act-base|0,1,2,3|4|--batch_size=32 --steps=60 --log_freq=20 --save_freq=100000 --dataset.episodes=null --num_workers=0|export MIOPEN_USER_DB_PATH=/outputs/rocm-train/miopen/fast/db;;export MIOPEN_CUSTOM_CACHE_DIR=/outputs/rocm-train/miopen/fast/cache
+scale3-act-4g-w1|act-base|0,1,2,3|4|--batch_size=32 --steps=60 --log_freq=20 --save_freq=100000 --dataset.episodes=null --num_workers=1|export MIOPEN_USER_DB_PATH=/outputs/rocm-train/miopen/fast/db;;export MIOPEN_CUSTOM_CACHE_DIR=/outputs/rocm-train/miopen/fast/cache
+scale3-act-4g-w4|act-base|0,1,2,3|4|--batch_size=32 --steps=60 --log_freq=20 --save_freq=100000 --dataset.episodes=null --num_workers=4|export MIOPEN_USER_DB_PATH=/outputs/rocm-train/miopen/fast/db;;export MIOPEN_CUSTOM_CACHE_DIR=/outputs/rocm-train/miopen/fast/cache

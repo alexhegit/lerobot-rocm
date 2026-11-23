@@ -1,0 +1,208 @@
+----- 2026-11-22T15:38:42+00:00 BEGIN eval-diffusion-pusht devices=6 free=196G -----
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.6s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[W1122 15:39:09.709846918 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:39:09.746084077 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:39:09.758065228 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:39:09.770076132 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:39:09.782053584 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:39:09.818052844 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:39:09.830062306 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:39:09.842050549 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:39:09.854072241 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:39:09.866043847 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:39:09.884053425 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:39:09.902064735 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:39:09.917050374 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 111, in encode
+    return fn(obj, declared_type)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 242, in encode_tuple
+    if type_args and len(type_args) == len(obj):
+                                       ^^^^^^^^
+TypeError: object of type 'int' has no len()
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 114, in encode
+    return fn(obj)
+           ^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 247, in encode_tuple
+    return [encode(x) for x in obj]
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'int' object is not iterable
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/lerobot/src/lerobot/processor/migrate_policy_normalization.py", line 780, in <module>
+    main()
+  File "/lerobot/src/lerobot/processor/migrate_policy_normalization.py", line 642, in main
+    policy.save_pretrained(output_dir)
+  File "/lerobot/src/lerobot/utils/hub.py", line 149, in save_pretrained
+    self._save_pretrained(save_directory)
+  File "/lerobot/src/lerobot/policies/pretrained.py", line 156, in _save_pretrained
+    self.config._save_pretrained(save_directory)
+  File "/lerobot/src/lerobot/configs/policies.py", line 175, in _save_pretrained
+    json.dump(draccus.encode(self, PreTrainedConfig), f, indent=4)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/registry_utils.py", line 81, in wrapper
+    return base_func(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 129, in encode
+    raise e
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 120, in encode
+    return encode_choice(obj, underlying_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 176, in encode_choice
+    encoded = encode_dataclass(obj, declared_type)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 159, in encode_dataclass
+    d[field.name] = encode(value, field_type)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/registry_utils.py", line 81, in wrapper
+    return base_func(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 111, in encode
+    return fn(obj, declared_type)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 235, in encode_list
+    return [encode(x, item_type) for x in obj]
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/registry_utils.py", line 81, in wrapper
+    return base_func(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 116, in encode
+    raise Exception(f"Couldn't encode {obj}") from e
+Exception: Couldn't encode 84
+Loading model from lerobot/diffusion_pusht...
+Extracting normalization statistics...
+Found normalization statistics for: ['observation.image', 'observation.state', 'action']
+Detecting features and normalization modes...
+Found normalization_mapping in config: {'ACTION': 'MIN_MAX', 'STATE': 'MIN_MAX', 'VISUAL': 'MEAN_STD'}
+Detected features: ['observation.image', 'observation.state', 'action']
+Normalization modes: {<FeatureType.ACTION: 'ACTION'>: <NormalizationMode.MIN_MAX: 'MIN_MAX'>, <FeatureType.STATE: 'STATE'>: <NormalizationMode.MIN_MAX: 'MIN_MAX'>, <FeatureType.VISUAL: 'VISUAL'>: <NormalizationMode.MEAN_STD: 'MEAN_STD'>}
+Removing normalization layers from model...
+Removed 8 normalization layer keys
+Detected policy type: diffusion
+Removing 'normalization_mapping' field from config
+Removing 'type' field from config
+Creating diffusion policy configuration...
+Instantiating diffusion policy...
+Successfully loaded cleaned state dict into policy model (all keys matched)
+Creating preprocessor and postprocessor using make_pre_post_processors...
+Saving preprocessor to /outputs/rocm-train/diffusion-pusht-migrated...
+Saving postprocessor to /outputs/rocm-train/diffusion-pusht-migrated...
+Saving model to /outputs/rocm-train/diffusion-pusht-migrated...
+RESULT eval-diffusion-pusht FAIL exit=1 seconds=30 dp_replicate= dp_shard= steps=[]
+QUEUE END 2026-11-22T15:39:12+00:00 /dev/vda1       2.0T  1.8T  195G  91% /
+----- 2026-11-22T15:50:34+00:00 BEGIN eval-diffusion-pusht devices=6 free=194G -----
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.8s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[W1122 15:50:59.502189562 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:50:59.538080619 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:50:59.550049466 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:50:59.562110919 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:50:59.574082982 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:50:59.605086045 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:50:59.641087694 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:50:59.652083192 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:50:59.664113635 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:50:59.676058460 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:50:59.715698024 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:50:59.727077675 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+[W1122 15:50:59.739042939 NNPACK.cpp:56] Could not initialize NNPACK! Reason: Unsupported hardware.
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 111, in encode
+    return fn(obj, declared_type)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 242, in encode_tuple
+    if type_args and len(type_args) == len(obj):
+                                       ^^^^^^^^
+TypeError: object of type 'int' has no len()
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 114, in encode
+    return fn(obj)
+           ^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 247, in encode_tuple
+    return [encode(x) for x in obj]
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'int' object is not iterable
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/outputs/rocm-train/latest-main/src/lerobot/processor/migrate_policy_normalization.py", line 780, in <module>
+    main()
+  File "/outputs/rocm-train/latest-main/src/lerobot/processor/migrate_policy_normalization.py", line 642, in main
+    policy.save_pretrained(output_dir)
+  File "/outputs/rocm-train/latest-main/src/lerobot/utils/hub.py", line 139, in save_pretrained
+    self._save_pretrained(save_directory)
+  File "/outputs/rocm-train/latest-main/src/lerobot/policies/pretrained.py", line 194, in _save_pretrained
+    self.config._save_pretrained(save_directory)
+  File "/outputs/rocm-train/latest-main/src/lerobot/configs/policies.py", line 176, in _save_pretrained
+    config = draccus.encode(self, PreTrainedConfig)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/registry_utils.py", line 81, in wrapper
+    return base_func(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 129, in encode
+    raise e
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 120, in encode
+    return encode_choice(obj, underlying_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 176, in encode_choice
+    encoded = encode_dataclass(obj, declared_type)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 159, in encode_dataclass
+    d[field.name] = encode(value, field_type)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/registry_utils.py", line 81, in wrapper
+    return base_func(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 111, in encode
+    return fn(obj, declared_type)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 235, in encode_list
+    return [encode(x, item_type) for x in obj]
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/registry_utils.py", line 81, in wrapper
+    return base_func(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/draccus/parsers/encoding.py", line 116, in encode
+    raise Exception(f"Couldn't encode {obj}") from e
+Exception: Couldn't encode 84
+Loading model from lerobot/diffusion_pusht...
+Extracting normalization statistics...
+Found normalization statistics for: ['observation.image', 'observation.state', 'action']
+Detecting features and normalization modes...
+Found normalization_mapping in config: {'ACTION': 'MIN_MAX', 'STATE': 'MIN_MAX', 'VISUAL': 'MEAN_STD'}
+Detected features: ['observation.image', 'observation.state', 'action']
+Normalization modes: {<FeatureType.ACTION: 'ACTION'>: <NormalizationMode.MIN_MAX: 'MIN_MAX'>, <FeatureType.STATE: 'STATE'>: <NormalizationMode.MIN_MAX: 'MIN_MAX'>, <FeatureType.VISUAL: 'VISUAL'>: <NormalizationMode.MEAN_STD: 'MEAN_STD'>}
+Removing normalization layers from model...
+Removed 8 normalization layer keys
+Detected policy type: diffusion
+Removing 'normalization_mapping' field from config
+Removing 'type' field from config
+Creating diffusion policy configuration...
+Instantiating diffusion policy...
+Successfully loaded cleaned state dict into policy model (all keys matched)
+Creating preprocessor and postprocessor using make_pre_post_processors...
+Saving preprocessor to /outputs/rocm-train/diffusion-pusht-migrated...
+Saving postprocessor to /outputs/rocm-train/diffusion-pusht-migrated...
+Saving model to /outputs/rocm-train/diffusion-pusht-migrated...
+RESULT eval-diffusion-pusht FAIL exit=1 seconds=28 dp_replicate= dp_shard= steps=[]
+QUEUE END 2026-11-22T15:51:02+00:00 /dev/vda1       2.0T  1.8T  193G  91% /

@@ -1,0 +1,88 @@
+{
+  "per_task": [
+    {
+      "task_group": "libero_spatial",
+      "task_id": 5,
+      "metrics": {
+        "sum_rewards": [
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        "max_rewards": [
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        "successes": [
+          false,
+          false,
+          true,
+          false,
+          false
+        ],
+        "video_paths": [
+          "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_0.mp4",
+          "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_1.mp4",
+          "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_2.mp4",
+          "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_3.mp4",
+          "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_4.mp4"
+        ],
+        "predicted_video_paths": []
+      },
+      "n_episodes": 5,
+      "n_success": 1,
+      "pc_success": 20.0,
+      "pc_success_ci95": [
+        3.6224108632430143,
+        62.44653702374745
+      ]
+    }
+  ],
+  "per_group": {
+    "libero_spatial": {
+      "avg_sum_reward": 0.2,
+      "avg_max_reward": 0.2,
+      "pc_success": 20.0,
+      "n_episodes": 5,
+      "n_success": 1,
+      "pc_success_ci95": [
+        3.6224108632430143,
+        62.44653702374745
+      ],
+      "video_paths": [
+        "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_0.mp4",
+        "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_1.mp4",
+        "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_2.mp4",
+        "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_3.mp4",
+        "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_4.mp4"
+      ],
+      "predicted_video_paths": []
+    }
+  },
+  "overall": {
+    "avg_sum_reward": 0.2,
+    "avg_max_reward": 0.2,
+    "pc_success": 20.0,
+    "n_episodes": 5,
+    "n_success": 1,
+    "pc_success_ci95": [
+      3.6224108632430143,
+      62.44653702374745
+    ],
+    "eval_s": 228.53555607795715,
+    "eval_ep_s": 45.707111310958865,
+    "video_paths": [
+      "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_0.mp4",
+      "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_1.mp4",
+      "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_2.mp4",
+      "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_3.mp4",
+      "/outputs/rocm-train/eval-evo1-libero/task-5/videos/libero_spatial_5/eval_episode_4.mp4"
+    ],
+    "predicted_video_paths": []
+  }
+}

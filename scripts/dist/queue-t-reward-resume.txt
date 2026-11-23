@@ -1,0 +1,7 @@
+# After the scaling queue: SARM reward model on 2 GPUs, and resume with EMA / fp16 / grad accumulation.
+cover-sarm-ddp2|cover-sarm|0,1|2||
+cover-sarm-fsdp2|cover-sarm|0,1|2|--parallelism.dp_shard=2 @AUTOWRAP|
+act-ema-resume-ddp2|CUSTOM|2,3|2||
+act-ema-resume-fsdp2|CUSTOM|2,3|2||
+act-fp16-resume-ddp2|CUSTOM|2,3|2||
+act-gradacc-resume-fsdp2|CUSTOM|2,3|2||

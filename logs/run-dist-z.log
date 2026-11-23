@@ -1,0 +1,21 @@
+----- 2026-11-22T15:27:49+00:00 BEGIN concurrent-act-2x1 devices=0,1 free=200G -----
+CONCURRENT 2x1 gpu=0 updt_s:0.054 smp/s:565 
+CONCURRENT 2x1 gpu=1 updt_s:0.054 smp/s:572 
+RESULT concurrent-act-2x1 PASS exit=0 seconds=92 dp_replicate= dp_shard= steps=[]
+----- 2026-11-22T15:29:21+00:00 BEGIN concurrent-act-4x1 devices=0,1,2,3 free=200G -----
+CONCURRENT 4x1 gpu=0 updt_s:0.057 smp/s:533 
+CONCURRENT 4x1 gpu=1 updt_s:0.098 smp/s:305 
+CONCURRENT 4x1 gpu=2 updt_s:0.060 smp/s:503 
+CONCURRENT 4x1 gpu=3 updt_s:0.095 smp/s:313 
+RESULT concurrent-act-4x1 PASS exit=0 seconds=125 dp_replicate= dp_shard= steps=[]
+----- 2026-11-22T15:31:26+00:00 BEGIN concurrent-act-8x1 devices=0,1,2,3,4,5,6,7 free=199G -----
+CONCURRENT 8x1 gpu=0 updt_s:0.077 smp/s:385 
+CONCURRENT 8x1 gpu=1 updt_s:0.054 smp/s:565 
+CONCURRENT 8x1 gpu=2 updt_s:0.069 smp/s:444 
+CONCURRENT 8x1 gpu=3 updt_s:0.059 smp/s:515 
+CONCURRENT 8x1 gpu=4 updt_s:0.056 smp/s:546 
+CONCURRENT 8x1 gpu=5 updt_s:0.056 smp/s:545 
+CONCURRENT 8x1 gpu=6 updt_s:0.055 smp/s:549 
+CONCURRENT 8x1 gpu=7 updt_s:0.056 smp/s:555 
+RESULT concurrent-act-8x1 PASS exit=0 seconds=127 dp_replicate= dp_shard= steps=[]
+QUEUE END 2026-11-22T15:33:33+00:00 /dev/vda1       2.0T  1.8T  198G  91% /

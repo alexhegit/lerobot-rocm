@@ -30,7 +30,8 @@ echo "== resume: steps 3-4"
 accelerate launch --num_processes=2 $entry --resume=true \\
   --config_path=$out/checkpoints/000002/pretrained_model/train_config.json --steps=4
 test -d $out/checkpoints/000004
-cat $out/checkpoints/000004/training_state/training_step.json 2>/dev/null || find $out/checkpoints/000004 -maxdepth 2
+find $out/checkpoints/000004 -maxdepth 2 | sort
+cat $out/checkpoints/000004/training_state/training_step.json 2>/dev/null || true
 echo "RESUME_OK"
 EOF
   chmod +x "$ROOT/jobs/$name.sh"
@@ -39,9 +40,16 @@ EOF
 write_job dit-resume-ddp2 "$DIT_ARGS" ""
 AUTOWRAP=/outputs/rocm-train/jobs/fsdp_autowrap_train.py
 write_job dit-resume-fsdp2 "$DIT_ARGS" "--parallelism.dp_shard=2" "$AUTOWRAP"
-write_job smolvla-resume-fsdp2 "$SMOLVLA_ARGS" "--parallelism.dp_shard=2 --accelerator.mixed_precision=bf16" \
-  "$AUTOWRAP" "export FSDP_CAST_FP32=1"
+# SmolVLA runs its language layers through submodules, so only the vision encoder layers are units.
+write_job smolvla-resume-fsdp2 "$SMOLVLA_ARGS" \
+  "--parallelism.dp_shard=2 --accelerator.mixed_precision=bf16 --accelerator.fsdp.wrap_modules='[\"SmolVLMEncoderLayer\"]'" \
+  "$AUTOWRAP" "export FSDP_CAST_DTYPE=float32"
 # ACT declares its wrap units and uses every parameter: a control for the FSDP resume path.
 write_job act-resume-fsdp2 "$ACT_ARGS" "--parallelism.dp_shard=2"
 write_job act-resume-ddp2 "$ACT_ARGS" ""
+# EMA (sharded EMA state under FSDP), fp16 loss-scaler state, and gradient accumulation across resume.
+write_job act-ema-resume-ddp2 "$ACT_ARGS" "--ema.type=constant"
+write_job act-ema-resume-fsdp2 "$ACT_ARGS" "--parallelism.dp_shard=2 --ema.type=constant"
+write_job act-fp16-resume-ddp2 "$ACT_ARGS" "--accelerator.mixed_precision=fp16"
+write_job act-gradacc-resume-fsdp2 "$ACT_ARGS" "--parallelism.dp_shard=2 --accelerator.gradient_accumulation.steps=2"
 echo "resume jobs written"

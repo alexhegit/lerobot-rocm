@@ -1,0 +1,2 @@
+# ACT trained from scratch on 2 GPUs (DDP, batch 32 per GPU), then 50 sim episodes.
+act-aloha-train-eval|CUSTOM|4,5|2||

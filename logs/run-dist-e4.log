@@ -1,0 +1,412 @@
+----- 2026-11-22T16:15:33+00:00 BEGIN eval-groot-libero devices=6 free=189G -----
+W: GPG error: https://repo.radeon.com/amdainic/pensando/ubuntu/1.117.5-a-77 noble InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 9386B48A1A693C5C
+W: The repository 'https://repo.radeon.com/amdainic/pensando/ubuntu/1.117.5-a-77 noble InRelease' is not signed.
+debconf: delaying package configuration, since apt-utils is not installed
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.9s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/draccus/parsers/decoding.py:177: FutureWarning: `model_params_fp32` is deprecated; use `--policy.dtype` instead.
+  instance = origin(**init_args)
+WARNING 2026-11-22 16:16:08 figs/eval.py:73 No job name provided, using 'libero_groot' as job name.
+INFO 2026-11-22 16:16:08 bot_eval.py:813 {'env': {'camera_name': 'agentview_image,robot0_eye_in_hand_image',
+         'camera_name_mapping': None,
+         'control_mode': 'relative',
+         'disable_env_checker': True,
+         'episode_length': None,
+         'features': {},
+         'features_map': {},
+         'fps': 20,
+         'hard_reset': True,
+         'init_states': True,
+         'is_libero_plus': False,
+         'max_parallel_tasks': 1,
+         'obs_type': 'pixels_agent_pos',
+         'observation_height': 360,
+         'observation_width': 360,
+         'render_mode': 'rgb_array',
+         'server': None,
+         'task': 'libero_spatial',
+         'task_ids': None},
+ 'eval': {'batch_size': 5,
+          'max_episode_steps': None,
+          'n_episodes': 5,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'job_name': 'libero_groot',
+ 'output_dir': PosixPath('/outputs/rocm-train/eval-groot-libero'),
+ 'policy': {'action_decode_transform': 'libero',
+            'balance_dataset_weights': True,
+            'balance_trajectory_weights': True,
+            'base_model_path': '/cache/huggingface/models--nvidia--GR00T-N1.7-3B/snapshots/2fc962b973bccdd5d8ce4f67cc63b264d6886495',
+            'batch_size': 32,
+            'chunk_size': 16,
+            'dataloader_num_workers': 8,
+            'dataset_paths': None,
+            'device': 'cuda',
+            'dtype': torch.float32,
+            'embodiment_tag': 'libero_sim',
+            'image_size': (256, 256),
+            'input_features': {'observation.images.image': {'shape': (256,
+                                                                      256,
+                                                                      3),
+                                                            'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.images.wrist_image': {'shape': (256,
+                                                                            256,
+                                                                            3),
+                                                                  'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.state': {'shape': (8,),
+                                                     'type': <FeatureType.STATE: 'STATE'>}},
+            'license': None,
+            'lora_alpha': 16,
+            'lora_dropout': 0.1,
+            'lora_full_model': False,
+            'lora_rank': 0,
+            'max_action_dim': 132,
+            'max_state_dim': 132,
+            'max_steps': 20000,
+            'model_params_fp32': None,
+            'n_action_steps': 16,
+            'n_obs_steps': 1,
+            'normalization_mapping': {'ACTION': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'STATE': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>},
+            'num_inference_timesteps': 4,
+            'optimizer_betas': (0.9, 0.999),
+            'optimizer_eps': 1e-08,
+            'optimizer_fused': None,
+            'optimizer_lr': 0.0001,
+            'optimizer_weight_decay': 1e-05,
+            'output_dir': './tmp/gr00t',
+            'output_features': {'action': {'shape': (7,),
+                                           'type': <FeatureType.ACTION: 'ACTION'>}},
+            'pretrained_path': PosixPath('nvidia/gr00t17-lerobot-libero_spatial-640'),
+            'pretrained_revision': None,
+            'private': None,
+            'push_to_hub': False,
+            'relative_exclude_joints': [],
+            'repo_id': None,
+            'report_to': 'wandb',
+            'resume': False,
+            'rtc_ramp_rate': 6.0,
+            'save_steps': 1000,
+            'tags': None,
+            'tokenizer_assets_repo': None,
+            'tune_diffusion_model': True,
+            'tune_llm': False,
+            'tune_projector': True,
+            'tune_top_llm_layers': 0,
+            'tune_visual': False,
+            'tune_vlln': True,
+            'use_amp': False,
+            'use_bf16': True,
+            'use_flash_attention': False,
+            'use_peft': False,
+            'use_relative_actions': False,
+            'video_backend': 'decord',
+            'warmup_ratio': 0.05},
+ 'rename_map': {},
+ 'seed': 1000,
+ 'tf32': True,
+ 'trust_remote_code': False}
+INFO 2026-11-22 16:16:08 bot_eval.py:835 Output dir: /outputs/rocm-train/eval-groot-libero
+INFO 2026-11-22 16:16:08 bot_eval.py:837 Making environment (batch_size=5, async=True).
+Do you want to specify a custom path for the dataset folder? (Y/N): /opt/venv/lib/python3.12/site-packages/robosuite/__init__.py:30: SyntaxWarning: invalid escape sequence '\ '
+  __logo__ = """
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING 2026-11-22 16:16:08 e/__init__.py:7 No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING 2026-11-22 16:16:08 e/__init__.py:8 It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING 2026-11-22 16:16:08 e/__init__.py:9 To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+INFO 2026-11-22 16:16:08 tesupport.py:24 No OpenGL_accelerate module loaded: No module named 'OpenGL_accelerate'
+INFO 2026-11-22 16:16:09 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+Initializing the default config file...
+The following information is stored in the config file: /root/.libero/config.yaml
+benchmark_root: /opt/venv/lib/python3.12/site-packages/libero/libero
+bddl_files: /opt/venv/lib/python3.12/site-packages/libero/libero/./bddl_files
+init_states: /opt/venv/lib/python3.12/site-packages/libero/libero/./init_files
+datasets: /opt/venv/lib/python3.12/site-packages/libero/libero/../datasets
+assets: /opt/venv/lib/python3.12/site-packages/libero/libero/./assets
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING:robosuite_logs:No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING:robosuite_logs:It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING:robosuite_logs:To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING:robosuite_logs:No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING:robosuite_logs:It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING:robosuite_logs:To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING:robosuite_logs:No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING:robosuite_logs:It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING:robosuite_logs:To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING:robosuite_logs:No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING:robosuite_logs:It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING:robosuite_logs:To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING:robosuite_logs:No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING:robosuite_logs:It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING:robosuite_logs:To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+INFO 2026-11-22 16:16:28 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:16:28 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:16:28 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:16:28 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:16:28 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:16:28 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:16:28 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:16:28 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:16:28 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Traceback (most recent call last):
+  File "/opt/venv/bin/lerobot-eval", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/lerobot/src/lerobot/scripts/lerobot_eval.py", line 1243, in main
+    eval_main()
+  File "/lerobot/src/lerobot/configs/parser.py", line 468, in wrapper_inner
+    response = fn(cfg, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lerobot/src/lerobot/scripts/lerobot_eval.py", line 854, in eval_main
+    validate_checkpoint(
+  File "/lerobot/src/lerobot/envs/utils.py", line 207, in validate_checkpoint
+    raise ValueError(f"Checkpoint feature missing from the simulator (check --rename_map): {name}")
+ValueError: Checkpoint feature missing from the simulator (check --rename_map): observation.images.wrist_image
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: '/outputs/rocm-train/eval-groot-libero/eval_info.json'
+RESULT eval-groot-libero FAIL exit=1 seconds=58 dp_replicate= dp_shard= steps=[]
+QUEUE END 2026-11-22T16:16:31+00:00 /dev/vda1       2.0T  1.8T  188G  91% /
+----- 2026-11-22T16:28:32+00:00 BEGIN eval-groot-libero devices=6 free=187G -----
+W: GPG error: https://repo.radeon.com/amdainic/pensando/ubuntu/1.117.5-a-77 noble InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 9386B48A1A693C5C
+W: The repository 'https://repo.radeon.com/amdainic/pensando/ubuntu/1.117.5-a-77 noble InRelease' is not signed.
+debconf: delaying package configuration, since apt-utils is not installed
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.9s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/draccus/parsers/decoding.py:177: FutureWarning: `model_params_fp32` is deprecated; use `--policy.dtype` instead.
+  instance = origin(**init_args)
+WARNING 2026-11-22 16:29:04 figs/eval.py:73 No job name provided, using 'libero_groot' as job name.
+INFO 2026-11-22 16:29:04 bot_eval.py:813 {'env': {'camera_name': 'agentview_image,robot0_eye_in_hand_image',
+         'camera_name_mapping': None,
+         'control_mode': 'relative',
+         'disable_env_checker': True,
+         'episode_length': None,
+         'features': {},
+         'features_map': {},
+         'fps': 20,
+         'hard_reset': True,
+         'init_states': True,
+         'is_libero_plus': False,
+         'max_parallel_tasks': 1,
+         'obs_type': 'pixels_agent_pos',
+         'observation_height': 360,
+         'observation_width': 360,
+         'render_mode': 'rgb_array',
+         'server': None,
+         'task': 'libero_spatial',
+         'task_ids': None},
+ 'eval': {'batch_size': 5,
+          'max_episode_steps': None,
+          'n_episodes': 5,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'job_name': 'libero_groot',
+ 'output_dir': PosixPath('/outputs/rocm-train/eval-groot-libero'),
+ 'policy': {'action_decode_transform': 'libero',
+            'balance_dataset_weights': True,
+            'balance_trajectory_weights': True,
+            'base_model_path': '/cache/huggingface/models--nvidia--GR00T-N1.7-3B/snapshots/2fc962b973bccdd5d8ce4f67cc63b264d6886495',
+            'batch_size': 32,
+            'chunk_size': 16,
+            'dataloader_num_workers': 8,
+            'dataset_paths': None,
+            'device': 'cuda',
+            'dtype': torch.float32,
+            'embodiment_tag': 'libero_sim',
+            'image_size': (256, 256),
+            'input_features': {'observation.images.image': {'shape': (256,
+                                                                      256,
+                                                                      3),
+                                                            'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.images.wrist_image': {'shape': (256,
+                                                                            256,
+                                                                            3),
+                                                                  'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.state': {'shape': (8,),
+                                                     'type': <FeatureType.STATE: 'STATE'>}},
+            'license': None,
+            'lora_alpha': 16,
+            'lora_dropout': 0.1,
+            'lora_full_model': False,
+            'lora_rank': 0,
+            'max_action_dim': 132,
+            'max_state_dim': 132,
+            'max_steps': 20000,
+            'model_params_fp32': None,
+            'n_action_steps': 16,
+            'n_obs_steps': 1,
+            'normalization_mapping': {'ACTION': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'STATE': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>},
+            'num_inference_timesteps': 4,
+            'optimizer_betas': (0.9, 0.999),
+            'optimizer_eps': 1e-08,
+            'optimizer_fused': None,
+            'optimizer_lr': 0.0001,
+            'optimizer_weight_decay': 1e-05,
+            'output_dir': './tmp/gr00t',
+            'output_features': {'action': {'shape': (7,),
+                                           'type': <FeatureType.ACTION: 'ACTION'>}},
+            'pretrained_path': PosixPath('nvidia/gr00t17-lerobot-libero_spatial-640'),
+            'pretrained_revision': None,
+            'private': None,
+            'push_to_hub': False,
+            'relative_exclude_joints': [],
+            'repo_id': None,
+            'report_to': 'wandb',
+            'resume': False,
+            'rtc_ramp_rate': 6.0,
+            'save_steps': 1000,
+            'tags': None,
+            'tokenizer_assets_repo': None,
+            'tune_diffusion_model': True,
+            'tune_llm': False,
+            'tune_projector': True,
+            'tune_top_llm_layers': 0,
+            'tune_visual': False,
+            'tune_vlln': True,
+            'use_amp': False,
+            'use_bf16': True,
+            'use_flash_attention': False,
+            'use_peft': False,
+            'use_relative_actions': False,
+            'video_backend': 'decord',
+            'warmup_ratio': 0.05},
+ 'rename_map': {'observation.images.image2': 'observation.images.wrist_image'},
+ 'seed': 1000,
+ 'tf32': True,
+ 'trust_remote_code': False}
+INFO 2026-11-22 16:29:04 bot_eval.py:835 Output dir: /outputs/rocm-train/eval-groot-libero
+INFO 2026-11-22 16:29:04 bot_eval.py:837 Making environment (batch_size=5, async=True).
+Do you want to specify a custom path for the dataset folder? (Y/N): /opt/venv/lib/python3.12/site-packages/robosuite/__init__.py:30: SyntaxWarning: invalid escape sequence '\ '
+  __logo__ = """
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING 2026-11-22 16:29:04 e/__init__.py:7 No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING 2026-11-22 16:29:04 e/__init__.py:8 It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING 2026-11-22 16:29:04 e/__init__.py:9 To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+INFO 2026-11-22 16:29:04 tesupport.py:24 No OpenGL_accelerate module loaded: No module named 'OpenGL_accelerate'
+INFO 2026-11-22 16:29:05 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+Initializing the default config file...
+The following information is stored in the config file: /root/.libero/config.yaml
+benchmark_root: /opt/venv/lib/python3.12/site-packages/libero/libero
+bddl_files: /opt/venv/lib/python3.12/site-packages/libero/libero/./bddl_files
+init_states: /opt/venv/lib/python3.12/site-packages/libero/libero/./init_files
+datasets: /opt/venv/lib/python3.12/site-packages/libero/libero/../datasets
+assets: /opt/venv/lib/python3.12/site-packages/libero/libero/./assets
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING:robosuite_logs:No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING:robosuite_logs:It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING:robosuite_logs:To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING:robosuite_logs:No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING:robosuite_logs:It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING:robosuite_logs:To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING:robosuite_logs:No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING:robosuite_logs:It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING:robosuite_logs:To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING:robosuite_logs:No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING:robosuite_logs:It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING:robosuite_logs:To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING:robosuite_logs:No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING:robosuite_logs:It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING:robosuite_logs:To setup, run: python /opt/venv/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+INFO 2026-11-22 16:29:22 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:29:22 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:29:22 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:29:22 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:29:22 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:29:22 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:29:23 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:29:23 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+INFO 2026-11-22 16:29:23 s/libero.py:510 Creating LIBERO envs | suites=['libero_spatial'] | n_envs(per task)=5 | init_states=True
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Traceback (most recent call last):
+  File "/opt/venv/bin/lerobot-eval", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/lerobot/src/lerobot/scripts/lerobot_eval.py", line 1243, in main
+    eval_main()
+  File "/lerobot/src/lerobot/configs/parser.py", line 468, in wrapper_inner
+    response = fn(cfg, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lerobot/src/lerobot/scripts/lerobot_eval.py", line 854, in eval_main
+    validate_checkpoint(
+  File "/lerobot/src/lerobot/envs/utils.py", line 214, in validate_checkpoint
+    raise ValueError(
+ValueError: Checkpoint feature shape mismatch for observation.images.wrist_image: expected (256, 256, 3), got (3, 360, 360)
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: '/outputs/rocm-train/eval-groot-libero/eval_info.json'
+RESULT eval-groot-libero FAIL exit=1 seconds=53 dp_replicate= dp_shard= steps=[]
+QUEUE END 2026-11-22T16:29:25+00:00 /dev/vda1       2.0T  1.8T  186G  91% /

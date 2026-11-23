@@ -1,6 +1,6 @@
 # LeRobot 0.7 ROCm 训练 smoke 报告
 
-更新：2026-11-22。数据来自 DOUni `/data/lerobot/outputs/rocm-train/results.txt` 和各批次日志。文中的 `tmp/rocm-train/` 是验证时在 LeRobot 检出里的工作目录；本仓库里报告在 `reports/`，脚本在 `scripts/`（分布式部分在 `scripts/dist/`），上游原文在 `upstream/`，日志在 `logs/`。主机地址、内部路径已替换为占位。
+更新：2026-11-23。数据来自 DOUni `/data/lerobot/outputs/rocm-train/results.txt` 和各批次日志。文中的 `tmp/rocm-train/` 是验证时在 LeRobot 检出里的工作目录；本仓库里报告在 `reports/`（仿真评估的 `eval_info.json` 在 `reports/eval/`），脚本在 `scripts/`（分布式和夜间部分在 `scripts/dist/`），上游原文在 `upstream/`，日志在 `logs/`。主机地址、内部路径已替换为占位。
 
 ## 当前状态
 
@@ -29,6 +29,8 @@
 | RL | HIL-SERL（Gaussian actor + SAC） | PASS | — | 11 |
 
 训练特性：从 checkpoint 恢复、训练中仿真评估（MuJoCo，OSMesa 渲染）、`num_workers=2`、`torch.compile`、bf16 混合精度、PEFT LoRA 都已通过，见第 4、7 节。分布式特性（梯度累积、HSDP、fp16 / bf16 / FSDP 混合精度策略、CPU offload、DDP 选项、分布式 resume、换分片 resume、DCP checkpoint 格式、多卡评估）见第 13 节。
+
+性能与效果（第 14 节）：多卡训练务必设 `AMD_CPU_AFFINITY=0`，否则 HIP 把所有 rank 和 DataLoader worker 限制在 8 个 CPU 上（ACT 8 卡 706 → 4122 smp/s）；卷积策略挂持久 MIOpen 缓存（首步 464 → 27.5 s）。ROCm 上按官方配方训的 ACT 仿真成功率 66%，官方检查点 76%，区间重叠。
 
 未完成：多机训练（两台机器都没有 InfiniBand，待后续）。推 Hub 不做（smoke checkpoint 不值得上传）。
 
@@ -502,3 +504,42 @@ PR 描述、留言和 issue 草稿在 `tmp/rocm-train/upstream/`。2026-11-20 �
 - 队列 B 的执行脚本在运行中被覆盖，跑完最后一项后解析出错、没写 `QUEUE END`，手动补写。以后不在运行中改脚本。
 - Hugging Face 缓存的大文件在共享的 `hub/blobs`，删模型目录不释放空间。`prune-hf-models.py` 只删不被其他模型引用的 blob，清了 Qwen3-VL-8B、Robometer-4B、X-VLA、Qwen3-VL-2B、InternVL3-1B、VLA-JEPA 共 42.3 GB。
 - 这一轮原定 5 小时，实际约 6 小时 15 分。
+
+## 14. 夜间验证（2026-11-22 20:20 – 11-23 01:25，UTC+8）
+
+脚本在 `tmp/rocm-train/dist/`，日志 DOUni `run-dist-{l,m,n,t,v,y1,s2,x,u,u2,u3,w,z,p,r,e1,e2,e3,e4,q,q2,s3,k2,s4}.log`。原计划 06:30 停发新任务，实际最后一批在 01:25 前跑完；之后本机休眠到 08:15，收尾晚了。
+
+### 14.1 结论先行
+
+1. **ROCm 多卡扩展差的根因是 CPU 亲和性**：HIP 运行时初始化时把进程的 CPU 亲和性从 160 个核缩到 8 个（`torch.cuda.device_count()` 前后 160 → 8）。`accelerate launch` 为了数 GPU 会初始化 HIP，所有 rank 和 DataLoader worker 继承这 8 个核。**设置 `AMD_CPU_AFFINITY=0` 后解决**（`HSA_OVERRIDE_CPU_AFFINITY_DEBUG` 无效）：
+
+   | 模型（每卡 batch） | 卡数 | 默认（smp/s） | `AMD_CPU_AFFINITY=0`（smp/s） |
+   |---|---:|---:|---:|
+   | ACT（32） | 1 / 2 / 4 / 8 | 584 / 1056 / 968 / 706 | 579 / 1066 / 2112 / **4122** |
+   | SmolVLA（8） | 1 / 4 / 8 | 80 / 173 / 137 | — / 269 / **506** |
+   | π0（4） | 1 / 4 / 8 | 9 / 26 / 21 | — / 28 / **53** |
+
+   排查过程：RCCL all-reduce 正常（8 卡 256 MB busbw 278 GB/s，xGMI 全互联）；8 个独立单卡任务并发不变慢；profiler 显示 DDP 时 GPU 时间不变（494 → 519 ms/10 步）而 CPU 时间涨 3 倍（509 → 1557 ms）；`num_workers=0` 时 DDP 不变慢；去掉 `torchao`（worker 里会经 `transformers → torchao → has_triton()` 建 HIP 上下文）不改善；`taskset` 看到 rank 进程都是 `0-7`；最后定位到 HIP 初始化和 `AMD_CPU_AFFINITY`。
+2. **MIOpen 冷启动**：卷积骨干（ACT 的 ResNet18）第一步编译 kernel 464 s，之后 0.053 s/步。容器 `--rm` 会丢缓存。挂持久目录并设 `MIOPEN_USER_DB_PATH`、`MIOPEN_CUSTOM_CACHE_DIR` 后，下一次第一步 27.5 s，整次 502 s → 66 s。`MIOPEN_FIND_MODE=1` 稳态不更快（0.060 vs 0.052 s）。
+3. **在 ROCm 上从头训出的策略和官方相当**：ACT 按官方配方（1 卡、batch 8、10 万步，74 分钟）在 AlohaTransferCube 50 局成功 66%（33/50，CI 52.2–77.6）；官方 `lerobot/act_aloha_sim_transfer_cube_human` 在同一 ROCm 评估下 76%（38/50，CI 62.6–85.7），区间重叠。2 卡 batch 64、1.25 万步的版本只有 48%（24/50），更新次数是官方的 1/8。
+4. **官方 VLA 检查点的 LIBERO 成功率低于文档**：EVO1（文档参数原样，revision 515921f4）LIBERO-Spatial 84%（42/50），文档 97%（485/500）；SmolVLA `lerobot/smolvla_libero` 60%（30/50），文档无参考值。MI300X 没有图形上下文，只能用 OSMesa 软件渲染，参考结果是 EGL；无法区分渲染差异和数值误差，未做 GPU/CPU 数值对比。
+
+### 14.2 其他结果
+
+| 项目 | 结果 | 说明 |
+|---|---|---|
+| 上一轮 3 项补跑 | 全 PASS | DDP2 → 单卡 resume（需 `--parallelism.dp_replicate=1`）；FSDP2 训练后单卡 `from_pretrained` + `select_action`（动作 `(1, 14)`）；SmolVLA FSDP resume（只切 `SmolVLMEncoderLayer`） |
+| `nat_vla`（上游新策略，最新 `main` 经 `PYTHONPATH`） | 单卡 / DDP2 / FSDP2 PASS | LIBERO episode 0 |
+| 最新 `main`（`e5be0c16`）回归 | 18/18 PASS | ACT（1 卡 / DDP2 / FSDP2）、DiT、SmolVLA、π0.5、GR00T、X-VLA（1 卡 / DDP2）、WALL-OSS 0.5（1 卡 / FSDP2） |
+| 按参数归属切分 FSDP（`FSDP_WRAP_STRATEGY=params`，每个直接持有参数的模块一个单元） | WALL-OSS flow PASS；G05、FineART、Long-WAM FAIL | 原始混合 dtype 下能过 FSDP 的 dtype 检查。G05 把 `conv1d` 权重直接传给 `causal_conv1d` kernel；FineART 的融合交叉熵直接取 `lm_head` 权重；Long-WAM 的 MoT 块直接用参数 |
+| SARM | DDP2 PASS；FSDP 不支持 | LeRobot 明确报错：奖励模型没有 FSDP 单元和分片保存路径 |
+| resume 组合（ACT） | 全 PASS | EMA + DDP、EMA + FSDP、fp16 + DDP（GradScaler）、梯度累积 + FSDP |
+| `praxis`（上游新策略，27.2B LoRA） | FAIL | 按文档的 `rename_map`（Cartesian 列替换 `observation.state`）报键冲突；把原键挪走后，`lerobot-train` 在 processor 里第二次应用 map 又冲突。文档与代码不一致，未做本地 DROID 副本 |
+| `lerobot/diffusion_pusht` 评估 | FAIL | 旧格式，`migrate_policy_normalization` 保存配置时 `Couldn't encode 84`；最新 `main` 同样失败 |
+| GR00T LIBERO 检查点评估 | FAIL | 检查点图像特征 `(256, 256, 3)`（HWC），环境给 `(3, 360, 360)`，特征检查拒绝 |
+
+### 14.3 上游草稿（未提交）
+
+- `upstream/pr-rabc-ddp-unwrap.md`：RA-BC 在 DDP 下的修复，本地分支 `fix/rabc-ddp-unwrap` commit `6b51d9e2`（基于 `e5be0c16`），DOUni 上 2 卡验证通过。
+- `upstream/issue-fsdp-resume-unused-params.md`：带「可训练但没有梯度」参数的策略 FSDP resume 失败（DiT 的 CLIP `post_layernorm`）。
+- 文档分支 `docs/rocm-known-issues` 新增两个 commit：已知问题里加 CPU 亲和性和 MIOpen 缓存（`e08a4764`），`docker/Dockerfile.rocm` 加 `ENV AMD_CPU_AFFINITY=0`（`e8750eac`）。

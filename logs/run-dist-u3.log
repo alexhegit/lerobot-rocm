@@ -1,0 +1,1953 @@
+----- 2026-11-22T15:02:45+00:00 BEGIN praxis-lora-1g devices=0 free=201G -----
+Using Python 3.12.3 environment at: /opt/venv
+Resolved 1 package in 217ms
+Downloading torchao (3.2MiB)
+ Downloaded torchao
+Prepared 1 package in 172ms
+Uninstalled 1 package in 28ms
+Installed 1 package in 27ms
+ - torchao==0.15.0+gite9c7bead9 (from file:///workspace/ao)
+ + torchao==0.18.0
+lerobot from /outputs/rocm-train/latest-main/src/lerobot/__init__.py
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.5s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/apex/transformer/functional/fused_rope.py:49: UserWarning: Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0
+  warnings.warn("Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0", UserWarning)
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+/opt/venv/lib/python3.12/site-packages/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+W1122 15:03:14.352000 681 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:03:14.418000 681 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+INFO 2026-11-22 15:03:20 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': True,
+                         'gradient_as_bucket_view': False,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': None,
+                                                     'reduce_dtype': None},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 1,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'no'},
+ 'batch_size': 1,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': [1, 2],
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'lerobot/droid_1.0.1',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': 'refs/pr/11',
+             'root': None,
+             'storage_options': None,
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': None,
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': 'praxis',
+ 'log_freq': 1,
+ 'max_eval_samples': 0,
+ 'num_workers': 2,
+ 'optimizer': {'betas': [0.9, 0.95],
+               'eps': 1e-08,
+               'grad_clip_norm': 1.0,
+               'lr': 3e-06,
+               'seed': 0,
+               'type': 'praxis_adamw',
+               'weight_decay': 0.0001},
+ 'output_dir': '/outputs/rocm-train/praxis-lora-1g',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 1,
+                 'dp_shard': 1},
+ 'peft': {'full_training_modules': None,
+          'init_type': None,
+          'lora_alpha': 32,
+          'method_type': 'LORA',
+          'r': 16,
+          'target_modules': None},
+ 'persistent_workers': True,
+ 'policy': {'action_feature_names': None,
+            'action_guard': 5.0,
+            'action_weight': 1.0,
+            'activation_checkpointing': True,
+            'attention_backend': 'auto',
+            'camera_keys': [],
+            'cfg_scale': 1.0,
+            'cfg_video_scale': 4.0,
+            'chunk_size': 24,
+            'device': 'cuda',
+            'dtype': 'bfloat16',
+            'exterior_image_key': 'observation.images.exterior',
+            'input_features': {'observation.images.exterior': {'shape': [3,
+                                                                         288,
+                                                                         512],
+                                                               'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.images.wrist': {'shape': [3,
+                                                                      288,
+                                                                      512],
+                                                            'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.state': {'shape': [7],
+                                                     'type': <FeatureType.STATE: 'STATE'>}},
+            'license': None,
+            'max_context_chunks': 1,
+            'model_config': {'action_expert': {'absolute_positions': True,
+                                               'action_patch_dim': 40,
+                                               'action_pos_table': False,
+                                               'attention': 'flex_dynamic',
+                                               'clean_only_conditioning': False,
+                                               'dim': 1024,
+                                               'flex_kernel_options': {'fwd_BLOCK_M': 32,
+                                                                       'fwd_BLOCK_N': 128,
+                                                                       'num_stages': 3,
+                                                                       'num_warps': 4},
+                                               'future_chunk_offset': 'zero',
+                                               'global_order': ['register',
+                                                                'anchor',
+                                                                'text'],
+                                               'head_dim': 64,
+                                               'head_plus_zero': True,
+                                               'layout_stamp': 20260924,
+                                               'max_action_tokens': 64,
+                                               'max_chunks': 16,
+                                               'num_future_per_chunk': 8,
+                                               'num_heads': 16,
+                                               'num_layers': 16,
+                                               'proprio_patch_dim': 10,
+                                               'rope': {'base': 26000000,
+                                                        'dim': 64,
+                                                        'effective_dim': 64,
+                                                        'kind': 'trunk',
+                                                        'order': 'before_norm',
+                                                        'table_size': 1000000},
+                                               'rope_base': 100.0,
+                                               'rope_cross': False,
+                                               'rope_self': False,
+                                               'tap_norm': True,
+                                               'trunk_dim': 3072},
+                             'action_space': {'dim': 10,
+                                              'layout': '[xyz(3) rot6d(6) '
+                                                        'grip(1)]',
+                                              'pose_layout': '[xyz(3) '
+                                                             'quat_wxyz(4) '
+                                                             'grip(1)]'},
+                             'backbone': {'attention': {'backend': 'flash',
+                                                        'flex_block_size': 128,
+                                                        'gated': True,
+                                                        'head_dim': 128,
+                                                        'num_heads': 24,
+                                                        'num_kv_heads': 8,
+                                                        'qk_norm_compute_dtype': 'float32',
+                                                        'qk_norm_eps': 1e-06,
+                                                        'rope_after_norm': False},
+                                          'decoder': {'dense_blocks': [0],
+                                                      'depth': 6,
+                                                      'input_projections': {'VideoTensor': {'c_in': 48,
+                                                                                            'move_dim': True,
+                                                                                            'timestep_modulated': True}},
+                                                      'modulation_dim': 3072,
+                                                      'output_projections': {'VideoTensor': {'c_out': 48,
+                                                                                             'move_dim': True}},
+                                                      'positive_zero_residual_add': True,
+                                                      'unpatch_factor': [1,
+                                                                         2,
+                                                                         2]},
+                                          'dense_ffn_hidden': 11520,
+                                          'dim': 3072,
+                                          'encoder': {'dense_blocks': [0, 1],
+                                                      'depth': 14,
+                                                      'input_projections': {'TextEncodingTensor': {'c_in': 2048,
+                                                                                                   'timestep_modulated': False},
+                                                                            'VideoTensor': {'c_in': 192,
+                                                                                            'move_dim': True,
+                                                                                            'timestep_modulated': True}},
+                                                      'output_projections': {'VideoTensor': {'c_out': 3072,
+                                                                                             'move_dim': True}},
+                                                      'positive_zero_residual_add': True,
+                                                      'tap_blocks': [0,
+                                                                     2,
+                                                                     4,
+                                                                     6,
+                                                                     7,
+                                                                     9,
+                                                                     11,
+                                                                     13]},
+                                          'layout': 'chunk_causal',
+                                          'modulation_dtype': 'mixed',
+                                          'moe': {'dispatch_chunk_size': 16384,
+                                                  'expert_hidden': 1280,
+                                                  'no_expert_slots': False,
+                                                  'num_experts': 129,
+                                                  'num_routed_experts': 128,
+                                                  'routed_scaling_factor': 2.5,
+                                                  'routed_weight_layout': 'expert_first',
+                                                  'router_activation': 'sigmoid',
+                                                  'router_dtype': 'float32',
+                                                  'shared_expert': True,
+                                                  'top_k': 9,
+                                                  'top_k_routed': 8},
+                                          'norm_compute_dtype': 'float32',
+                                          'norm_eps': 1e-06,
+                                          'num_registers': 4,
+                                          'rope': {'base': 26000000,
+                                                   'chunked_video_layout': True,
+                                                   'dim': 128,
+                                                   'effective_dim': 64,
+                                                   'efficient_cache_max': 1000000,
+                                                   'max_inter': 129600,
+                                                   'max_intra': 360,
+                                                   'max_seq_len': 90000000,
+                                                   'n_chunks': None,
+                                                   'n_tiles': None,
+                                                   'ref_placement': 'group',
+                                                   'time_scale': 1.0},
+                                          'timestep_dim': 128},
+                             'chunking': {'action_chunk': 24,
+                                          'action_frames_per_token': 4,
+                                          'chunk_geometry': [[0, 21],
+                                                             [21, 24],
+                                                             [45, 24],
+                                                             [69, 24]],
+                                          'context_format': 'vxt',
+                                          'contiguous_chunks': True,
+                                          'future_frames': 24,
+                                          'global_frame_anchor': True,
+                                          'grid_hz': 15.0,
+                                          'latents_per_chunk': 6,
+                                          'n_chunks': 4,
+                                          'past_frames': 15,
+                                          'proprio_frames': 1,
+                                          'window_frames': 93},
+                             'embodiment': 'single_arm',
+                             'format_version': 2,
+                             'fp32_tensors': ['*.ffn.expert_bias'],
+                             'model_type': 'praxis',
+                             'normalization': {'action_formula': 'clip(2 * (a '
+                                                                 '- q01) / '
+                                                                 '(q99 - q01 + '
+                                                                 '1e-8) - 1, '
+                                                                 '-1, 1) on '
+                                                                 'q99_normed_dims, '
+                                                                 'identity on '
+                                                                 'the other '
+                                                                 'dims',
+                                               'action_q01': [-0.1485469937324524,
+                                                              -0.19603200256824493,
+                                                              -0.2031259983778,
+                                                              0.6827049851417542,
+                                                              -0.5835009813308716,
+                                                              -0.3863309919834137,
+                                                              -0.5673199892044067,
+                                                              0.6868450045585632,
+                                                              -0.39503800868988037,
+                                                              0.0],
+                                               'action_q99': [0.18577100336551666,
+                                                              0.19784800708293915,
+                                                              0.19871099293231964,
+                                                              1.0,
+                                                              0.5795639753341675,
+                                                              0.4474309980869293,
+                                                              0.5877500176429749,
+                                                              1.0,
+                                                              0.39563798904418945,
+                                                              1.0],
+                                               'domain': 'droid',
+                                               'proprio_formula': '(p - mean) '
+                                                                  '/ max(std, '
+                                                                  '1e-6) on '
+                                                                  'all dims',
+                                               'proprio_mean': [0.5195770263671875,
+                                                                -0.006078170146793127,
+                                                                0.3168239891529083,
+                                                                0.7413139939308167,
+                                                                -0.04902319982647896,
+                                                                0.08595360070466995,
+                                                                -0.06293799728155136,
+                                                                -0.7607250213623047,
+                                                                0.008901899680495262,
+                                                                0.39361199736595154],
+                                               'proprio_std': [0.1195869967341423,
+                                                               0.17830400168895721,
+                                                               0.1687529981136322,
+                                                               0.32760199904441833,
+                                                               0.4835300147533417,
+                                                               0.3154970109462738,
+                                                               0.4926550090312958,
+                                                               0.33570900559425354,
+                                                               0.24869099259376526,
+                                                               0.4135879874229431],
+                                               'q99_normed_dims': [0, 1, 2, 9]},
+                             'pose_frame': 'flange',
+                             'text_encoder': {'blank_caption': ' ',
+                                              'hidden_dim': 2048,
+                                              'hidden_layer': -3,
+                                              'model': 'Qwen3.5-2B',
+                                              'pad_to_multiple_of': 32,
+                                              'trim_padding': True,
+                                              'uncond': 'blank_caption'},
+                             'torch_dtype': 'bfloat16',
+                             'video': {'antialias': True,
+                                       'aspect_tol': 0.03,
+                                       'canvas': 'tiles',
+                                       'height': 224,
+                                       'keep_aspect': True,
+                                       'latent_channels': 48,
+                                       'layout': 'hstack',
+                                       'patch_size': [1, 2, 2],
+                                       'tile_bounds_rows_cols': {'exterior': [0,
+                                                                              224,
+                                                                              0,
+                                                                              416],
+                                                                 'wrist': [0,
+                                                                           224,
+                                                                           416,
+                                                                           832]},
+                                       'tile_height': 224,
+                                       'tile_width': 416,
+                                       'vae': 'Wan2.2',
+                                       'vae_encode_chunk_frames': 4,
+                                       'vae_encode_impl': 'megakernel',
+                                       'vae_megakernel_chunk_frames': 16,
+                                       'vae_stride': [4, 16, 16],
+                                       'views': ['exterior', 'wrist'],
+                                       'width': 832}},
+            'moe_balance_speed': 0.001,
+            'moe_seq_balance_coef': 0.0001,
+            'n_action_steps': 24,
+            'n_obs_steps': 1,
+            'normalization_mapping': {'ACTION': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'STATE': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>},
+            'num_steps': 2,
+            'optimizer_betas': [0.9, 0.95],
+            'optimizer_eps': 1e-08,
+            'optimizer_grad_clip_norm': 1.0,
+            'optimizer_lr': 3e-06,
+            'optimizer_weight_decay': 0.0001,
+            'output_features': {'action': {'shape': [7],
+                                           'type': <FeatureType.ACTION: 'ACTION'>}},
+            'pretrained_path': 'runwayml/praxis-1-droid-lerobot',
+            'pretrained_revision': None,
+            'private': None,
+            'proprio_dropout': 0.1,
+            'push_to_hub': False,
+            'repo_id': None,
+            'return_prediction': False,
+            'scheduler_decay_lr': 3e-07,
+            'scheduler_decay_steps': 1200,
+            'scheduler_warmup_steps': 50,
+            'seed': 0,
+            'seed_stride': 1000,
+            't_shift': 12.5,
+            'tags': None,
+            'text_dropout': 0.1,
+            'text_encoder_id': 'Qwen/Qwen3.5-2B',
+            'text_pad_to_multiple_of': 32,
+            'train_moe_dispatch_chunk_size': 65536,
+            'trust_remote_code': False,
+            'type': 'praxis',
+            'use_amp': False,
+            'use_peft': True,
+            'vae_id': 'Wan-AI/Wan2.2-TI2V-5B:Wan2.2_VAE.pth',
+            'video_timestep_shift': 5.0,
+            'video_weight': 1.0,
+            'wrist_image_key': 'observation.images.wrist'},
+ 'prefetch_factor': 4,
+ 'rename_map': {'action': 'action.joint_unused',
+                'action.cartesian': 'action',
+                'observation.images.exterior_1_left': 'observation.images.exterior',
+                'observation.images.wrist_left': 'observation.images.wrist',
+                'observation.state': 'observation.state.joint_unused',
+                'observation.state.cartesian': 'observation.state'},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 2,
+ 'scheduler': {'decay_lr': 3e-07,
+               'num_decay_steps': 1200,
+               'num_warmup_steps': 50,
+               'peak_lr': 3e-06,
+               'type': 'cosine_decay_with_warmup'},
+ 'seed': 1000,
+ 'steps': 2,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-22 15:03:20 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-22 15:03:20 ot_train.py:589 Creating dataset
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 2126.93it/s]
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 802.49it/s]
+INFO 2026-11-22 15:03:21 ot_train.py:628 Creating policy
+Fetching 13 files:   0%|          | 0/13 [00:00<?, ?it/s]Fetching 13 files: 100%|██████████| 13/13 [00:00<00:00, 853.93it/s]
+INFO 2026-11-22 15:03:36 _encoder.py:172 text encoder kernel launch settings: {}
+Loading weights:   0%|          | 0/617 [00:00<?, ?it/s]Loading weights: 100%|██████████| 617/617 [00:00<00:00, 12339.13it/s]
+INFO 2026-11-22 15:03:39 ot_train.py:646 Using PEFT! Wrapping model.
+INFO 2026-11-22 15:03:39 etrained.py:652 Wrapped praxis with PEFT (LoraConfig)
+INFO 2026-11-22 15:03:39 ot_train.py:723 Creating optimizer and scheduler
+INFO 2026-11-22 15:03:39 hedulers.py:156 Auto-scaling LR scheduler: num_training_steps (2) < num_decay_steps (1200). Scaling warmup: 50 → 0, decay: 1200 → 2 (scale factor: 0.002)
+INFO 2026-11-22 15:03:40 ot_train.py:784 Output dir: /outputs/rocm-train/praxis-lora-1g
+INFO 2026-11-22 15:03:40 ot_train.py:791 cfg.steps=2 (2)
+INFO 2026-11-22 15:03:40 ot_train.py:792 dataset.num_frames=677 (677)
+INFO 2026-11-22 15:03:40 ot_train.py:793 dataset.num_episodes=2
+INFO 2026-11-22 15:03:40 ot_train.py:794 Effective batch size: 1 x 1 dp workers x 1 grad accum = 1 (topology: dp_replicate=1, dp_shard=1)
+INFO 2026-11-22 15:03:40 ot_train.py:799 num_learnable_params=5505024 (6M)
+INFO 2026-11-22 15:03:40 ot_train.py:800 num_total_params=27207873624 (27B)
+Training:   0%|          | 0/2 [00:00<?, ?step/s]INFO 2026-11-22 15:03:40 ot_train.py:848 Start offline training on a fixed dataset, with effective batch size: 1
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+W1122 15:03:46.275000 747 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:03:46.297000 747 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+W1122 15:03:56.972000 769 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:03:56.994000 769 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+Traceback (most recent call last):
+  File "/opt/venv/bin/lerobot-train", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+    train()
+  File "/outputs/rocm-train/latest-main/src/lerobot/configs/parser.py", line 473, in wrapper_inner
+    response = fn(cfg, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 861, in train
+    batch = _preprocess_dataset_batch(batch, dataset.meta.camera_keys, cfg.rename_map, preprocessor)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 178, in _preprocess_dataset_batch
+    return preprocessor(batch)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 327, in __call__
+    transformed_transition = self._forward(transition)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 344, in _forward
+    transition = processor_step(transition)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 1958, in __call__
+    processed_observation = self.observation(observation.copy())
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 45, in observation
+    return rename_keys(observation, self.rename_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 120, in rename_keys
+    raise ValueError(
+ValueError: Both 'observation.state.joint_unused' and 'observation.state' are named 'observation.state.joint_unused' after rename_map. Map one of them to another name as well, e.g. add {'observation.state.joint_unused': 'observation.state.joint_unused.original'} to rename a key onto an existing 'observation.state.joint_unused'.
+Training:   0%|          | 0/2 [00:32<?, ?step/s]
+Traceback (most recent call last):
+  File "/opt/venv/bin/accelerate", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/accelerate_cli.py", line 50, in main
+    args.func(args)
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/launch.py", line 1413, in launch_command
+    simple_launcher(args)
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/launch.py", line 999, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/opt/venv/bin/python', '/opt/venv/bin/lerobot-train', '--policy.path=runwayml/praxis-1-droid-lerobot', '--policy.device=cuda', '--policy.push_to_hub=false', '--peft.r=16', '--peft.lora_alpha=32', '--dataset.repo_id=lerobot/droid_1.0.1', '--dataset.revision=refs/pr/11', '--dataset.episodes=[1, 2]', '--rename_map={"observation.state":"observation.state.joint_unused","action":"action.joint_unused","observation.state.cartesian":"observation.state","action.cartesian":"action","observation.images.exterior_1_left":"observation.images.exterior","observation.images.wrist_left":"observation.images.wrist"}', '--batch_size=1', '--steps=2', '--env_eval_freq=0', '--save_freq=2', '--log_freq=1', '--num_workers=2', '--trackio.enable=false', '--output_dir=/outputs/rocm-train/praxis-lora-1g']' returned non-zero exit status 1.
+RESULT praxis-lora-1g FAIL exit=1 seconds=90 dp_replicate=1 dp_shard=1 steps=[]
+----- 2026-11-22T15:04:15+00:00 BEGIN praxis-lora-ddp2 devices=0,1 free=200G -----
+Using Python 3.12.3 environment at: /opt/venv
+Resolved 1 package in 196ms
+Downloading torchao (3.2MiB)
+ Downloaded torchao
+Prepared 1 package in 188ms
+Uninstalled 1 package in 25ms
+Installed 1 package in 22ms
+ - torchao==0.15.0+gite9c7bead9 (from file:///workspace/ao)
+ + torchao==0.18.0
+lerobot from /outputs/rocm-train/latest-main/src/lerobot/__init__.py
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.6s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/apex/transformer/functional/fused_rope.py:49: UserWarning: Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0
+  warnings.warn("Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0", UserWarning)
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+/opt/venv/lib/python3.12/site-packages/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+/opt/venv/lib/python3.12/site-packages/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+W1122 15:04:43.386000 684 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:04:43.386000 683 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:04:43.451000 684 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:04:43.451000 683 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+INFO 2026-11-22 15:04:50 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': True,
+                         'gradient_as_bucket_view': False,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': None,
+                                                     'reduce_dtype': None},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 1,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'no'},
+ 'batch_size': 1,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': [1, 2],
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'lerobot/droid_1.0.1',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': 'refs/pr/11',
+             'root': None,
+             'storage_options': None,
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': None,
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': 'praxis',
+ 'log_freq': 1,
+ 'max_eval_samples': 0,
+ 'num_workers': 2,
+ 'optimizer': {'betas': [0.9, 0.95],
+               'eps': 1e-08,
+               'grad_clip_norm': 1.0,
+               'lr': 3e-06,
+               'seed': 0,
+               'type': 'praxis_adamw',
+               'weight_decay': 0.0001},
+ 'output_dir': '/outputs/rocm-train/praxis-lora-ddp2',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 2,
+                 'dp_shard': 1},
+ 'peft': {'full_training_modules': None,
+          'init_type': None,
+          'lora_alpha': 32,
+          'method_type': 'LORA',
+          'r': 16,
+          'target_modules': None},
+ 'persistent_workers': True,
+ 'policy': {'action_feature_names': None,
+            'action_guard': 5.0,
+            'action_weight': 1.0,
+            'activation_checkpointing': True,
+            'attention_backend': 'auto',
+            'camera_keys': [],
+            'cfg_scale': 1.0,
+            'cfg_video_scale': 4.0,
+            'chunk_size': 24,
+            'device': 'cuda',
+            'dtype': 'bfloat16',
+            'exterior_image_key': 'observation.images.exterior',
+            'input_features': {'observation.images.exterior': {'shape': [3,
+                                                                         288,
+                                                                         512],
+                                                               'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.images.wrist': {'shape': [3,
+                                                                      288,
+                                                                      512],
+                                                            'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.state': {'shape': [7],
+                                                     'type': <FeatureType.STATE: 'STATE'>}},
+            'license': None,
+            'max_context_chunks': 1,
+            'model_config': {'action_expert': {'absolute_positions': True,
+                                               'action_patch_dim': 40,
+                                               'action_pos_table': False,
+                                               'attention': 'flex_dynamic',
+                                               'clean_only_conditioning': False,
+                                               'dim': 1024,
+                                               'flex_kernel_options': {'fwd_BLOCK_M': 32,
+                                                                       'fwd_BLOCK_N': 128,
+                                                                       'num_stages': 3,
+                                                                       'num_warps': 4},
+                                               'future_chunk_offset': 'zero',
+                                               'global_order': ['register',
+                                                                'anchor',
+                                                                'text'],
+                                               'head_dim': 64,
+                                               'head_plus_zero': True,
+                                               'layout_stamp': 20260924,
+                                               'max_action_tokens': 64,
+                                               'max_chunks': 16,
+                                               'num_future_per_chunk': 8,
+                                               'num_heads': 16,
+                                               'num_layers': 16,
+                                               'proprio_patch_dim': 10,
+                                               'rope': {'base': 26000000,
+                                                        'dim': 64,
+                                                        'effective_dim': 64,
+                                                        'kind': 'trunk',
+                                                        'order': 'before_norm',
+                                                        'table_size': 1000000},
+                                               'rope_base': 100.0,
+                                               'rope_cross': False,
+                                               'rope_self': False,
+                                               'tap_norm': True,
+                                               'trunk_dim': 3072},
+                             'action_space': {'dim': 10,
+                                              'layout': '[xyz(3) rot6d(6) '
+                                                        'grip(1)]',
+                                              'pose_layout': '[xyz(3) '
+                                                             'quat_wxyz(4) '
+                                                             'grip(1)]'},
+                             'backbone': {'attention': {'backend': 'flash',
+                                                        'flex_block_size': 128,
+                                                        'gated': True,
+                                                        'head_dim': 128,
+                                                        'num_heads': 24,
+                                                        'num_kv_heads': 8,
+                                                        'qk_norm_compute_dtype': 'float32',
+                                                        'qk_norm_eps': 1e-06,
+                                                        'rope_after_norm': False},
+                                          'decoder': {'dense_blocks': [0],
+                                                      'depth': 6,
+                                                      'input_projections': {'VideoTensor': {'c_in': 48,
+                                                                                            'move_dim': True,
+                                                                                            'timestep_modulated': True}},
+                                                      'modulation_dim': 3072,
+                                                      'output_projections': {'VideoTensor': {'c_out': 48,
+                                                                                             'move_dim': True}},
+                                                      'positive_zero_residual_add': True,
+                                                      'unpatch_factor': [1,
+                                                                         2,
+                                                                         2]},
+                                          'dense_ffn_hidden': 11520,
+                                          'dim': 3072,
+                                          'encoder': {'dense_blocks': [0, 1],
+                                                      'depth': 14,
+                                                      'input_projections': {'TextEncodingTensor': {'c_in': 2048,
+                                                                                                   'timestep_modulated': False},
+                                                                            'VideoTensor': {'c_in': 192,
+                                                                                            'move_dim': True,
+                                                                                            'timestep_modulated': True}},
+                                                      'output_projections': {'VideoTensor': {'c_out': 3072,
+                                                                                             'move_dim': True}},
+                                                      'positive_zero_residual_add': True,
+                                                      'tap_blocks': [0,
+                                                                     2,
+                                                                     4,
+                                                                     6,
+                                                                     7,
+                                                                     9,
+                                                                     11,
+                                                                     13]},
+                                          'layout': 'chunk_causal',
+                                          'modulation_dtype': 'mixed',
+                                          'moe': {'dispatch_chunk_size': 16384,
+                                                  'expert_hidden': 1280,
+                                                  'no_expert_slots': False,
+                                                  'num_experts': 129,
+                                                  'num_routed_experts': 128,
+                                                  'routed_scaling_factor': 2.5,
+                                                  'routed_weight_layout': 'expert_first',
+                                                  'router_activation': 'sigmoid',
+                                                  'router_dtype': 'float32',
+                                                  'shared_expert': True,
+                                                  'top_k': 9,
+                                                  'top_k_routed': 8},
+                                          'norm_compute_dtype': 'float32',
+                                          'norm_eps': 1e-06,
+                                          'num_registers': 4,
+                                          'rope': {'base': 26000000,
+                                                   'chunked_video_layout': True,
+                                                   'dim': 128,
+                                                   'effective_dim': 64,
+                                                   'efficient_cache_max': 1000000,
+                                                   'max_inter': 129600,
+                                                   'max_intra': 360,
+                                                   'max_seq_len': 90000000,
+                                                   'n_chunks': None,
+                                                   'n_tiles': None,
+                                                   'ref_placement': 'group',
+                                                   'time_scale': 1.0},
+                                          'timestep_dim': 128},
+                             'chunking': {'action_chunk': 24,
+                                          'action_frames_per_token': 4,
+                                          'chunk_geometry': [[0, 21],
+                                                             [21, 24],
+                                                             [45, 24],
+                                                             [69, 24]],
+                                          'context_format': 'vxt',
+                                          'contiguous_chunks': True,
+                                          'future_frames': 24,
+                                          'global_frame_anchor': True,
+                                          'grid_hz': 15.0,
+                                          'latents_per_chunk': 6,
+                                          'n_chunks': 4,
+                                          'past_frames': 15,
+                                          'proprio_frames': 1,
+                                          'window_frames': 93},
+                             'embodiment': 'single_arm',
+                             'format_version': 2,
+                             'fp32_tensors': ['*.ffn.expert_bias'],
+                             'model_type': 'praxis',
+                             'normalization': {'action_formula': 'clip(2 * (a '
+                                                                 '- q01) / '
+                                                                 '(q99 - q01 + '
+                                                                 '1e-8) - 1, '
+                                                                 '-1, 1) on '
+                                                                 'q99_normed_dims, '
+                                                                 'identity on '
+                                                                 'the other '
+                                                                 'dims',
+                                               'action_q01': [-0.1485469937324524,
+                                                              -0.19603200256824493,
+                                                              -0.2031259983778,
+                                                              0.6827049851417542,
+                                                              -0.5835009813308716,
+                                                              -0.3863309919834137,
+                                                              -0.5673199892044067,
+                                                              0.6868450045585632,
+                                                              -0.39503800868988037,
+                                                              0.0],
+                                               'action_q99': [0.18577100336551666,
+                                                              0.19784800708293915,
+                                                              0.19871099293231964,
+                                                              1.0,
+                                                              0.5795639753341675,
+                                                              0.4474309980869293,
+                                                              0.5877500176429749,
+                                                              1.0,
+                                                              0.39563798904418945,
+                                                              1.0],
+                                               'domain': 'droid',
+                                               'proprio_formula': '(p - mean) '
+                                                                  '/ max(std, '
+                                                                  '1e-6) on '
+                                                                  'all dims',
+                                               'proprio_mean': [0.5195770263671875,
+                                                                -0.006078170146793127,
+                                                                0.3168239891529083,
+                                                                0.7413139939308167,
+                                                                -0.04902319982647896,
+                                                                0.08595360070466995,
+                                                                -0.06293799728155136,
+                                                                -0.7607250213623047,
+                                                                0.008901899680495262,
+                                                                0.39361199736595154],
+                                               'proprio_std': [0.1195869967341423,
+                                                               0.17830400168895721,
+                                                               0.1687529981136322,
+                                                               0.32760199904441833,
+                                                               0.4835300147533417,
+                                                               0.3154970109462738,
+                                                               0.4926550090312958,
+                                                               0.33570900559425354,
+                                                               0.24869099259376526,
+                                                               0.4135879874229431],
+                                               'q99_normed_dims': [0, 1, 2, 9]},
+                             'pose_frame': 'flange',
+                             'text_encoder': {'blank_caption': ' ',
+                                              'hidden_dim': 2048,
+                                              'hidden_layer': -3,
+                                              'model': 'Qwen3.5-2B',
+                                              'pad_to_multiple_of': 32,
+                                              'trim_padding': True,
+                                              'uncond': 'blank_caption'},
+                             'torch_dtype': 'bfloat16',
+                             'video': {'antialias': True,
+                                       'aspect_tol': 0.03,
+                                       'canvas': 'tiles',
+                                       'height': 224,
+                                       'keep_aspect': True,
+                                       'latent_channels': 48,
+                                       'layout': 'hstack',
+                                       'patch_size': [1, 2, 2],
+                                       'tile_bounds_rows_cols': {'exterior': [0,
+                                                                              224,
+                                                                              0,
+                                                                              416],
+                                                                 'wrist': [0,
+                                                                           224,
+                                                                           416,
+                                                                           832]},
+                                       'tile_height': 224,
+                                       'tile_width': 416,
+                                       'vae': 'Wan2.2',
+                                       'vae_encode_chunk_frames': 4,
+                                       'vae_encode_impl': 'megakernel',
+                                       'vae_megakernel_chunk_frames': 16,
+                                       'vae_stride': [4, 16, 16],
+                                       'views': ['exterior', 'wrist'],
+                                       'width': 832}},
+            'moe_balance_speed': 0.001,
+            'moe_seq_balance_coef': 0.0001,
+            'n_action_steps': 24,
+            'n_obs_steps': 1,
+            'normalization_mapping': {'ACTION': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'STATE': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>},
+            'num_steps': 2,
+            'optimizer_betas': [0.9, 0.95],
+            'optimizer_eps': 1e-08,
+            'optimizer_grad_clip_norm': 1.0,
+            'optimizer_lr': 3e-06,
+            'optimizer_weight_decay': 0.0001,
+            'output_features': {'action': {'shape': [7],
+                                           'type': <FeatureType.ACTION: 'ACTION'>}},
+            'pretrained_path': 'runwayml/praxis-1-droid-lerobot',
+            'pretrained_revision': None,
+            'private': None,
+            'proprio_dropout': 0.1,
+            'push_to_hub': False,
+            'repo_id': None,
+            'return_prediction': False,
+            'scheduler_decay_lr': 3e-07,
+            'scheduler_decay_steps': 1200,
+            'scheduler_warmup_steps': 50,
+            'seed': 0,
+            'seed_stride': 1000,
+            't_shift': 12.5,
+            'tags': None,
+            'text_dropout': 0.1,
+            'text_encoder_id': 'Qwen/Qwen3.5-2B',
+            'text_pad_to_multiple_of': 32,
+            'train_moe_dispatch_chunk_size': 65536,
+            'trust_remote_code': False,
+            'type': 'praxis',
+            'use_amp': False,
+            'use_peft': True,
+            'vae_id': 'Wan-AI/Wan2.2-TI2V-5B:Wan2.2_VAE.pth',
+            'video_timestep_shift': 5.0,
+            'video_weight': 1.0,
+            'wrist_image_key': 'observation.images.wrist'},
+ 'prefetch_factor': 4,
+ 'rename_map': {'action': 'action.joint_unused',
+                'action.cartesian': 'action',
+                'observation.images.exterior_1_left': 'observation.images.exterior',
+                'observation.images.wrist_left': 'observation.images.wrist',
+                'observation.state': 'observation.state.joint_unused',
+                'observation.state.cartesian': 'observation.state'},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 2,
+ 'scheduler': {'decay_lr': 3e-07,
+               'num_decay_steps': 1200,
+               'num_warmup_steps': 50,
+               'peak_lr': 3e-06,
+               'type': 'cosine_decay_with_warmup'},
+ 'seed': 1000,
+ 'steps': 2,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-22 15:04:50 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-22 15:04:50 ot_train.py:589 Creating dataset
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 2240.19it/s]
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 684.65it/s]
+INFO 2026-11-22 15:04:53 ot_train.py:628 Creating policy
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 2043.31it/s]
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 769.92it/s]
+Fetching 13 files:   0%|          | 0/13 [00:00<?, ?it/s]Fetching 13 files: 100%|██████████| 13/13 [00:00<00:00, 2598.08it/s]
+INFO 2026-11-22 15:05:08 _encoder.py:172 text encoder kernel launch settings: {}
+Loading weights:   0%|          | 0/617 [00:00<?, ?it/s]Loading weights: 100%|██████████| 617/617 [00:00<00:00, 12995.05it/s]
+Fetching 13 files:   0%|          | 0/13 [00:00<?, ?it/s]Fetching 13 files: 100%|██████████| 13/13 [00:00<00:00, 1613.86it/s]
+Loading weights:   0%|          | 0/617 [00:00<?, ?it/s]Loading weights: 100%|██████████| 617/617 [00:00<00:00, 13627.12it/s]
+INFO 2026-11-22 15:05:11 ot_train.py:646 Using PEFT! Wrapping model.
+INFO 2026-11-22 15:05:11 etrained.py:652 Wrapped praxis with PEFT (LoraConfig)
+INFO 2026-11-22 15:05:12 ot_train.py:723 Creating optimizer and scheduler
+INFO 2026-11-22 15:05:12 hedulers.py:156 Auto-scaling LR scheduler: num_training_steps (2) < num_decay_steps (1200). Scaling warmup: 50 → 0, decay: 1200 → 2 (scale factor: 0.002)
+INFO 2026-11-22 15:05:14 ot_train.py:784 Output dir: /outputs/rocm-train/praxis-lora-ddp2
+INFO 2026-11-22 15:05:14 ot_train.py:791 cfg.steps=2 (2)
+INFO 2026-11-22 15:05:14 ot_train.py:792 dataset.num_frames=677 (677)
+INFO 2026-11-22 15:05:14 ot_train.py:793 dataset.num_episodes=2
+INFO 2026-11-22 15:05:14 ot_train.py:794 Effective batch size: 1 x 2 dp workers x 1 grad accum = 2 (topology: dp_replicate=2, dp_shard=1)
+INFO 2026-11-22 15:05:14 ot_train.py:799 num_learnable_params=5505024 (6M)
+INFO 2026-11-22 15:05:14 ot_train.py:800 num_total_params=27207873624 (27B)
+Training:   0%|          | 0/2 [00:00<?, ?step/s]INFO 2026-11-22 15:05:14 ot_train.py:848 Start offline training on a fixed dataset, with effective batch size: 2
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+W1122 15:05:19.900000 834 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:05:19.903000 833 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:05:19.923000 834 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:05:19.925000 833 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+W1122 15:05:31.088000 877 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:05:31.088000 878 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:05:31.113000 877 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:05:31.113000 878 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/opt/venv/bin/lerobot-train", line 10, in <module>
+[rank0]:     sys.exit(main())
+[rank0]:              ^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+[rank0]:     train()
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/configs/parser.py", line 473, in wrapper_inner
+[rank0]:     response = fn(cfg, *args, **kwargs)
+[rank0]:                ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 861, in train
+[rank0]:     batch = _preprocess_dataset_batch(batch, dataset.meta.camera_keys, cfg.rename_map, preprocessor)
+[rank0]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 178, in _preprocess_dataset_batch
+[rank0]:     return preprocessor(batch)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 327, in __call__
+[rank0]:     transformed_transition = self._forward(transition)
+[rank0]:                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 344, in _forward
+[rank0]:     transition = processor_step(transition)
+[rank0]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 1958, in __call__
+[rank0]:     processed_observation = self.observation(observation.copy())
+[rank0]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 45, in observation
+[rank0]:     return rename_keys(observation, self.rename_map)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 120, in rename_keys
+[rank0]:     raise ValueError(
+[rank0]: ValueError: Both 'observation.state.joint_unused' and 'observation.state' are named 'observation.state.joint_unused' after rename_map. Map one of them to another name as well, e.g. add {'observation.state.joint_unused': 'observation.state.joint_unused.original'} to rename a key onto an existing 'observation.state.joint_unused'.
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/opt/venv/bin/lerobot-train", line 10, in <module>
+[rank1]:     sys.exit(main())
+[rank1]:              ^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+[rank1]:     train()
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/configs/parser.py", line 473, in wrapper_inner
+[rank1]:     response = fn(cfg, *args, **kwargs)
+[rank1]:                ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 861, in train
+[rank1]:     batch = _preprocess_dataset_batch(batch, dataset.meta.camera_keys, cfg.rename_map, preprocessor)
+[rank1]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 178, in _preprocess_dataset_batch
+[rank1]:     return preprocessor(batch)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 327, in __call__
+[rank1]:     transformed_transition = self._forward(transition)
+[rank1]:                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 344, in _forward
+[rank1]:     transition = processor_step(transition)
+[rank1]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 1958, in __call__
+[rank1]:     processed_observation = self.observation(observation.copy())
+[rank1]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 45, in observation
+[rank1]:     return rename_keys(observation, self.rename_map)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 120, in rename_keys
+[rank1]:     raise ValueError(
+[rank1]: ValueError: Both 'observation.state.joint_unused' and 'observation.state' are named 'observation.state.joint_unused' after rename_map. Map one of them to another name as well, e.g. add {'observation.state.joint_unused': 'observation.state.joint_unused.original'} to rename a key onto an existing 'observation.state.joint_unused'.
+Training:   0%|          | 0/2 [00:33<?, ?step/s]
+[rank0]:[W1122 15:05:47.961992915 ProcessGroupNCCL.cpp:1647] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+W1122 15:05:49.728000 309 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 684 closing signal SIGTERM
+E1122 15:05:49.732000 309 torch/distributed/elastic/multiprocessing/api.py:988] failed (exitcode: 1) local_rank: 0 (pid: 683) of binary: /opt/venv/bin/python
+Traceback (most recent call last):
+  File "/opt/venv/bin/accelerate", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/accelerate_cli.py", line 50, in main
+    args.func(args)
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/launch.py", line 1404, in launch_command
+    multi_gpu_launcher(args)
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/launch.py", line 1029, in multi_gpu_launcher
+    distrib_run.run(args)
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/run.py", line 1007, in run
+    elastic_launch(
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 191, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 371, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/opt/venv/bin/lerobot-train FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-11-22_15:05:49
+  host      : 93762a6af846
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 684) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-11-22_15:05:49
+  host      : 93762a6af846
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 683) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+RESULT praxis-lora-ddp2 FAIL exit=1 seconds=95 dp_replicate=2 dp_shard=1 steps=[]
+----- 2026-11-22T15:05:50+00:00 BEGIN praxis-lora-fsdp4 devices=0,1,2,3 free=200G -----
+Using Python 3.12.3 environment at: /opt/venv
+Resolved 1 package in 179ms
+Downloading torchao (3.2MiB)
+ Downloaded torchao
+Prepared 1 package in 174ms
+Uninstalled 1 package in 25ms
+Installed 1 package in 21ms
+ - torchao==0.15.0+gite9c7bead9 (from file:///workspace/ao)
+ + torchao==0.18.0
+lerobot from /outputs/rocm-train/latest-main/src/lerobot/__init__.py
+[aiter] start build [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [32mfinish build [module_aiter_core], cost 12.8s [0m
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+/opt/venv/lib/python3.12/site-packages/apex/transformer/functional/fused_rope.py:49: UserWarning: Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0
+  warnings.warn("Aiter backend is selected for fused RoPE. This has lower precision. To disable aiter, export USE_ROCM_AITER_ROPE_BACKEND=0", UserWarning)
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+/opt/venv/lib/python3.12/site-packages/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+/opt/venv/lib/python3.12/site-packages/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+/opt/venv/lib/python3.12/site-packages/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+/opt/venv/lib/python3.12/site-packages/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+W1122 15:06:19.760000 683 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:06:19.760000 684 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:06:19.760000 685 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:06:19.760000 686 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:06:19.833000 683 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:06:19.833000 685 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:06:19.833000 684 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:06:19.833000 686 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+INFO 2026-11-22 15:06:27 ot_train.py:565 {'accelerator': {'activation_checkpointing': {'mode': <ActivationCheckpointingMode.NONE: 'none'>},
+                 'compile': {'backend': 'inductor',
+                             'enabled': False,
+                             'mode': None,
+                             'regional': True},
+                 'ddp': {'find_unused_parameters': True,
+                         'gradient_as_bucket_view': False,
+                         'static_graph': False},
+                 'fsdp': {'cpu_offload': False,
+                          'ignored_modules': None,
+                          'min_num_params': None,
+                          'mixed_precision_policy': {'cast_forward_inputs': True,
+                                                     'output_dtype': None,
+                                                     'param_dtype': None,
+                                                     'reduce_dtype': None},
+                          'reshard_after_forward': True,
+                          'wrap_modules': None},
+                 'grad_scaler': {'backoff_factor': 0.5,
+                                 'growth_factor': 2.0,
+                                 'growth_interval': 2000,
+                                 'init_scale': 65536.0},
+                 'gradient_accumulation': {'steps': 1,
+                                           'sync_each_batch': False},
+                 'init_process_group': {'backend': 'nccl',
+                                        'init_method': None,
+                                        'timeout': None},
+                 'mixed_precision': 'no'},
+ 'batch_size': 1,
+ 'checkpoint_format': <CheckpointFormat.SAFETENSORS: 'safetensors'>,
+ 'checkpoint_path': None,
+ 'cudnn_deterministic': False,
+ 'dataloader_multiprocessing_context': 'spawn',
+ 'dataset': {'depth_output_unit': 'mm',
+             'episodes': [1, 2],
+             'eval_split': 0.0,
+             'exclude_episodes': None,
+             'image_transforms': {'backend': 'dataloader',
+                                  'enable': False,
+                                  'gpu_chunk_size': 32,
+                                  'gpu_compile': True,
+                                  'max_num_transforms': 3,
+                                  'random_order': False,
+                                  'tfs': {'affine': {'kwargs': {'degrees': [-5.0,
+                                                                            5.0],
+                                                                'translate': [0.05,
+                                                                              0.05]},
+                                                     'type': 'RandomAffine',
+                                                     'weight': 1.0},
+                                          'brightness': {'kwargs': {'brightness': [0.8,
+                                                                                   1.2]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'contrast': {'kwargs': {'contrast': [0.8,
+                                                                               1.2]},
+                                                       'type': 'ColorJitter',
+                                                       'weight': 1.0},
+                                          'hue': {'kwargs': {'hue': [-0.05,
+                                                                     0.05]},
+                                                  'type': 'ColorJitter',
+                                                  'weight': 1.0},
+                                          'saturation': {'kwargs': {'saturation': [0.5,
+                                                                                   1.5]},
+                                                         'type': 'ColorJitter',
+                                                         'weight': 1.0},
+                                          'sharpness': {'kwargs': {'sharpness': [0.5,
+                                                                                 1.5]},
+                                                        'type': 'SharpnessJitter',
+                                                        'weight': 1.0}}},
+             'repo_id': 'lerobot/droid_1.0.1',
+             'repo_type': 'dataset',
+             'return_uint8': False,
+             'revision': 'refs/pr/11',
+             'root': None,
+             'storage_options': None,
+             'streaming': False,
+             'streaming_byte_budget_gb': 8.0,
+             'streaming_decode_threads': 2,
+             'streaming_decoded_queue_size': 8,
+             'streaming_episode_pool_size': None,
+             'streaming_native_http_connections': None,
+             'streaming_native_http_subranges': 1,
+             'streaming_prefetch_episodes': 8,
+             'streaming_sampling_strategy': <StreamingSamplingStrategy.REMAINING: 'remaining'>,
+             'streaming_sidecar_lock_timeout_s': 1800,
+             'use_imagenet_stats': True,
+             'video_backend': 'torchcodec',
+             'video_decoder_cache_size': None},
+ 'ema': None,
+ 'env': None,
+ 'env_eval_freq': 0,
+ 'eval': {'batch_size': 50,
+          'max_episode_steps': None,
+          'n_episodes': 50,
+          'recording': False,
+          'recording_private': False,
+          'recording_repo_id': None,
+          'use_async_envs': True},
+ 'eval_steps': 0,
+ 'job': {'detach': False,
+         'image': 'huggingface/lerobot-gpu:latest',
+         'tags': [],
+         'target': None,
+         'timeout': '2d'},
+ 'job_name': 'praxis',
+ 'log_freq': 1,
+ 'max_eval_samples': 0,
+ 'num_workers': 2,
+ 'optimizer': {'betas': [0.9, 0.95],
+               'eps': 1e-08,
+               'grad_clip_norm': 1.0,
+               'lr': 3e-06,
+               'seed': 0,
+               'type': 'praxis_adamw',
+               'weight_decay': 0.0001},
+ 'output_dir': '/outputs/rocm-train/praxis-lora-fsdp4',
+ 'parallelism': {'cfg_parallel': 1,
+                 'context_parallel': {'ring_degree': 1, 'ulysses_degree': 1},
+                 'dp_replicate': 1,
+                 'dp_shard': 4},
+ 'peft': {'full_training_modules': None,
+          'init_type': None,
+          'lora_alpha': 32,
+          'method_type': 'LORA',
+          'r': 16,
+          'target_modules': None},
+ 'persistent_workers': True,
+ 'policy': {'action_feature_names': None,
+            'action_guard': 5.0,
+            'action_weight': 1.0,
+            'activation_checkpointing': True,
+            'attention_backend': 'auto',
+            'camera_keys': [],
+            'cfg_scale': 1.0,
+            'cfg_video_scale': 4.0,
+            'chunk_size': 24,
+            'device': 'cuda',
+            'dtype': 'bfloat16',
+            'exterior_image_key': 'observation.images.exterior',
+            'input_features': {'observation.images.exterior': {'shape': [3,
+                                                                         288,
+                                                                         512],
+                                                               'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.images.wrist': {'shape': [3,
+                                                                      288,
+                                                                      512],
+                                                            'type': <FeatureType.VISUAL: 'VISUAL'>},
+                               'observation.state': {'shape': [7],
+                                                     'type': <FeatureType.STATE: 'STATE'>}},
+            'license': None,
+            'max_context_chunks': 1,
+            'model_config': {'action_expert': {'absolute_positions': True,
+                                               'action_patch_dim': 40,
+                                               'action_pos_table': False,
+                                               'attention': 'flex_dynamic',
+                                               'clean_only_conditioning': False,
+                                               'dim': 1024,
+                                               'flex_kernel_options': {'fwd_BLOCK_M': 32,
+                                                                       'fwd_BLOCK_N': 128,
+                                                                       'num_stages': 3,
+                                                                       'num_warps': 4},
+                                               'future_chunk_offset': 'zero',
+                                               'global_order': ['register',
+                                                                'anchor',
+                                                                'text'],
+                                               'head_dim': 64,
+                                               'head_plus_zero': True,
+                                               'layout_stamp': 20260924,
+                                               'max_action_tokens': 64,
+                                               'max_chunks': 16,
+                                               'num_future_per_chunk': 8,
+                                               'num_heads': 16,
+                                               'num_layers': 16,
+                                               'proprio_patch_dim': 10,
+                                               'rope': {'base': 26000000,
+                                                        'dim': 64,
+                                                        'effective_dim': 64,
+                                                        'kind': 'trunk',
+                                                        'order': 'before_norm',
+                                                        'table_size': 1000000},
+                                               'rope_base': 100.0,
+                                               'rope_cross': False,
+                                               'rope_self': False,
+                                               'tap_norm': True,
+                                               'trunk_dim': 3072},
+                             'action_space': {'dim': 10,
+                                              'layout': '[xyz(3) rot6d(6) '
+                                                        'grip(1)]',
+                                              'pose_layout': '[xyz(3) '
+                                                             'quat_wxyz(4) '
+                                                             'grip(1)]'},
+                             'backbone': {'attention': {'backend': 'flash',
+                                                        'flex_block_size': 128,
+                                                        'gated': True,
+                                                        'head_dim': 128,
+                                                        'num_heads': 24,
+                                                        'num_kv_heads': 8,
+                                                        'qk_norm_compute_dtype': 'float32',
+                                                        'qk_norm_eps': 1e-06,
+                                                        'rope_after_norm': False},
+                                          'decoder': {'dense_blocks': [0],
+                                                      'depth': 6,
+                                                      'input_projections': {'VideoTensor': {'c_in': 48,
+                                                                                            'move_dim': True,
+                                                                                            'timestep_modulated': True}},
+                                                      'modulation_dim': 3072,
+                                                      'output_projections': {'VideoTensor': {'c_out': 48,
+                                                                                             'move_dim': True}},
+                                                      'positive_zero_residual_add': True,
+                                                      'unpatch_factor': [1,
+                                                                         2,
+                                                                         2]},
+                                          'dense_ffn_hidden': 11520,
+                                          'dim': 3072,
+                                          'encoder': {'dense_blocks': [0, 1],
+                                                      'depth': 14,
+                                                      'input_projections': {'TextEncodingTensor': {'c_in': 2048,
+                                                                                                   'timestep_modulated': False},
+                                                                            'VideoTensor': {'c_in': 192,
+                                                                                            'move_dim': True,
+                                                                                            'timestep_modulated': True}},
+                                                      'output_projections': {'VideoTensor': {'c_out': 3072,
+                                                                                             'move_dim': True}},
+                                                      'positive_zero_residual_add': True,
+                                                      'tap_blocks': [0,
+                                                                     2,
+                                                                     4,
+                                                                     6,
+                                                                     7,
+                                                                     9,
+                                                                     11,
+                                                                     13]},
+                                          'layout': 'chunk_causal',
+                                          'modulation_dtype': 'mixed',
+                                          'moe': {'dispatch_chunk_size': 16384,
+                                                  'expert_hidden': 1280,
+                                                  'no_expert_slots': False,
+                                                  'num_experts': 129,
+                                                  'num_routed_experts': 128,
+                                                  'routed_scaling_factor': 2.5,
+                                                  'routed_weight_layout': 'expert_first',
+                                                  'router_activation': 'sigmoid',
+                                                  'router_dtype': 'float32',
+                                                  'shared_expert': True,
+                                                  'top_k': 9,
+                                                  'top_k_routed': 8},
+                                          'norm_compute_dtype': 'float32',
+                                          'norm_eps': 1e-06,
+                                          'num_registers': 4,
+                                          'rope': {'base': 26000000,
+                                                   'chunked_video_layout': True,
+                                                   'dim': 128,
+                                                   'effective_dim': 64,
+                                                   'efficient_cache_max': 1000000,
+                                                   'max_inter': 129600,
+                                                   'max_intra': 360,
+                                                   'max_seq_len': 90000000,
+                                                   'n_chunks': None,
+                                                   'n_tiles': None,
+                                                   'ref_placement': 'group',
+                                                   'time_scale': 1.0},
+                                          'timestep_dim': 128},
+                             'chunking': {'action_chunk': 24,
+                                          'action_frames_per_token': 4,
+                                          'chunk_geometry': [[0, 21],
+                                                             [21, 24],
+                                                             [45, 24],
+                                                             [69, 24]],
+                                          'context_format': 'vxt',
+                                          'contiguous_chunks': True,
+                                          'future_frames': 24,
+                                          'global_frame_anchor': True,
+                                          'grid_hz': 15.0,
+                                          'latents_per_chunk': 6,
+                                          'n_chunks': 4,
+                                          'past_frames': 15,
+                                          'proprio_frames': 1,
+                                          'window_frames': 93},
+                             'embodiment': 'single_arm',
+                             'format_version': 2,
+                             'fp32_tensors': ['*.ffn.expert_bias'],
+                             'model_type': 'praxis',
+                             'normalization': {'action_formula': 'clip(2 * (a '
+                                                                 '- q01) / '
+                                                                 '(q99 - q01 + '
+                                                                 '1e-8) - 1, '
+                                                                 '-1, 1) on '
+                                                                 'q99_normed_dims, '
+                                                                 'identity on '
+                                                                 'the other '
+                                                                 'dims',
+                                               'action_q01': [-0.1485469937324524,
+                                                              -0.19603200256824493,
+                                                              -0.2031259983778,
+                                                              0.6827049851417542,
+                                                              -0.5835009813308716,
+                                                              -0.3863309919834137,
+                                                              -0.5673199892044067,
+                                                              0.6868450045585632,
+                                                              -0.39503800868988037,
+                                                              0.0],
+                                               'action_q99': [0.18577100336551666,
+                                                              0.19784800708293915,
+                                                              0.19871099293231964,
+                                                              1.0,
+                                                              0.5795639753341675,
+                                                              0.4474309980869293,
+                                                              0.5877500176429749,
+                                                              1.0,
+                                                              0.39563798904418945,
+                                                              1.0],
+                                               'domain': 'droid',
+                                               'proprio_formula': '(p - mean) '
+                                                                  '/ max(std, '
+                                                                  '1e-6) on '
+                                                                  'all dims',
+                                               'proprio_mean': [0.5195770263671875,
+                                                                -0.006078170146793127,
+                                                                0.3168239891529083,
+                                                                0.7413139939308167,
+                                                                -0.04902319982647896,
+                                                                0.08595360070466995,
+                                                                -0.06293799728155136,
+                                                                -0.7607250213623047,
+                                                                0.008901899680495262,
+                                                                0.39361199736595154],
+                                               'proprio_std': [0.1195869967341423,
+                                                               0.17830400168895721,
+                                                               0.1687529981136322,
+                                                               0.32760199904441833,
+                                                               0.4835300147533417,
+                                                               0.3154970109462738,
+                                                               0.4926550090312958,
+                                                               0.33570900559425354,
+                                                               0.24869099259376526,
+                                                               0.4135879874229431],
+                                               'q99_normed_dims': [0, 1, 2, 9]},
+                             'pose_frame': 'flange',
+                             'text_encoder': {'blank_caption': ' ',
+                                              'hidden_dim': 2048,
+                                              'hidden_layer': -3,
+                                              'model': 'Qwen3.5-2B',
+                                              'pad_to_multiple_of': 32,
+                                              'trim_padding': True,
+                                              'uncond': 'blank_caption'},
+                             'torch_dtype': 'bfloat16',
+                             'video': {'antialias': True,
+                                       'aspect_tol': 0.03,
+                                       'canvas': 'tiles',
+                                       'height': 224,
+                                       'keep_aspect': True,
+                                       'latent_channels': 48,
+                                       'layout': 'hstack',
+                                       'patch_size': [1, 2, 2],
+                                       'tile_bounds_rows_cols': {'exterior': [0,
+                                                                              224,
+                                                                              0,
+                                                                              416],
+                                                                 'wrist': [0,
+                                                                           224,
+                                                                           416,
+                                                                           832]},
+                                       'tile_height': 224,
+                                       'tile_width': 416,
+                                       'vae': 'Wan2.2',
+                                       'vae_encode_chunk_frames': 4,
+                                       'vae_encode_impl': 'megakernel',
+                                       'vae_megakernel_chunk_frames': 16,
+                                       'vae_stride': [4, 16, 16],
+                                       'views': ['exterior', 'wrist'],
+                                       'width': 832}},
+            'moe_balance_speed': 0.001,
+            'moe_seq_balance_coef': 0.0001,
+            'n_action_steps': 24,
+            'n_obs_steps': 1,
+            'normalization_mapping': {'ACTION': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'STATE': <NormalizationMode.IDENTITY: 'IDENTITY'>,
+                                      'VISUAL': <NormalizationMode.IDENTITY: 'IDENTITY'>},
+            'num_steps': 2,
+            'optimizer_betas': [0.9, 0.95],
+            'optimizer_eps': 1e-08,
+            'optimizer_grad_clip_norm': 1.0,
+            'optimizer_lr': 3e-06,
+            'optimizer_weight_decay': 0.0001,
+            'output_features': {'action': {'shape': [7],
+                                           'type': <FeatureType.ACTION: 'ACTION'>}},
+            'pretrained_path': 'runwayml/praxis-1-droid-lerobot',
+            'pretrained_revision': None,
+            'private': None,
+            'proprio_dropout': 0.1,
+            'push_to_hub': False,
+            'repo_id': None,
+            'return_prediction': False,
+            'scheduler_decay_lr': 3e-07,
+            'scheduler_decay_steps': 1200,
+            'scheduler_warmup_steps': 50,
+            'seed': 0,
+            'seed_stride': 1000,
+            't_shift': 12.5,
+            'tags': None,
+            'text_dropout': 0.1,
+            'text_encoder_id': 'Qwen/Qwen3.5-2B',
+            'text_pad_to_multiple_of': 32,
+            'train_moe_dispatch_chunk_size': 65536,
+            'trust_remote_code': False,
+            'type': 'praxis',
+            'use_amp': False,
+            'use_peft': True,
+            'vae_id': 'Wan-AI/Wan2.2-TI2V-5B:Wan2.2_VAE.pth',
+            'video_timestep_shift': 5.0,
+            'video_weight': 1.0,
+            'wrist_image_key': 'observation.images.wrist'},
+ 'prefetch_factor': 4,
+ 'rename_map': {'action': 'action.joint_unused',
+                'action.cartesian': 'action',
+                'observation.images.exterior_1_left': 'observation.images.exterior',
+                'observation.images.wrist_left': 'observation.images.wrist',
+                'observation.state': 'observation.state.joint_unused',
+                'observation.state.cartesian': 'observation.state'},
+ 'resume': False,
+ 'reward_model': None,
+ 'sample_weighting': None,
+ 'save_checkpoint': True,
+ 'save_checkpoint_to_hub': False,
+ 'save_freq': 2,
+ 'scheduler': {'decay_lr': 3e-07,
+               'num_decay_steps': 1200,
+               'num_warmup_steps': 50,
+               'peak_lr': 3e-06,
+               'type': 'cosine_decay_with_warmup'},
+ 'seed': 1000,
+ 'steps': 2,
+ 'tf32': True,
+ 'tolerance_s': 0.0001,
+ 'trackio': {'capture_console': True,
+             'disable_artifact': True,
+             'enable': False,
+             'private': None,
+             'project': 'lerobot',
+             'resume': None,
+             'run_name': None,
+             'space_id': None},
+ 'use_policy_training_preset': True}
+INFO 2026-11-22 15:06:27 ot_train.py:572 Logs will be saved locally.
+INFO 2026-11-22 15:06:27 ot_train.py:589 Creating dataset
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 2302.16it/s]
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 728.85it/s]
+INFO 2026-11-22 15:06:32 ot_train.py:628 Creating policy
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 830.11it/s]
+Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 1743.49it/s]
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 1063.17it/s]
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 744.24it/s]
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 901.85it/s]
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 460.99it/s]
+Fetching 13 files:   0%|          | 0/13 [00:00<?, ?it/s]Fetching 13 files: 100%|██████████| 13/13 [00:00<00:00, 1150.07it/s]
+INFO 2026-11-22 15:06:48 _encoder.py:172 text encoder kernel launch settings: {}
+Loading weights:   0%|          | 0/617 [00:00<?, ?it/s]Loading weights:  71%|███████   | 435/617 [00:00<00:00, 4283.09it/s]Loading weights: 100%|██████████| 617/617 [00:00<00:00, 4712.03it/s]
+Fetching 13 files:   0%|          | 0/13 [00:00<?, ?it/s]Fetching 13 files: 100%|██████████| 13/13 [00:00<00:00, 628.73it/s]
+Loading weights:   0%|          | 0/617 [00:00<?, ?it/s]Loading weights:  93%|█████████▎| 575/617 [00:00<00:00, 5701.84it/s]Loading weights: 100%|██████████| 617/617 [00:00<00:00, 5693.84it/s]
+INFO 2026-11-22 15:06:52 ot_train.py:646 Using PEFT! Wrapping model.
+INFO 2026-11-22 15:06:52 etrained.py:652 Wrapped praxis with PEFT (LoraConfig)
+Fetching 13 files:   0%|          | 0/13 [00:00<?, ?it/s]Fetching 13 files: 100%|██████████| 13/13 [00:00<00:00, 450.04it/s]
+Loading weights:   0%|          | 0/617 [00:00<?, ?it/s]Loading weights: 100%|██████████| 617/617 [00:00<00:00, 7294.13it/s]
+Fetching 13 files:   0%|          | 0/13 [00:00<?, ?it/s]Fetching 13 files: 100%|██████████| 13/13 [00:00<00:00, 395.66it/s]
+Loading weights:   0%|          | 0/617 [00:00<?, ?it/s]Loading weights:  64%|██████▎   | 393/617 [00:00<00:00, 3822.26it/s]Loading weights: 100%|██████████| 617/617 [00:00<00:00, 4312.11it/s]
+INFO 2026-11-22 15:07:04 ot_train.py:723 Creating optimizer and scheduler
+INFO 2026-11-22 15:07:04 hedulers.py:156 Auto-scaling LR scheduler: num_training_steps (2) < num_decay_steps (1200). Scaling warmup: 50 → 0, decay: 1200 → 2 (scale factor: 0.002)
+/opt/venv/lib/python3.12/site-packages/torch/distributed/device_mesh.py:746: UserWarning: Slicing a flattened dim from root mesh will be deprecated in PT 2.11. Users need to bookkeep the flattened mesh directly. 
+  sliced_mesh_layout = self._get_slice_mesh_layout(mesh_dim_names)
+/opt/venv/lib/python3.12/site-packages/torch/distributed/device_mesh.py:746: UserWarning: Slicing a flattened dim from root mesh will be deprecated in PT 2.11. Users need to bookkeep the flattened mesh directly. 
+  sliced_mesh_layout = self._get_slice_mesh_layout(mesh_dim_names)
+/opt/venv/lib/python3.12/site-packages/torch/distributed/device_mesh.py:746: UserWarning: Slicing a flattened dim from root mesh will be deprecated in PT 2.11. Users need to bookkeep the flattened mesh directly. 
+  sliced_mesh_layout = self._get_slice_mesh_layout(mesh_dim_names)
+/opt/venv/lib/python3.12/site-packages/torch/distributed/device_mesh.py:746: UserWarning: Slicing a flattened dim from root mesh will be deprecated in PT 2.11. Users need to bookkeep the flattened mesh directly. 
+  sliced_mesh_layout = self._get_slice_mesh_layout(mesh_dim_names)
+INFO 2026-11-22 15:07:07 ot_train.py:784 Output dir: /outputs/rocm-train/praxis-lora-fsdp4
+INFO 2026-11-22 15:07:07 ot_train.py:791 cfg.steps=2 (2)
+INFO 2026-11-22 15:07:07 ot_train.py:792 dataset.num_frames=677 (677)
+INFO 2026-11-22 15:07:07 ot_train.py:793 dataset.num_episodes=2
+INFO 2026-11-22 15:07:07 ot_train.py:794 Effective batch size: 1 x 4 dp workers x 1 grad accum = 4 (topology: dp_replicate=1, dp_shard=4)
+INFO 2026-11-22 15:07:07 ot_train.py:799 num_learnable_params=5505024 (6M)
+INFO 2026-11-22 15:07:07 ot_train.py:800 num_total_params=27207873624 (27B)
+Training:   0%|          | 0/2 [00:00<?, ?step/s]INFO 2026-11-22 15:07:07 ot_train.py:848 Start offline training on a fixed dataset, with effective batch size: 4
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+W1122 15:07:13.705000 971 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:07:13.727000 971 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+W1122 15:07:13.879000 974 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:07:13.918000 974 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+W1122 15:07:17.291000 967 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:07:17.341000 967 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+W1122 15:07:17.869000 973 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:07:17.918000 973 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+W1122 15:07:26.143000 1025 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:07:26.166000 1025 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+W1122 15:07:28.758000 1027 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:07:28.780000 1027 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_cutlass_90a.abi3.so
+WARNING:torchao:Failed to load /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /opt/venv/lib/python3.12/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
+W1122 15:07:31.877000 1066 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:07:31.902000 1066 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:07:31.980000 1067 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1122 15:07:32.002000 1067 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/opt/venv/bin/lerobot-train", line 10, in <module>
+[rank0]:     sys.exit(main())
+[rank0]:              ^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+[rank0]:     train()
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/configs/parser.py", line 473, in wrapper_inner
+[rank0]:     response = fn(cfg, *args, **kwargs)
+[rank0]:                ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 861, in train
+[rank0]:     batch = _preprocess_dataset_batch(batch, dataset.meta.camera_keys, cfg.rename_map, preprocessor)
+[rank0]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 178, in _preprocess_dataset_batch
+[rank0]:     return preprocessor(batch)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 327, in __call__
+[rank0]:     transformed_transition = self._forward(transition)
+[rank0]:                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 344, in _forward
+[rank0]:     transition = processor_step(transition)
+[rank0]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 1958, in __call__
+[rank0]:     processed_observation = self.observation(observation.copy())
+[rank0]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 45, in observation
+[rank0]:     return rename_keys(observation, self.rename_map)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 120, in rename_keys
+[rank0]:     raise ValueError(
+[rank0]: ValueError: Both 'observation.state.joint_unused' and 'observation.state' are named 'observation.state.joint_unused' after rename_map. Map one of them to another name as well, e.g. add {'observation.state.joint_unused': 'observation.state.joint_unused.original'} to rename a key onto an existing 'observation.state.joint_unused'.
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/opt/venv/bin/lerobot-train", line 10, in <module>
+[rank2]:     sys.exit(main())
+[rank2]:              ^^^^^^
+[rank2]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+[rank2]:     train()
+[rank2]:   File "/outputs/rocm-train/latest-main/src/lerobot/configs/parser.py", line 473, in wrapper_inner
+[rank2]:     response = fn(cfg, *args, **kwargs)
+[rank2]:                ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 861, in train
+[rank2]:     batch = _preprocess_dataset_batch(batch, dataset.meta.camera_keys, cfg.rename_map, preprocessor)
+[rank2]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 178, in _preprocess_dataset_batch
+[rank2]:     return preprocessor(batch)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 327, in __call__
+[rank2]:     transformed_transition = self._forward(transition)
+[rank2]:                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 344, in _forward
+[rank2]:     transition = processor_step(transition)
+[rank2]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 1958, in __call__
+[rank2]:     processed_observation = self.observation(observation.copy())
+[rank2]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 45, in observation
+[rank2]:     return rename_keys(observation, self.rename_map)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 120, in rename_keys
+[rank2]:     raise ValueError(
+[rank2]: ValueError: Both 'observation.state.joint_unused' and 'observation.state' are named 'observation.state.joint_unused' after rename_map. Map one of them to another name as well, e.g. add {'observation.state.joint_unused': 'observation.state.joint_unused.original'} to rename a key onto an existing 'observation.state.joint_unused'.
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+Unable to import `torchao` Tensor objects. This may affect loading checkpoints serialized with `torchao`
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /opt/venv/lib/python3.12/site-packages/aiter/jit/module_aiter_core.so
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/opt/venv/bin/lerobot-train", line 10, in <module>
+[rank3]:     sys.exit(main())
+[rank3]:              ^^^^^^
+[rank3]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+[rank3]:     train()
+[rank3]:   File "/outputs/rocm-train/latest-main/src/lerobot/configs/parser.py", line 473, in wrapper_inner
+[rank3]:     response = fn(cfg, *args, **kwargs)
+[rank3]:                ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 861, in train
+[rank3]:     batch = _preprocess_dataset_batch(batch, dataset.meta.camera_keys, cfg.rename_map, preprocessor)
+[rank3]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 178, in _preprocess_dataset_batch
+[rank3]:     return preprocessor(batch)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 327, in __call__
+[rank3]:     transformed_transition = self._forward(transition)
+[rank3]:                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 344, in _forward
+[rank3]:     transition = processor_step(transition)
+[rank3]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 1958, in __call__
+[rank3]:     processed_observation = self.observation(observation.copy())
+[rank3]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 45, in observation
+[rank3]:     return rename_keys(observation, self.rename_map)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 120, in rename_keys
+[rank3]:     raise ValueError(
+[rank3]: ValueError: Both 'observation.state.joint_unused' and 'observation.state' are named 'observation.state.joint_unused' after rename_map. Map one of them to another name as well, e.g. add {'observation.state.joint_unused': 'observation.state.joint_unused.original'} to rename a key onto an existing 'observation.state.joint_unused'.
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/opt/venv/bin/lerobot-train", line 10, in <module>
+[rank1]:     sys.exit(main())
+[rank1]:              ^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 1073, in main
+[rank1]:     train()
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/configs/parser.py", line 473, in wrapper_inner
+[rank1]:     response = fn(cfg, *args, **kwargs)
+[rank1]:                ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 861, in train
+[rank1]:     batch = _preprocess_dataset_batch(batch, dataset.meta.camera_keys, cfg.rename_map, preprocessor)
+[rank1]:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/scripts/lerobot_train.py", line 178, in _preprocess_dataset_batch
+[rank1]:     return preprocessor(batch)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 327, in __call__
+[rank1]:     transformed_transition = self._forward(transition)
+[rank1]:                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 344, in _forward
+[rank1]:     transition = processor_step(transition)
+[rank1]:                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/pipeline.py", line 1958, in __call__
+[rank1]:     processed_observation = self.observation(observation.copy())
+[rank1]:                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 45, in observation
+[rank1]:     return rename_keys(observation, self.rename_map)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/outputs/rocm-train/latest-main/src/lerobot/processor/rename_processor.py", line 120, in rename_keys
+[rank1]:     raise ValueError(
+[rank1]: ValueError: Both 'observation.state.joint_unused' and 'observation.state' are named 'observation.state.joint_unused' after rename_map. Map one of them to another name as well, e.g. add {'observation.state.joint_unused': 'observation.state.joint_unused.original'} to rename a key onto an existing 'observation.state.joint_unused'.
+Training:   0%|          | 0/2 [00:35<?, ?step/s]
+W1122 15:07:45.152000 309 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 684 closing signal SIGTERM
+W1122 15:07:45.152000 309 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 685 closing signal SIGTERM
+W1122 15:07:45.152000 309 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 686 closing signal SIGTERM
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 14 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 14 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 14 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+E1122 15:07:45.778000 309 torch/distributed/elastic/multiprocessing/api.py:988] failed (exitcode: 1) local_rank: 0 (pid: 683) of binary: /opt/venv/bin/python
+Traceback (most recent call last):
+  File "/opt/venv/bin/accelerate", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/accelerate_cli.py", line 50, in main
+    args.func(args)
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/launch.py", line 1404, in launch_command
+    multi_gpu_launcher(args)
+  File "/opt/venv/lib/python3.12/site-packages/accelerate/commands/launch.py", line 1029, in multi_gpu_launcher
+    distrib_run.run(args)
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/run.py", line 1007, in run
+    elastic_launch(
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 191, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/venv/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 371, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/opt/venv/bin/lerobot-train FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-11-22_15:07:45
+  host      : c0419e103c32
+  rank      : 1 (local_rank: 1)
+  exitcode  : -15 (pid: 684)  (SIGTERM)
+  error_file: <N/A>
+  traceback : Signal 15 (SIGTERM) received by PID 684
+[2]:
+  time      : 2026-11-22_15:07:45
+  host      : c0419e103c32
+  rank      : 2 (local_rank: 2)
+  exitcode  : -15 (pid: 685)  (SIGTERM)
+  error_file: <N/A>
+  traceback : Signal 15 (SIGTERM) received by PID 685
+[3]:
+  time      : 2026-11-22_15:07:45
+  host      : c0419e103c32
+  rank      : 3 (local_rank: 3)
+  exitcode  : -15 (pid: 686)  (SIGTERM)
+  error_file: <N/A>
+  traceback : Signal 15 (SIGTERM) received by PID 686
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-11-22_15:07:45
+  host      : c0419e103c32
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 683) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+RESULT praxis-lora-fsdp4 FAIL exit=1 seconds=116 dp_replicate=1 dp_shard=4 steps=[]
+QUEUE END 2026-11-22T15:07:46+00:00 /dev/vda1       2.0T  1.8T  200G  90% /

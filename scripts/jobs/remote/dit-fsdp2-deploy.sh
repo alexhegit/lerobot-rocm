@@ -3,7 +3,7 @@ set -euo pipefail
 OUT=/outputs/rocm-train/dit-fsdp2-deploy
 rm -rf "$OUT"
 accelerate launch --num_processes=2 /outputs/rocm-train/jobs/fsdp_autowrap_train.py --policy.type=multi_task_dit --policy.device=cuda --policy.push_to_hub=false   --policy.horizon=32 --policy.n_action_steps=24 --policy.objective=diffusion --policy.num_inference_steps=10   --dataset.repo_id=lerobot/aloha_sim_transfer_cube_human --dataset.episodes='[0]' --parallelism.dp_shard=2   --batch_size=1 --steps=2 --env_eval_freq=0 --save_freq=2 --log_freq=1 --num_workers=0 --trackio.enable=false --output_dir=$OUT
-CUDA_VISIBLE_DEVICES=0 HIP_VISIBLE_DEVICES=${HIP_VISIBLE_DEVICES%%,*} python3 - $OUT/checkpoints/000002/pretrained_model <<'PY'
+HIP_VISIBLE_DEVICES=${HIP_VISIBLE_DEVICES%%,*} python3 - $OUT/checkpoints/000002/pretrained_model <<'PY'
 import sys
 import torch
 from lerobot.datasets import LeRobotDataset

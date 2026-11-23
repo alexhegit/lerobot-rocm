@@ -1,0 +1,2 @@
+# EVO1 LIBERO checkpoint with the documented settings, libero_spatial 10 tasks x 5 (GPU 5).
+eval-evo1-libero|CUSTOM|5|1||

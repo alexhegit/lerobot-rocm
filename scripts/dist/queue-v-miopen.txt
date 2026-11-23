@@ -1,0 +1,6 @@
+# MIOpen kernel cache and find mode, ACT (ResNet18 backbone) 1 GPU, batch 32, 12 steps, per-step logs.
+# Runs 1-2 share a persistent cache with fast find (MIOPEN_FIND_MODE=2); runs 3-4 with normal find (1).
+miopen-fast-cold|act-base|6|1|--batch_size=32 --steps=12 --log_freq=1 --save_freq=100000|export MIOPEN_FIND_MODE=2;;export MIOPEN_USER_DB_PATH=/outputs/rocm-train/miopen/fast/db;;export MIOPEN_CUSTOM_CACHE_DIR=/outputs/rocm-train/miopen/fast/cache;;mkdir -p $MIOPEN_USER_DB_PATH $MIOPEN_CUSTOM_CACHE_DIR
+miopen-fast-warm|act-base|6|1|--batch_size=32 --steps=12 --log_freq=1 --save_freq=100000|export MIOPEN_FIND_MODE=2;;export MIOPEN_USER_DB_PATH=/outputs/rocm-train/miopen/fast/db;;export MIOPEN_CUSTOM_CACHE_DIR=/outputs/rocm-train/miopen/fast/cache
+miopen-normal-cold|act-base|6|1|--batch_size=32 --steps=12 --log_freq=1 --save_freq=100000|export MIOPEN_FIND_MODE=1;;export MIOPEN_USER_DB_PATH=/outputs/rocm-train/miopen/normal/db;;export MIOPEN_CUSTOM_CACHE_DIR=/outputs/rocm-train/miopen/normal/cache;;mkdir -p $MIOPEN_USER_DB_PATH $MIOPEN_CUSTOM_CACHE_DIR
+miopen-normal-warm|act-base|6|1|--batch_size=32 --steps=12 --log_freq=1 --save_freq=100000|export MIOPEN_FIND_MODE=1;;export MIOPEN_USER_DB_PATH=/outputs/rocm-train/miopen/normal/db;;export MIOPEN_CUSTOM_CACHE_DIR=/outputs/rocm-train/miopen/normal/cache

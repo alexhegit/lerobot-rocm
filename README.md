@@ -9,6 +9,8 @@
 - **FLUX3:** blocked on `main` because NATTEN has no usable ROCm path. With upstream PR [huggingface/lerobot#5213](https://github.com/huggingface/lerobot/pull/5213) it trains on ROCm without NATTEN (1 GPU and DDP 2).
 - **Upstream:** PRs [#5432](https://github.com/huggingface/lerobot/pull/5432) and [#5433](https://github.com/huggingface/lerobot/pull/5433), ROCm results on [#5213](https://github.com/huggingface/lerobot/pull/5213#issuecomment-7029511117), issue [SHI-Labs/NATTEN#354](https://github.com/SHI-Labs/NATTEN/issues/354).
 - **Distributed (2026-11-22):** 59 of 69 multi-GPU jobs pass. DDP up to 8 GPUs; FSDP2 on 2 GPUs for 21 policies and on 8 GPUs for π0, FastWAM, WALL-OSS 0.5 and Cosmos3; HSDP 2×2 / 2×4 / 4×2; gradient accumulation, fp16 / bf16 / FSDP mixed-precision policy, CPU offload, DDP options, resume (DDP, FSDP, FSDP 2→4 reshard), DCP checkpoint formats, multi-GPU eval. FSDP fails for G05, FineART, WALL-OSS flow and Long-WAM (mixed dtypes inside layers). Found two LeRobot issues: RA-BC crashes under DDP, and FSDP resume fails for models with unused trainable parameters.
+- **Multi-GPU performance (2026-11-23):** set `AMD_CPU_AFFINITY=0`. Otherwise the HIP runtime pins every process that initialises it to 8 of 160 CPUs, and `accelerate launch` passes that to all ranks and DataLoader workers: ACT on 8 GPUs goes from 706 to 4,122 samples/s (7.1× one GPU), SmolVLA from 137 to 506, π0 from 21 to 53. Mount a persistent MIOpen cache for conv backbones (first step 464 s → 28 s).
+- **Training quality:** ACT trained on ROCm with the official recipe scores 66% (33/50) on AlohaTransferCube; the official checkpoint scores 76% (38/50) under the same ROCm evaluation (overlapping 95% intervals).
 - **Open:** multi-node (no InfiniBand).
 
 ## 验证范围
@@ -88,6 +90,8 @@ docker run --rm --ipc=host --shm-size 16g \
 
 | 现象 | 处理 |
 |---|---|
+| 多卡 DDP 加卡反而变慢、CPU 侧操作整体变慢 | HIP 运行时把进程限制在少数 CPU 上；启动前设 `AMD_CPU_AFFINITY=0` |
+| 卷积策略（ACT、Diffusion）每次第一步要好几分钟 | MIOpen 在编译 kernel；挂持久目录并设 `MIOPEN_USER_DB_PATH`、`MIOPEN_CUSTOM_CACHE_DIR` |
 | `--group-add render` 失败 | 用宿主机的数字 gid（见上面的命令） |
 | 第一步要几十秒 | MIOpen 在查找卷积内核；设 `MIOPEN_FIND_MODE=2` |
 | PyPI 的 CUDA torch 把 ROCm torch 换掉 | 镜像用 `UV_OVERRIDE` 锁住 torch / torchvision / numpy；装完检查 `torch.version.hip` 和 torchvision 的 `+rocm` |
@@ -106,6 +110,7 @@ scripts/runners/  批量队列脚本（生成单任务脚本并串行执行）
 scripts/jobs/     单任务脚本；remote/ 是 GPU 节点上实际执行过的版本
 scripts/patches/  一次性运行时补丁（LaWAM FSDP、MolmoAct2 LoRA）
 scripts/repro/    NATTEN / flex attention 复现脚本
+scripts/dist/     分布式队列：run-dist-queue.sh、queue-*.txt、resume/拓扑任务生成器、fsdp_autowrap_train.py
 upstream/         提交给上游的 PR 描述、留言、issue 原文
 logs/             各批次的训练日志
 webui/            本地 WebUI：通过 ssh 在 GPU 节点上启动一次固定的 DiT 2 步训练
