@@ -2,6 +2,8 @@
 
 在 AMD Instinct MI300X（ROCm）上验证 [LeRobot](https://github.com/huggingface/lerobot) 0.7 训练的过程记录、脚本和结论。
 
+**完整实践报告：[reports/practice-report.md](reports/practice-report.md)**（模型与特性覆盖、单卡 / 多卡设置、问题、上游 issue 与 PR、性能数据）。详细过程记录在 [reports/smoke-report.md](reports/smoke-report.md)。
+
 ## Summary (English)
 
 - **Coverage:** on 8× MI300X (ROCm 7.14, PyTorch 2.12), every policy in LeRobot 0.7 trains on a single GPU and on 2-GPU DDP, except FLUX3 on `main`. Many large models also pass FSDP, and Diffusion and ACT pass on 8 GPUs. Resume, sim eval, `torch.compile` and LoRA work.
