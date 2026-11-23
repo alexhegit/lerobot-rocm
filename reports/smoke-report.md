@@ -34,7 +34,9 @@
 
 未完成：多机训练（两台机器都没有 InfiniBand，待后续）。推 Hub 不做（smoke checkpoint 不值得上传）。
 
-上游：已提交 PR [#5432](https://github.com/huggingface/lerobot/pull/5432)、[#5433](https://github.com/huggingface/lerobot/pull/5433)，在 [#5213](https://github.com/huggingface/lerobot/pull/5213) 留言 ROCm 结果，提交 NATTEN issue [SHI-Labs/NATTEN#354](https://github.com/SHI-Labs/NATTEN/issues/354)。LeRobot ROCm 文档补充在本地分支，未提交。见第 12 节。
+上游：已提交 PR [#5432](https://github.com/huggingface/lerobot/pull/5432)、[#5433](https://github.com/huggingface/lerobot/pull/5433)，在 [#5213](https://github.com/huggingface/lerobot/pull/5213) 留言 ROCm 结果，提交 NATTEN issue [SHI-Labs/NATTEN#354](https://github.com/SHI-Labs/NATTEN/issues/354)。第二批：PR [#5471](https://github.com/huggingface/lerobot/pull/5471)、[#5472](https://github.com/huggingface/lerobot/pull/5472)、[#5473](https://github.com/huggingface/lerobot/pull/5473)，issue [#5474](https://github.com/huggingface/lerobot/issues/5474)、[#5475](https://github.com/huggingface/lerobot/issues/5475)、[#5476](https://github.com/huggingface/lerobot/issues/5476)，在 [ROCm/rocm-systems#6712](https://github.com/ROCm/rocm-systems/pull/6712#issuecomment-7088991627) 留言。见第 12、14.3 节。
+
+数值：ACT、SmolVLA 的 GPU fp32 推理与 CPU 一致（max_abs < 1e-5），LIBERO 成功率偏低不是 ROCm 数值问题（14.4）。
 
 ## 1. 硬件环境
 
@@ -522,7 +524,7 @@ PR 描述、留言和 issue 草稿在 `tmp/rocm-train/upstream/`。2026-11-20 �
    排查过程：RCCL all-reduce 正常（8 卡 256 MB busbw 278 GB/s，xGMI 全互联）；8 个独立单卡任务并发不变慢；profiler 显示 DDP 时 GPU 时间不变（494 → 519 ms/10 步）而 CPU 时间涨 3 倍（509 → 1557 ms）；`num_workers=0` 时 DDP 不变慢；去掉 `torchao`（worker 里会经 `transformers → torchao → has_triton()` 建 HIP 上下文）不改善；`taskset` 看到 rank 进程都是 `0-7`；最后定位到 HIP 初始化和 `AMD_CPU_AFFINITY`。
 2. **MIOpen 冷启动**：卷积骨干（ACT 的 ResNet18）第一步编译 kernel 464 s，之后 0.053 s/步。容器 `--rm` 会丢缓存。挂持久目录并设 `MIOPEN_USER_DB_PATH`、`MIOPEN_CUSTOM_CACHE_DIR` 后，下一次第一步 27.5 s，整次 502 s → 66 s。`MIOPEN_FIND_MODE=1` 稳态不更快（0.060 vs 0.052 s）。
 3. **在 ROCm 上从头训出的策略和官方相当**：ACT 按官方配方（1 卡、batch 8、10 万步，74 分钟）在 AlohaTransferCube 50 局成功 66%（33/50，CI 52.2–77.6）；官方 `lerobot/act_aloha_sim_transfer_cube_human` 在同一 ROCm 评估下 76%（38/50，CI 62.6–85.7），区间重叠。2 卡 batch 64、1.25 万步的版本只有 48%（24/50），更新次数是官方的 1/8。
-4. **官方 VLA 检查点的 LIBERO 成功率低于文档**：EVO1（文档参数原样，revision 515921f4）LIBERO-Spatial 84%（42/50），文档 97%（485/500）；SmolVLA `lerobot/smolvla_libero` 60%（30/50），文档无参考值。MI300X 没有图形上下文，只能用 OSMesa 软件渲染，参考结果是 EGL；无法区分渲染差异和数值误差，未做 GPU/CPU 数值对比。
+4. **官方 VLA 检查点的 LIBERO 成功率低于文档**：EVO1（文档参数原样，revision 515921f4）LIBERO-Spatial 84%（42/50），文档 97%（485/500）；SmolVLA `lerobot/smolvla_libero` 60%（30/50），文档无参考值。MI300X 没有图形上下文，只能用 OSMesa 软件渲染，参考结果是 EGL。**GPU/CPU 数值对比（14.4）排除了 ROCm 数值误差**，差距来自渲染、仿真环境或评估本身的方差。
 
 ### 14.2 其他结果
 
@@ -538,8 +540,30 @@ PR 描述、留言和 issue 草稿在 `tmp/rocm-train/upstream/`。2026-11-20 �
 | `lerobot/diffusion_pusht` 评估 | FAIL | 旧格式，`migrate_policy_normalization` 保存配置时 `Couldn't encode 84`；最新 `main` 同样失败 |
 | GR00T LIBERO 检查点评估 | FAIL | 检查点图像特征 `(256, 256, 3)`（HWC），环境给 `(3, 360, 360)`，特征检查拒绝 |
 
-### 14.3 上游草稿（未提交）
+### 14.3 上游提交（2026-11-23）
 
-- `upstream/pr-rabc-ddp-unwrap.md`：RA-BC 在 DDP 下的修复，本地分支 `fix/rabc-ddp-unwrap` commit `6b51d9e2`（基于 `e5be0c16`），DOUni 上 2 卡验证通过。
-- `upstream/issue-fsdp-resume-unused-params.md`：带「可训练但没有梯度」参数的策略 FSDP resume 失败（DiT 的 CLIP `post_layernorm`）。
-- 文档分支 `docs/rocm-known-issues` 新增两个 commit：已知问题里加 CPU 亲和性和 MIOpen 缓存（`e08a4764`），`docker/Dockerfile.rocm` 加 `ENV AMD_CPU_AFFINITY=0`（`e8750eac`）。
+| 链接 | 内容 |
+|---|---|
+| PR [#5471](https://github.com/huggingface/lerobot/pull/5471) | RA-BC 在 DDP 下崩溃：`make_sample_weighter` 解包 `DistributedDataParallel`，带单进程 gloo 单测 |
+| PR [#5472](https://github.com/huggingface/lerobot/pull/5472) | `docker/Dockerfile.rocm` 加 `ENV AMD_CPU_AFFINITY=0` |
+| PR [#5473](https://github.com/huggingface/lerobot/pull/5473) | `torch_accelerators.mdx`：ROCm 已知问题（CPU 亲和性写成部分 ROCm 版本的回归、MIOpen 缓存等）和 ROCm 上训过的策略 |
+| issue [#5474](https://github.com/huggingface/lerobot/issues/5474) | FSDP resume 在有「可训练但无梯度」参数时失败；纯 torch CPU gloo 复现（`dist/fsdp_unused_param_repro.py`），与设备无关 |
+| issue [#5475](https://github.com/huggingface/lerobot/issues/5475) | `--accelerator.fsdp.min_num_params` 在 FSDP2 下失败（`fully_shard` 拒绝 ModuleList）；cpu_offload 需 `cpu:gloo,cuda:nccl` |
+| issue [#5476](https://github.com/huggingface/lerobot/issues/5476) | Praxis DROID 文档的 `rename_map` 自 #5316 起失效，且 map 被应用两次 |
+| [ROCm/rocm-systems#6712 留言](https://github.com/ROCm/rocm-systems/pull/6712#issuecomment-7088991627) | `AMD_CPU_AFFINITY` 默认开启对 PyTorch DDP 的影响数据（ACT 8 卡 706 → 4122 smp/s） |
+
+旧文档分支 `docs/rocm-known-issues` 已被 #5473 取代。
+
+### 14.4 LIBERO 数值对比：ROCm fp32 推理准确
+
+`dist/numerics_check.py`：同一检查点在 CPU fp32 和 GPU 上各跑一遍，16 帧 LIBERO 数据，每帧传入同一份固定噪声，比较整个动作块。
+
+| 模型 | 对比 | max_abs | 相对 mean_abs |
+|---|---|---:|---:|
+| ACT | GPU fp32 vs CPU fp32 | 2.7e-6 | — |
+| SmolVLA（`lerobot/smolvla_libero`） | GPU fp32 重复两次 | 0 | 0 |
+| SmolVLA | GPU fp32 vs CPU fp32 | 9.1e-6 | 6.9e-7 |
+| SmolVLA | GPU fp32（math SDPA）vs CPU fp32 | 6.9e-6 | 6.4e-7 |
+| SmolVLA | GPU 默认 dtype（bf16）vs CPU fp32 | 2.6e-2 | 4.3e-3 |
+
+中间一度看到 GPU/CPU 相差 7.5%，原因是脚本 bug：用 `__code__.co_varnames` 判断 `predict_action_chunk` 是否接受 `noise`，而它被装饰器包装，只看得到 `*args, **kwargs`，噪声没传进去，模型在各自设备上采样。改用 `inspect.signature` 后差距消失。结论：EVO1 / SmolVLA 的 LIBERO 成功率偏低不是 ROCm 数值问题。

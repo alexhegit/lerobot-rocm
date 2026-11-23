@@ -11,6 +11,8 @@
 - **Distributed (2026-11-22):** 59 of 69 multi-GPU jobs pass. DDP up to 8 GPUs; FSDP2 on 2 GPUs for 21 policies and on 8 GPUs for π0, FastWAM, WALL-OSS 0.5 and Cosmos3; HSDP 2×2 / 2×4 / 4×2; gradient accumulation, fp16 / bf16 / FSDP mixed-precision policy, CPU offload, DDP options, resume (DDP, FSDP, FSDP 2→4 reshard), DCP checkpoint formats, multi-GPU eval. FSDP fails for G05, FineART, WALL-OSS flow and Long-WAM (mixed dtypes inside layers). Found two LeRobot issues: RA-BC crashes under DDP, and FSDP resume fails for models with unused trainable parameters.
 - **Multi-GPU performance (2026-11-23):** set `AMD_CPU_AFFINITY=0`. Otherwise the HIP runtime pins every process that initialises it to 8 of 160 CPUs, and `accelerate launch` passes that to all ranks and DataLoader workers: ACT on 8 GPUs goes from 706 to 4,122 samples/s (7.1× one GPU), SmolVLA from 137 to 506, π0 from 21 to 53. Mount a persistent MIOpen cache for conv backbones (first step 464 s → 28 s).
 - **Training quality:** ACT trained on ROCm with the official recipe scores 66% (33/50) on AlohaTransferCube; the official checkpoint scores 76% (38/50) under the same ROCm evaluation (overlapping 95% intervals).
+- **Numerics:** fp32 inference on ROCm matches CPU (max abs diff 2.7e-6 for ACT, 9.1e-6 for SmolVLA on LIBERO frames with fixed noise), so the lower LIBERO scores of official checkpoints (EVO1 84% vs 97% documented, SmolVLA 60%) are not a ROCm numerics issue.
+- **Upstream (2026-11-23):** PRs [#5471](https://github.com/huggingface/lerobot/pull/5471), [#5472](https://github.com/huggingface/lerobot/pull/5472), [#5473](https://github.com/huggingface/lerobot/pull/5473); issues [#5474](https://github.com/huggingface/lerobot/issues/5474), [#5475](https://github.com/huggingface/lerobot/issues/5475), [#5476](https://github.com/huggingface/lerobot/issues/5476); comment on [ROCm/rocm-systems#6712](https://github.com/ROCm/rocm-systems/pull/6712#issuecomment-7088991627).
 - **Open:** multi-node (no InfiniBand).
 
 ## 验证范围
@@ -133,4 +135,10 @@ LEROBOT_ROCM_HOST=<ssh-alias> LEROBOT_OUTPUTS=<outputs-dir-on-node> python3 webu
 | [huggingface/lerobot#5433](https://github.com/huggingface/lerobot/pull/5433) RA-BC 不支持的策略提前报错 | 等待评审，已有社区复现 |
 | [huggingface/lerobot#5213](https://github.com/huggingface/lerobot/pull/5213) FLUX3 不依赖 NATTEN（他人 PR） | 已留言 ROCm 结果 |
 | [SHI-Labs/NATTEN#354](https://github.com/SHI-Labs/NATTEN/issues/354) ROCm 上编译版 flex 不可用 | 已提交 |
-| LeRobot `torch_accelerators.mdx` ROCm 已知问题 | 本地分支草稿，未提交 |
+| [huggingface/lerobot#5471](https://github.com/huggingface/lerobot/pull/5471) RA-BC 在 DDP 下解包 `DistributedDataParallel` | 等待评审 |
+| [huggingface/lerobot#5472](https://github.com/huggingface/lerobot/pull/5472) `Dockerfile.rocm` 设 `AMD_CPU_AFFINITY=0` | 等待评审 |
+| [huggingface/lerobot#5473](https://github.com/huggingface/lerobot/pull/5473) `torch_accelerators.mdx` ROCm 已知问题 | 等待评审 |
+| [huggingface/lerobot#5474](https://github.com/huggingface/lerobot/issues/5474) FSDP resume：可训练但无梯度的参数（CPU gloo 复现） | 已提交 |
+| [huggingface/lerobot#5475](https://github.com/huggingface/lerobot/issues/5475) FSDP2 下 `min_num_params` 失败 | 已提交 |
+| [huggingface/lerobot#5476](https://github.com/huggingface/lerobot/issues/5476) Praxis DROID `rename_map` | 已提交 |
+| [ROCm/rocm-systems#6712](https://github.com/ROCm/rocm-systems/pull/6712#issuecomment-7088991627) `AMD_CPU_AFFINITY` 对 PyTorch DDP 的影响 | 已留言 |
